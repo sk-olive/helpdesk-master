@@ -56,7 +56,7 @@ else
     
       }
 
-      
+
     $user_dept = $_SESSION['department'];
     $user_level=$_SESSION['level'];
     $user_name=$_SESSION['name'];
@@ -109,8 +109,84 @@ else
 
         
             $sql = mysqli_query($con,"INSERT INTO request (date_filled, requestor, requestorUsername, email, department, request_to, request_details, assignedPersonnel, assignedPersonnelName, action1, onthespot_ticket, ticket_category, ticket_filer)
-            VALUES ('$datenow', '$requestor','$requestorIdnumber', '$requestorEmail', '$requestorDepartment', 'mis', '$detailsOfRequest', '$r_personnels', '$r_personnelsName', '$action', '$onthespot_ticket', '$ticket_category', '$user_name')");}
+            VALUES ('$datenow', '$requestor','$requestorIdnumber', '$requestorEmail', '$requestorDepartment', 'mis', '$detailsOfRequest', '$r_personnels', '$r_personnelsName', '$action', '$onthespot_ticket', '$ticket_category', '$user_name')");
             
+            if($sql){
+                $sqllink = "SELECT `link` FROM `setting`";
+                $resultlink = mysqli_query($con, $sqllink);
+                $link = "";
+                while($listlink=mysqli_fetch_assoc($resultlink))
+                {
+                $link=$listlink["link"];
+                
+                
+                  }
+                $sql2 = "Select * FROM `sender`";
+                $result2 = mysqli_query($con, $sql2);
+                while($list=mysqli_fetch_assoc($result2))
+                {
+                $account=$list["email"];
+                $accountpass=$list["password"];
+        
+                  }    
+
+                $subject ='Ticket Request';
+                $message = 'Hi,<br> <br>   Mr/Ms. '.$requestor.' filed a job order. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                
+
+                 require '../vendor/autoload.php';
+    
+                 $mail = new PHPMailer(true);                      
+                 try {
+                  //Server settings
+                    $mail->isSMTP();                                      // Set mailer to use SMTP
+                    $mail->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
+                    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                    // $mail->Username = $account;     // Your Email/ Server Email
+                    // $mail->Password = $accountpass;                     // Your Password
+                    $mail->SMTPOptions = array(
+                        'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                        )
+                                                );                         
+                    $mail->SMTPSecure = 'none';                           
+                    $mail->Port = 465;                                   
+            
+                    //Send Email
+                    // $mail->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
+                    
+                    //Recipients
+                    $mail->setFrom('mis.dev@glory.com.ph', 'Helpdesk');
+                    // $mail->AddCC($immediateHeadEmail);
+                    // $mail->addAddress($requestorEmail);
+                    $mail->addAddress('o.bugarin@glory.com.ph');              
+                    $mail->isHTML(true);                                  
+                    $mail->Subject = $subject;
+                    $mail->Body    = $message;
+            
+                    $mail->send();
+                    $_SESSION['message'] = 'Message has been sent';
+                    echo "<script>alert('Thank you! Your request has been sent. $messageUpload') </script>";
+                    echo "<script> location.href='index.php'; </script>";
+
+                        // header("location: form.php");
+                    } catch (Exception $e) {
+                        $_SESSION['message'] = 'Message could not be sent. Mailer Error: '.$mail->ErrorInfo;
+                        $error = $_SESSION['message'];
+                    echo "<script>alert('Message could not be sent. Mailer Error. $error') </script>";
+
+                    }
+
+               
+               
+            }
+            else{
+                echo "<script>alert('There is a problem with filing. Please contact your administrator.') </script>";
+
+            }
+        }
                 ?>
 
 
