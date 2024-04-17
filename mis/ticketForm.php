@@ -84,8 +84,8 @@ else
             $requestorEmail = $_POST['r_email'];
             $requestorDepartment  = $_POST['r_department'];
             $immediateHeadEmail = $_POST['immediateHeadEmail'];
-            // $r_categories = $_POST['r_categories'];
-            // $r_cat_level = $_POST['r_cat_level'];
+            $r_categories = $_POST['r_categories'];
+            $r_cat_level = $_POST['r_cat_level'];
             if(isset($_POST['r_personnels'])) {
                 $r_personnels = $_POST['r_personnels'];
                 $r_personnelsName = $_POST['r_personnelsName'];
@@ -97,20 +97,24 @@ else
             $detailsOfRequest = $_POST['detailsOfRequest'];
             $datenow = date("Y-m-d");
             $ticket_category = $_POST['r_categories'];
-           
+            $onthespot_ticket ="";
             if(isset($_POST['on_the_spot'])) {
                 $onthespot_ticket = $_POST['on_the_spot'];
                 $action = $_POST['requestAction'];
+                $recommendation = $_POST['recommendation'];
             }
             else{
                 $onthespot_ticket = NULL;
                 $action = NULL;
+                $recommendation = NULL;
             } 
 
         
-            $sql = mysqli_query($con,"INSERT INTO request (date_filled, requestor, requestorUsername, email, department, request_to, request_details, assignedPersonnel, assignedPersonnelName, action1, onthespot_ticket, ticket_category, ticket_filer)
-            VALUES ('$datenow', '$requestor','$requestorIdnumber', '$requestorEmail', '$requestorDepartment', 'mis', '$detailsOfRequest', '$r_personnels', '$r_personnelsName', '$action', '$onthespot_ticket', '$ticket_category', '$user_name')");
+            $sql = mysqli_query($con,"INSERT INTO request (date_filled, status2, requestor, requestorUsername, email, department, request_type, request_to, request_details, assignedPersonnel, assignedPersonnelName, action, recommendation, onthespot_ticket, ticket_category, category_level, ticket_filer)
+            VALUES ('$datenow', 'admin', '$requestor','$requestorIdnumber', '$requestorEmail', '$requestorDepartment', 'Technical Support', 'mis', '$detailsOfRequest', '$r_personnels', '$r_personnelsName', '$action', '$recommendation', '$onthespot_ticket', '$ticket_category', '$r_cat_level', '$user_name')");
             
+
+
             if($sql){
                 $sqllink = "SELECT `link` FROM `setting`";
                 $resultlink = mysqli_query($con, $sqllink);
@@ -118,21 +122,24 @@ else
                 while($listlink=mysqli_fetch_assoc($resultlink))
                 {
                 $link=$listlink["link"];
-                
-                
-                  }
+                }
+
+                $getid = mysqli_query($con, "SELECT id FROM request ORDER BY id DESC LIMIT 1");
+                $row = mysqli_fetch_assoc($getid);
+                $id = $row['id'];
+                $date = new DateTime($datenow);
+                $date = $date->format('ym');
+                $ticketNumber = 'TS-'.$date.'-'.$id.'';
+
+                $headApprovalLink = 'http://192.168.60.47/helpdesk-master/ticketApproval.php?id='.$id.'&head=true';
+                $requestorApprovalLink = 'http://192.168.60.47/helpdesk-master/ticketApproval.php?id='.$id.'&requestor=true';
                 $sql2 = "Select * FROM `sender`";
                 $result2 = mysqli_query($con, $sql2);
                 while($list=mysqli_fetch_assoc($result2))
                 {
                 $account=$list["email"];
                 $accountpass=$list["password"];
-        
-                  }    
-
-                $subject ='Ticket Request';
-                $message = 'Hi,<br> <br>   Mr/Ms. '.$requestor.' filed a job order. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
-                
+                }    
 
                  require '../vendor/autoload.php';
     
@@ -140,10 +147,10 @@ else
                  try {
                   //Server settings
                     $mail->isSMTP();                                      // Set mailer to use SMTP
-                    $mail->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
+                    $mail->Host = 'mail.glorylocal.com.ph';               // Specify main and backup SMTP servers
                     $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                    // $mail->Username = $account;     // Your Email/ Server Email
-                    // $mail->Password = $accountpass;                     // Your Password
+                    $mail->Username = $account;    
+                    $mail->Password = $accountpass;                     
                     $mail->SMTPOptions = array(
                         'ssl' => array(
                         'verify_peer' => false,
@@ -155,20 +162,56 @@ else
                     $mail->Port = 465;                                   
             
                     //Send Email
-                    // $mail->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
-                    
-                    //Recipients
                     $mail->setFrom('mis.dev@glory.com.ph', 'Helpdesk');
-                    // $mail->AddCC($immediateHeadEmail);
+                           
+
+                    if ($onthespot_ticket == '1'){
+                    $subject = 'On the Spot Ticket Request Closed';
+                    // Message to Requestor
                     // $mail->addAddress($requestorEmail);
-                    $mail->addAddress('o.bugarin@glory.com.ph');              
+                    $mail->addAddress('o.bugarin@glory.com.ph'); // requestor
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
-                    $mail->Body    = $message;
+                    $mail->Body    = 'Hi '.$requestor.',<br> <br>   Your ticket request has been closed. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br> If you agree with the closure of this ticket, please click the link below to confirm: <br> Click <a href="'.$requestorApprovalLink.'">this</a>  to confirm. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
             
                     $mail->send();
+                         
+                    //Message to ICT HEAD & Dept Head
+                    $mail->clearAddresses();
+                    $mail->addAddress('o.bugarin@glory.com.ph');  // dept head      
+                    $mail->AddCC('demo@glory.com.ph');  // ict head       
+                    $mail->isHTML(true);                                  
+                    $mail->Subject = $subject;
+                    $mail->Body    = 'Hi,<br> <br>   A ticket request has been closed. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br>  This is a generated email. Please do not reply. <br><br> Helpdesk';;
+
+                    $mail->send();                               
+                    }
+                    else
+                    {
+                    $subject = 'Ticket Request Created';
+                    // Message to Requestor & Dept Head
+                    // $mail->AddCC($immediateHeadEmail);
+                    // $mail->addAddress($requestorEmail);
+                    $mail->addAddress('o.bugarin@glory.com.ph'); // requestor
+                    $mail->AddCC('demo@glory.com.ph');  // dept head   
+                    $mail->isHTML(true);                                  
+                    $mail->Subject = $subject;
+                    $mail->Body    = 'Hi '.$requestor.',<br> <br>   Your ticket request has been created. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br>  Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br> You can check the status of your ticket by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+            
+                    $mail->send();
+
+                    //Message to ICT HEAD
+                    $mail->clearAddresses();
+                    $mail->clearCCs();
+                    $mail->addAddress('o.bugarin@glory.com.ph');   // ict head        
+                    $mail->isHTML(true);                                  
+                    $mail->Subject = $subject;
+                    $mail->Body    = 'Hi,<br> <br>   A ticket request has been created. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br>  Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br>  Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br> Please approve or reject the ticket by signing in into our Helpdesk <br> Click this '.$link.' to signin. Or just click the link below to approve: <br> Click <a href="'.$headApprovalLink.'">this</a> to approve.<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+
+                    $mail->send();     
+                    }
                     $_SESSION['message'] = 'Message has been sent';
-                    echo "<script>alert('Thank you! Your request has been sent. $messageUpload') </script>";
+                    echo "<script>alert('Thank you! Your request has been sent.') </script>";
                     echo "<script> location.href='index.php'; </script>";
 
                         // header("location: form.php");
@@ -404,8 +447,10 @@ else
 <div id="detailsOfAction" class="hidden">
 <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Action</label>
   <textarea id="requestAction" name="requestAction" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="What is your action"></textarea>
-
+  <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Recommendation</label>
+  <textarea id="recommendation" name="recommendation" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="What is your recommendation"></textarea>
 </div>
+
   
                 </div>
                 <br>
@@ -712,6 +757,7 @@ $("#sidehistory").removeClass("bg-gray-200");
 $("#sideMyRequest").removeClass("bg-gray-200");
 
 $("#sidepms").removeClass("bg-gray-200");
+
 
 </script>
 </body>

@@ -287,7 +287,7 @@ while ($row = mysqli_fetch_assoc($resultHoli)) {
 
 // Function to add weekdays, excluding weekends and holidays
 function addWeekdays2($startDate, $daysToAdd, $holidays) {
-    $currentDate = strtotime($startDate);
+    $currentDate = strtotime($startDate); // ict approval date
     $weekdaysAdded = 0;
 
     while ($weekdaysAdded < $daysToAdd) {
@@ -309,7 +309,7 @@ function addWeekdays2($startDate, $daysToAdd, $holidays) {
 
     return date('Y-m-d', $currentDate);
 }
-
+$dateToday = date('Y-m-d H:i:s', time());
 // Your existing code to set the start date and add 7 weekdays
 $date = date("Y-m-d");
 $startDate = $date; // Replace with your start date
@@ -320,7 +320,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
 // echo "New Date (after adding 7 weekdays excluding weekends and holidays): $newDate";
 
             $username = $_SESSION['name'];
-            $sql = "UPDATE `request` SET `status2`='inprogress',`reqstart_date` = '$start',`reqfinish_date` = '$finish',`admin_approved_date`='$date',`expectedFinishDate` = '$newDate',`admin_remarks`='$remarks',`assignedPersonnel`='$assigned',`assignedPersonnelName`='$perseonnelName' WHERE `id` = '$requestID';";
+            $sql = "UPDATE `request` SET `status2`='inprogress',`reqstart_date` = '$start',`reqfinish_date` = '$finish',`admin_approved_date`='$date',`expectedFinishDate` = '$newDate',`admin_remarks`='$remarks',`assignedPersonnel`='$assigned',`assignedPersonnelName`='$perseonnelName', `ict_approval_date`= '$dateToday' WHERE `id` = '$requestID';";
                $results = mysqli_query($con,$sql);
 
                if($results){
@@ -365,7 +365,8 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     
                     //Recipients
                     $mail->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-                    $mail->addAddress($personnelEmail);              
+                    $mail->addAddress($personnelEmail);       
+                    // $mail->addAddress('o.bugarin@gmail.com');        
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
                     $mail->Body    = $message;
@@ -399,7 +400,8 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                           
                           //Recipients
                           $mail2->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-                          $mail2->addAddress($requestorEmail);              
+                        $mail2->addAddress($requestorEmail);     
+                        // $mail2->addAddress('o.bugarin@glory.com.ph');            
                           $mail2->isHTML(true);                                  
                           $mail2->Subject = $subject2;
                           $mail2->Body    = $message2;
@@ -980,7 +982,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     $result = mysqli_query($con,$sql);
                 }
                 else if($_SESSION['leaderof'] == "mis"){
-                    $sql="select * from `request` WHERE `status2` ='admin' AND `request_to` = 'mis' order by id asc  ";
+                    $sql="select * from `request` WHERE `status2` ='admin' AND `request_to` = 'mis' AND onthespot_ticket = '0' order by id asc  ";
                     $result = mysqli_query($con,$sql);
                 }
                 else{
@@ -1071,7 +1073,6 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
 
 
               
-
 
 
 
@@ -1504,8 +1505,8 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
             (SELECT COUNT(id) FROM request 
              WHERE `status2` = 'inprogress' 
              AND `assignedPersonnel` = u.username) AS 'pending'
-     FROM `user` u";
-                            $result = mysqli_query($con,$sql);
+            FROM `user` u";
+                $result = mysqli_query($con,$sql);
 
                 while($row=mysqli_fetch_assoc($result)){
                     // $date = new DateTime($row['date_filled']);
@@ -1961,10 +1962,14 @@ document.getElementById("ptotalRating").value = element.getAttribute("data-ratin
 document.getElementById("pratingRemarks").value = element.getAttribute("data-requestorremarks");
 document.getElementById("pratedDate").value = element.getAttribute("data-daterate");
 
-
 var action1 = element.getAttribute("data-action1");
 var action2 = element.getAttribute("data-action2");
 var action3 = element.getAttribute("data-action3");
+
+    // Change the value of the select element to "option2"
+    $("#assigned").val(element.getAttribute("data-personnel"));
+    console.log(element.getAttribute("data-assignedpersonnel"));
+
 
 var recommendation = element.getAttribute("data-recommendation");
 

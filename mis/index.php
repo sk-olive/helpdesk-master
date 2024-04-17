@@ -167,12 +167,13 @@
             $action = $_POST['action'];
             $date = new DateTime(); 
             $date = $date->format('F d, Y');
+            $datetime = date('Y-m-d H:i:s', time());
             $sql="select * from `request` WHERE `id` ='$requestID'";
             $result = mysqli_query($con,$sql);
 
           while($row=mysqli_fetch_assoc($result)){
             if($row['action1'] ==""){
-                $sql = "UPDATE `request` SET `action1`='$action', `action1Date`='$date' WHERE `id` = '$requestID';";
+                $sql = "UPDATE `request` SET `action1`='$action', `first_responded_date`= '$datetime', `action1Date`='$date' WHERE `id` = '$requestID';";
                 $results = mysqli_query($con,$sql);
             }
             else if($row['action1'] !="" && $row['action2'] ==""){
@@ -226,16 +227,20 @@
             $requestorUsername=$list["requestorUsername"];
             $email=$list["email"];
             $requestor=$list["requestor"];
-
-    
+            $request_type =$list["request_type"];
+            $detailsOfRequest= $list["request_details"];
+            $r_personnelsName=$list["assignedPersonnelName"];
+            $ticket_category =$list["ticket_category"];
+            $user_name = $list["ticket_filer"];
             }
 
             $date = date("Y-m-d");
+            $datetime = date('Y-m-d H:i:s', time());
             $username = $_SESSION['name'];
             $action = str_replace("'", "&apos;", $action);
             $recommendation = str_replace("'", "&apos;", $recommendation);
 
-            $sql = "UPDATE `request` SET `status2`='Done', `late`='$late',`actual_finish_date`='$date',`action`='$action', `recommendation`='$recommendation' WHERE `id` = '$requestID';";
+            $sql = "UPDATE `request` SET `status2`='Done', `late`='$late',`actual_finish_date`='$date',`action`='$action', `first_responded_date` = '$datetime', `completed_date` = '$datetime', `recommendation`='$recommendation' WHERE `id` = '$requestID';";
                $results = mysqli_query($con,$sql);
   
                if($results){
@@ -245,13 +250,24 @@
                 {
                 $account=$list["email"];
                 $accountpass=$list["password"];
+
         
                   }    
+                  $requestorApprovalLink = 'http://192.168.60.47/helpdesk-master/ticketApproval.php?id='.$requestID.'&requestor=true';
+                if ($request_type == "Technical Support")
+                {
+                    $subject ='Ticket Closed';
+                    $message = 'Hi '.$requestor.',<br> <br> Your ticket request with TS Number of TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> If you agree with the closure of this ticket, please click the link below to confirm: <br> Click <a href="'.$requestorApprovalLink.'">this</a>  to confirm. This is a generated email. Please do not reply. <br><br> Helpdesk';
 
-                $subject ='Completed Job Order';
-                $message = 'Hi '.$requestor.',<br> <br> MIS has completed one of your job order requests. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
-                 $subjectA ='Finished JO';
-                $messageA = 'Hi '.$adminname.',<br> <br> MIS has completed the job order requests with JO Number of '.$completejoid.'  Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $subject ='Ticket Closed';
+                    $messageA = 'Hi '.$adminname.',<br> <br>  A ticket request with TS Number of TS-'.$completejoid.' has been closed. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                }  else {
+                    $subject ='Completed Job Order';
+                    $message = 'Hi '.$requestor.',<br> <br> MIS has completed one of your job order requests. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                     $subjectA ='Finished JO';
+                    $messageA = 'Hi '.$adminname.',<br> <br> MIS has completed the job order requests with JO Number of '.$completejoid.'  Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                }
+           
                 
 
                  require '../vendor/autoload.php';
@@ -282,7 +298,8 @@
                     
                     //Recipients
                     $mail->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-                    $mail->addAddress($email);              
+                    $mail->addAddress($email);   
+                    // $mail->addAddress('o.bugarin@glory.com.ph');            
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
                     $mail->Body    = $message;
@@ -304,13 +321,15 @@
                                                 );                         
                     $mailA->SMTPSecure = 'none';                           
                     $mailA->Port = 465;                                   
-            
+                    
+                    
                     //Send Email
                     // $mailA->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
                     
                     //Recipients
                     $mailA->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-                    $mailA->addAddress($adminemail);              
+                     $mailA->addAddress($adminemail);          
+                    // $mailA->addAddress('k.marero@glorylocal.com.ph');      
                     $mailA->isHTML(true);                                  
                     $mailA->Subject = $subjectA;
                     $mailA->Body    = $messageA;
