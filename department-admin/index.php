@@ -190,9 +190,9 @@
            while($list=mysqli_fetch_assoc($result))
            {
            $personnelEmail=$list["email"];
-           $perseonnelName=$list["name"];
+           $personnelName=$list["name"];
            }
-           $sql = "UPDATE `request` SET `assignedPersonnel`='$assigned',`assignedPersonnelName`='$perseonnelName' WHERE `id` = '$joidtransfer';";
+           $sql = "UPDATE `request` SET `assignedPersonnel`='$assigned',`assignedPersonnelName`='$personnelName' WHERE `id` = '$joidtransfer';";
            $results = mysqli_query($con,$sql);
         }
         if(isset($_POST['print'])){
@@ -263,8 +263,6 @@
             $assigned = $_POST['assigned'];
             $start = $_POST['start'];
             $finish = $_POST['finish'];
-
-
             
 
             $sql1 = "Select * FROM `user` WHERE `username` = '$assigned'";
@@ -272,7 +270,7 @@
             while($list=mysqli_fetch_assoc($result))
             {
             $personnelEmail=$list["email"];
-            $perseonnelName=$list["name"];
+            $personnelName=$list["name"];
             }
              
 
@@ -313,14 +311,14 @@ $dateToday = date('Y-m-d H:i:s', time());
 // Your existing code to set the start date and add 7 weekdays
 $date = date("Y-m-d");
 $startDate = $date; // Replace with your start date
-$daysToAdd = 7; // Number of weekdays to add
+$daysToAdd = 5; // Number of weekdays to add
 
 $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
 // echo "Start Date: $startDate<br>";
 // echo "New Date (after adding 7 weekdays excluding weekends and holidays): $newDate";
 
             $username = $_SESSION['name'];
-            $sql = "UPDATE `request` SET `status2`='inprogress',`reqstart_date` = '$start',`reqfinish_date` = '$finish',`admin_approved_date`='$date',`expectedFinishDate` = '$newDate',`admin_remarks`='$remarks',`assignedPersonnel`='$assigned',`assignedPersonnelName`='$perseonnelName', `ict_approval_date`= '$dateToday' WHERE `id` = '$requestID';";
+            $sql = "UPDATE `request` SET `status2`='inprogress',`reqstart_date` = '$start',`reqfinish_date` = '$finish',`admin_approved_date`='$date',`expectedFinishDate` = '$newDate',`admin_remarks`='$remarks',`assignedPersonnel`='$assigned',`assignedPersonnelName`='$personnelName', `ict_approval_date`= '$dateToday' WHERE `id` = '$requestID';";
                $results = mysqli_query($con,$sql);
 
                if($results){
@@ -331,10 +329,10 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                 $account=$list["email"];
                 $accountpass=$list["password"];
         
-                  }    
+                }    
 
                 $subject ='Job order request';
-                $message = 'Hi '.$perseonnelName.',<br> <br>   You have a new job order from '.$requestor.' Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                $message = 'Hi '.$personnelName.',<br> <br>   You have a new job order from '.$requestor.' Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                 
 
                  require '../vendor/autoload.php';
@@ -507,7 +505,14 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                 
                 }
           
-        
+            if(isset( $_POST["approveReco"])) {
+                $requestID = $_POST['joid2'];
+                $remarks = $_POST['ictheadrecoremarks'];
+
+                $sql = "UPDATE `request` SET `approved_reco`= 1 ,`icthead_reco_remarks` = '$remarks' WHERE `id` = '$requestID';";
+               $results = mysqli_query($con,$sql);
+            }
+
 ?>
 
 
@@ -1244,7 +1249,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                             <th>Comments</th>
                             <th>Assigned to</th>
                             <th>Assigned Section</th>
-                            <th>Ratings</th>
+                           
                         </tr>
                     </thead>
                     <tbody>
@@ -1288,6 +1293,8 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                     <button type="button" id="viewdetails" onclick="modalShow(this)"  
                     data-recommendation="<?php echo $row['recommendation'] ?>" 
+                    data-approved_reco="<?php echo $row['approved_reco'] ?>" 
+                    data-icthead_reco_remarks="<?php echo $row['icthead_reco_remarks'] ?>" 
                     data-requestorremarks="<?php echo $row['requestor_remarks'] ?>" 
                     data-quality="<?php echo $row['rating_quality'] ?>" 
                     data-delivery="<?php echo $row['rating_delivery'] ?>" 
@@ -1320,8 +1327,22 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     data-start="<?php echo $row['reqstart_date']; ?>" 
                     data-end="<?php echo $row['reqfinish_date']; ?>"
                     data-details="<?php echo $row['request_details']; ?>"
-                        class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"> 
-                    View more
+                        class="<?php if (($row['recommendation'] != "" || $row['recommendation'] != NULL) && $row['approved_reco'] == 0)
+                                {
+                                    echo "inline-block px-6 py-2.5 bg-gradient-to-r from-purple-400 to-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-800 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out";
+                                }
+                            else{
+                                echo "inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out";
+                                }?>"> 
+                            <?php if (($row['recommendation'] != "" || $row['recommendation'] != NULL) && $row['approved_reco'] == 0)
+                                {
+                                    echo "VIEW RECO";
+                                }
+                            else{
+                                    echo "VIEW MORE";
+                                }
+                            ?>
+                   
                     </button>
                 </td>
 
@@ -1358,53 +1379,6 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
             }
             ?> 
             </td>
-              <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                <h2>
-                <span class="flex justify-center items-center">
-                <?php for($i = 1; $i<=5; $i++){
-                    if($i<=$row['rating_final']){
-             
-                        $b = $i+1;
-
-                      
-                        ?>
-                        <svg aria-hidden="true" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Second star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <?php
-                          if($row['rating_final']>$i && $row['rating_final']<$b ){
-                               ?>
-                                <svg  class="w-5 h-5 "  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <defs>
-      <linearGradient id="grad">
-        <stop offset="50%" stop-color=" rgb(250 204 21 )"/>
-        <stop offset="50%" stop-color="rgb(209 213 219)"/>
-      </linearGradient>
-    </defs>
-                        <path fill="url(#grad)" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-
-                               <?php 
-                                $i++;
-                          }
-                    }
-                    else{
-                        ?>
-                            <svg aria-hidden="true" class="w-5 h-5 text-gray-300 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fifth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <?php
-                    }
-                } ?>   
-                       
-         
-                <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo  $row['rating_final'];?> </span> 
-               <!-- <?php echo ' '.$row['rating_final']?>   -->
-                </span></h2>
-              </td>
-
-
-
-              
-
-
-
-
                 </tr>
                   <?php
 
@@ -1472,10 +1446,10 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                 </h3>
                 <div class="ml-auto">
                 <button onclick="requireSelect()" id="transferButton" type="button" data-modal-target="transfer" data-modal-toggle="transfer" class=" hidden text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 ">
-  <svg class="w-4 h-4 mr-2 -ml-1 " fill="none"  focusable="false"  stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3"></path>
-</svg> Transfer
-</button>
+                <svg class="w-4 h-4 mr-2 -ml-1 " fill="none"  focusable="false"  stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3"></path>
+                </svg> Transfer
+                </button>
 
                 <button  onclick="modalHide()"type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
                     <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -1497,9 +1471,9 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                 </div>
             <div id="chooseAssignedDiv" class="w-full grid gap-4 grid-cols-3">
 
-<h2 class="float-left font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Assigned Personnel</span></h2>
-<select required id="assigned" name="assigned"class="bg-gray-50 col-span-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-  <option selected disabled value="">Choose</option>
+        <h2 class="float-left font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Assigned Personnel</span></h2>
+        <select required id="assigned" name="assigned" class="bg-gray-50 col-span-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <option selected disabled value="">Choose</option>
             <?php
             $sql="SELECT u.*, 
             (SELECT COUNT(id) FROM request 
@@ -1621,6 +1595,11 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                 <label for="message" class="py-4 col-span-1 font-semibold text-gray-400 dark:text-gray-400">Remarks</label>
                 <textarea id="remarks" name="remarks" rows="1" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Leave  remarks..."></textarea>
                 </div>
+                <div id="ictheadRecoRemarksDiv" class="hidden">
+                <hr class="h-px  bg-gray-200 border-0 dark:bg-gray-700">
+                <label for="message" class="py-4 col-span-1 font-semibold text-gray-400 dark:text-gray-400">ICT Head Remarks</label>
+                <textarea id="ictheadrecoremarks" name="ictheadrecoremarks" rows="1" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Leave  remarks..."></textarea>
+                </div>
                 <div id="ratingstar" class="hidden w-full grid grid-cols-12">
                         <h2 class="col-span-2 font-semibold text-gray-900 dark:text-gray-900"><span
                                 class="text-gray-400">Delivery: </span> </h2>
@@ -1658,6 +1637,11 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
             </div>
             <div id="buttonPrintDiv" class="hidden items-center px-4 rounded-b dark:border-gray-600">
             <button type="submit" name="print" class="shadow-lg shadow-blue-500/30 dark:shadow-lg dark:shadow-teal-800/80  w-full text-white bg-gradient-to-br from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Print</button>
+            </div>
+
+            
+            <div id="buttonApproveRecoDiv" class="hidden items-center px-4 rounded-b dark:border-gray-600">
+            <button type="button" data-modal-target="popup-modal-approvereco" data-modal-toggle="popup-modal-approvereco" class="shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80  w-full text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Approve Recommendation</button>
             </div>
 
 
@@ -1712,6 +1696,24 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     Yes, I'm sure
                 </button>
                 <button data-modal-toggle="popup-modal-approve" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup-modal-approvereco" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+    <div class="relative w-full h-full max-w-md md:h-auto">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <button type="button" data-modal-toggle="popup-modal-approvereco" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" >
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-6 text-center">
+                <svg aria-hidden="true" class="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to approve this recommendation?</h3>
+                <button type="submit" name="approveReco" class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                    Yes, I'm sure
+                </button>
+                <button data-modal-toggle="popup-modal-approvereco" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
             </div>
         </div>
     </div>
@@ -1852,6 +1854,21 @@ function modalShow(element){
 
     $headRemarksVar = element.getAttribute("data-headremarks");
     $adminRemarksVar = element.getAttribute("data-adminremarks");
+    $approved_reco = element.getAttribute("data-approved_reco");
+    $recommendation = element.getAttribute("data-recommendation");
+
+
+if($recommendation != "" && $approved_reco == 0)
+{
+    $("#buttonPrintDiv").addClass("hidden");
+    $("#buttonApproveRecoDiv").removeClass("hidden");
+    $("#ictheadRecoRemarksDiv").removeClass("hidden");
+}
+else
+{
+    $("#buttonPrintDiv").removeClass("hidden");
+    $("#buttonApproveRecoDiv").addClass("hidden");
+}
 
     if($headRemarksVar == ""){
         $("#headRemarksDiv").addClass("hidden");
@@ -2411,8 +2428,8 @@ function goToRate(){
     $("#chooseAssignedDiv").addClass("hidden");
     $("#buttonDiv").addClass("hidden");
     $("#actionDetailsDiv").removeClass("hidden");
-    $("#ratingstar").removeClass("hidden");
     $("#buttonPrintDiv").removeClass("hidden");
+
 const currentTransform = myElement.style.transform = 'translateX(385px) translateY(2px) rotate(135deg)';
 $("#recommendationDiv").removeClass("hidden");
 
@@ -2514,6 +2531,18 @@ function endDate() {
 $("#sidehome").addClass("bg-gray-200");
 $("#sidehistory").removeClass("bg-gray-200");
 $("#sidepms").removeClass("bg-gray-200");
+
+
+$(document).ready(function() {
+$('#forRatingTable').DataTable({
+        "order":[[1,"desc"]],
+        responsive: true,
+        destroy: true,
+        lengthMenu: [[10,15,20,50],[10,15,20,50]],
+        pageLength: 10
+        
+    });
+}); 
 
 </script>
 

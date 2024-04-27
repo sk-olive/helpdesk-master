@@ -35,20 +35,20 @@
     $totalRating = $_SESSION['totalRating'] ;
     $ratingRemarks = $_SESSION['ratingRemarks'] ;
     $ratedDate = $_SESSION['ratedDate'] ;
+    $approved_reco = $_SESSION['approved_reco'];
+    $icthead_reco_remarks = $_SESSION['icthead_reco_remarks'];
 
+ 
    $headsDate =  $_SESSION['headsDate'];
    $adminsDate =  $_SESSION['adminsDate'];
 
     if($_SESSION['status']=="inprogress"){
         $status = "In Progress";
     }
-    else if($_SESSION['status']=="rated"){
+    else if($_SESSION['status']=="Done"){
         $status = "Done";
 
-    }   else if($_SESSION['status']=="Done"){
-        $status = "To Rate";
-
-    }
+    }  
 
     $html ='<!DOCTYPE html>
     <html lang="en">
@@ -254,58 +254,53 @@ if($firstAction !=""){
 
 </tr>';
 }
-           if($recommendation != ""){
-            $html.='<tr>
-            <td class="first"><span class="label">Recommendation:</span></td>
-            <td colspan="4"> <span class="child">'.$recommendation.'</span></td>
-
-        </tr>';
-           }
+    
 if($dateFinished !=""){
         $html.='  <tr>
                 <td class="first"><span class="label">Date Finished:</span></td>
                 <td colspan="4"> <span class="child">'.$dateFinished.'
                     </span></td>
-
-            </tr>';
+                 </tr>';
 }
     
   
             $html.='  </table>
 
-        <hr>';
-if($status == "Done"  ){
-    $html.=' <table>
-    <tr>
-    <td class="category"><span class="label">RATING</span></td>
-    </tr>
-    <tr>
-    <td class="first"><span class="label">Rated by: </span></td>
-    <td style="width: 60%"> <span class="child">'.$ratedBy.'</span></td>
-    <td style="width: 20%"><span class="label">Date: </span></td>
-    <td style="width: 25%"><span class="child">'.$ratedDate.'</span></td>
-     </tr>
-     <tr>
-     <td><span class="label">Delivery: </span></td>
-     <td> <span class="child">'.$delivery.'</span></td>
- </tr>
- <tr>
- <td><span class="label">Quality: </span></td>
- <td> <span class="child">'.$quality.'</span></td>
-</tr>
-<tr>
-<td><span class="label">TOTAL RATING: </span></td>
-<td> <span class="child">'.$totalRating .'</span></td>
-</tr>
-<tr>
-<td class="first"><span class="label">Remarks:</span></td>
-<td colspan="4"> <span class="child">'.$ratingRemarks .'
-</span></td>
+            <hr>';
+            if($recommendation != "")
+            {
+                $html.='<table>
+                <tr>
+                <td colspan="2" class="category"><span class="label">RECOMMENDATION</span></td>
+                </tr>
+                    <tr>
+                    <td class="first"><span class="label">Assigned Personnel Recommendation:</span></td>
+                    <td colspan="4"> <span class="child">'.$recommendation.'</span></td>
+                    </tr>';
+                if($icthead_reco_remarks != "" && $approved_reco == 1)
+                {
+                    $html.= '<tr>
+                        <td class="first"><span class="label">ICT Head&apos;s Remarks:</span></td>
+                        <td colspan="4"> <span class="child">'.$icthead_reco_remarks.'</span></td>
+                        </tr>' ;
+                }elseif ($approved_reco == 1 && ($icthead_reco_remarks == "" || $icthead_reco_remarks == NULL))
+                {
+                    $html.= '<tr>
+                    <td class="first"><span class="label">ICT Head&apos;s Remarks:</span></td>
+                    <td colspan="4"> <span class="child">Approved recommendation</span></td>
+                    </tr>' ;
+                }
+                else{
+                    $html.= '<tr>
+                    <td class="first"><span class="label">ICT Head&apos;s Remarks:</span></td>
+                    <td colspan="4"> <span class="child">Pending approval of ICT head.</span></td>
+                    </tr>' ;
+                }
+            }
+               
 
-</tr>
+            $html.='  </table>';
 
-    </table>';
-}
     
 $html.='<table style="bottom: 35px; position: absolute;">
 <tr>

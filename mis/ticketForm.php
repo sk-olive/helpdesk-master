@@ -102,16 +102,18 @@ else
                 $onthespot_ticket = $_POST['on_the_spot'];
                 $action = $_POST['requestAction'];
                 $recommendation = $_POST['recommendation'];
+                $status = "Done";
             }
             else{
                 $onthespot_ticket = NULL;
                 $action = NULL;
                 $recommendation = NULL;
+                $status = "admin";
             } 
 
         
             $sql = mysqli_query($con,"INSERT INTO request (date_filled, status2, requestor, requestorUsername, email, department, request_type, request_to, request_details, assignedPersonnel, assignedPersonnelName, action, recommendation, onthespot_ticket, ticket_category, category_level, ticket_filer)
-            VALUES ('$datenow', 'admin', '$requestor','$requestorIdnumber', '$requestorEmail', '$requestorDepartment', 'Technical Support', 'mis', '$detailsOfRequest', '$r_personnels', '$r_personnelsName', '$action', '$recommendation', '$onthespot_ticket', '$ticket_category', '$r_cat_level', '$user_name')");
+            VALUES ('$datenow', '$status', '$requestor','$requestorIdnumber', '$requestorEmail', '$requestorDepartment', 'Technical Support', 'mis', '$detailsOfRequest', '$r_personnels', '$r_personnelsName', '$action', '$recommendation', '$onthespot_ticket', '$ticket_category', '$r_cat_level', '$user_name')");
             
 
 
@@ -168,8 +170,7 @@ else
                     if ($onthespot_ticket == '1'){
                     $subject = 'On the Spot Ticket Request Closed';
                     // Message to Requestor
-                    // $mail->addAddress($requestorEmail);
-                    $mail->addAddress('o.bugarin@glory.com.ph'); // requestor
+                    $mail->addAddress($requestorEmail);
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
                     $mail->Body    = 'Hi '.$requestor.',<br> <br>   Your ticket request has been closed. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br> If you agree with the closure of this ticket, please click the link below to confirm: <br> Click <a href="'.$requestorApprovalLink.'">this</a>  to confirm. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
@@ -179,7 +180,11 @@ else
                     //Message to ICT HEAD & Dept Head
                     $mail->clearAddresses();
                     $mail->addAddress('o.bugarin@glory.com.ph');  // dept head      
+                    // $mail->addAddress($immediateHeadEmail);  // dept head      
                     $mail->AddCC('demo@glory.com.ph');  // ict head       
+                    // $mail->AddCC('j.nemedez@glory.com.ph');  // ict head     
+                    
+                   
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
                     $mail->Body    = 'Hi,<br> <br>   A ticket request has been closed. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br>  This is a generated email. Please do not reply. <br><br> Helpdesk';;
@@ -190,8 +195,8 @@ else
                     {
                     $subject = 'Ticket Request Created';
                     // Message to Requestor & Dept Head
-                    // $mail->AddCC($immediateHeadEmail);
-                    // $mail->addAddress($requestorEmail);
+                    // $mail->AddCC($immediateHeadEmail); // dept head   
+                    // $mail->addAddress($requestorEmail); // requestor
                     $mail->addAddress('o.bugarin@glory.com.ph'); // requestor
                     $mail->AddCC('demo@glory.com.ph');  // dept head   
                     $mail->isHTML(true);                                  
@@ -203,6 +208,7 @@ else
                     //Message to ICT HEAD
                     $mail->clearAddresses();
                     $mail->clearCCs();
+                      // $mail->AddCC('j.nemedez@glory.com.ph');  // ict head     
                     $mail->addAddress('o.bugarin@glory.com.ph');   // ict head        
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
@@ -379,7 +385,7 @@ else
                     Requests' Details
                 </h3>
                 <br>
-                <div class="grid md:grid-cols-2 md:gap-x-6 gap-y-3">
+                <div class="grid md:grid-cols-3 md:gap-x-6 gap-y-3">
                 <div class="relative z-0 w-full  group">
                         <label for="r_categories" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categories</label>
                     <select id="r_categories" name="r_categories" class="js-example-basic-single bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -387,7 +393,7 @@ else
 
                     <?php
                                 //    $sql1 = "Select * FROM `user` WHERE `username`='$username'";
-                                $sql1 = "Select * FROM `categories`";
+                                $sql1 = "Select * FROM `categories` WHERE req_type = 'TS'  ";
                                 $result = mysqli_query($con, $sql1);
                                     while($list=mysqli_fetch_assoc($result))
                                     {
@@ -407,6 +413,10 @@ else
     <div class="relative z-0 w-full  group">
     <label for="r_cat_level" class="block mb-2 text- font-medium text-gray-900 dark:text-white">Priority Level</label>
     <input type="text" id="r_cat_level" name="r_cat_level" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  required />
+    </div>
+    <div class="relative z-0 w-full  group">
+    <label for="r_cat_hours" class="block mb-2 text- font-medium text-gray-900 dark:text-white">Minutes/Hours</label>
+    <input type="text" id="r_cat_hours" name="r_cat_hours" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  required />
     </div>
                 </div>
 
@@ -589,15 +599,18 @@ else
         $('#r_categories').change(function() {
             var selectedLevel = $(this).find('option:selected').data('level');
             var selectedHours = $(this).find('option:selected').data('hours');
-                if(selectedHours == '0.166'){
-                    selectedHours = '10';
-            $('#r_cat_level').val(selectedLevel+" ("+selectedHours+" minutes)");
+          
+            if(selectedHours<1){
+                var selectedMinutes = Math.round(selectedHours * 60);
+                $('#r_cat_hours').val(selectedMinutes + " minutes");
+            }
+            else{
+                $('#r_cat_hours').val(Math.round(selectedHours) + " hours");
+            }
+            $('#r_cat_level').val(selectedLevel);
+                // $('#r_cat_hours').val(selectedHours);
 
-                }
-                else{
-                    $('#r_cat_level').val(selectedLevel+" ("+selectedHours+" hours)");
-
-                }
+                
 
         });
 

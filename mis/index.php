@@ -84,7 +84,7 @@
    $_SESSION['ratedDate'] = "";
    
    $_SESSION['headsDate']= "";
-      $_SESSION['adminsDate']= "";
+   $_SESSION['adminsDate']= "";
    
    
    if(isset($_POST['print'])){
@@ -118,6 +118,8 @@
       $_SESSION['totalRating']= $_POST['ptotalRating'] ;
       $_SESSION['ratingRemarks']= $_POST['pratingRemarks'] ;
       $_SESSION['ratedDate']= $_POST['pratedDate'] ;
+      $_SESSION['approved_reco']= $_POST['papproved_reco'] ;
+      $_SESSION['icthead_reco_remarks']= $_POST['picthead_reco_remarks'] ;
    
       ?>
       <script type="text/javascript">
@@ -172,7 +174,7 @@
             $result = mysqli_query($con,$sql);
 
           while($row=mysqli_fetch_assoc($result)){
-            if($row['action1'] ==""){
+            if($row['action1'] =="" &&  $row['first_responded_date'] == NULL){
                 $sql = "UPDATE `request` SET `action1`='$action', `first_responded_date`= '$datetime', `action1Date`='$date' WHERE `id` = '$requestID';";
                 $results = mysqli_query($con,$sql);
             }
@@ -196,14 +198,49 @@
         {
         $adminemail=$list["email"];
         $adminname=$list["name"];
-
         } 
 
         if(isset($_POST['approveRequest'])){
             $requestID = $_POST['joid2'];
+            $cat_lvl ;
+            $sql1 = "Select * FROM `request` WHERE `id` = '$requestID'";
+            $result = mysqli_query($con, $sql1);
+            while($list=mysqli_fetch_assoc($result))
+            {
+            $requestorUsername=$list["requestorUsername"];
+            $email=$list["email"];
+            $requestor=$list["requestor"];
+            $request_type =$list["request_type"];
+            $detailsOfRequest= $list["request_details"];
+            $r_personnelsName=$list["assignedPersonnelName"];
+            $ticket_category =$list["ticket_category"];
+            $user_name = $list["ticket_filer"];
+            $ict_approval_date = $list["ict_approval_date"];
+            $cat_lvl =$row['category_level'];
+            }
+
+         
+
+            if( $cat_lvl  == "" || $cat_lvl == NULL)
+            {
+                $sql1="SELECT * FROM `categories`
+                WHERE `req_type` = 'JO'";
+                $result1 = mysqli_query($con,$sql1);
+                $row1=mysqli_fetch_assoc($result1);
+                $days = $row1['days'];
+            }
+            else{
+                $sql1="SELECT * FROM `categories`
+                WHERE `level` LIKE '$cat_lvl%' AND `req_type`= 'TS'";
+                $result1 = mysqli_query($con,$sql1);
+                $row1=mysqli_fetch_assoc($result1);
+                $days = $row1['days'];
+            }
+
             $numberOfDays = $_POST['NumberOfDays'];
+            
             $late;
-            if($numberOfDays >=8){
+            if($numberOfDays >=$days){ //required completion days (save this to database)
                 $late = 1;
             }
             else{
@@ -218,29 +255,15 @@
             $recommendation = $_POST['recommendation'];
 
 
-            
-
-            $sql1 = "Select * FROM `request` WHERE `id` = '$requestID'";
-            $result = mysqli_query($con, $sql1);
-            while($list=mysqli_fetch_assoc($result))
-            {
-            $requestorUsername=$list["requestorUsername"];
-            $email=$list["email"];
-            $requestor=$list["requestor"];
-            $request_type =$list["request_type"];
-            $detailsOfRequest= $list["request_details"];
-            $r_personnelsName=$list["assignedPersonnelName"];
-            $ticket_category =$list["ticket_category"];
-            $user_name = $list["ticket_filer"];
-            }
-
             $date = date("Y-m-d");
             $datetime = date('Y-m-d H:i:s', time());
             $username = $_SESSION['name'];
             $action = str_replace("'", "&apos;", $action);
             $recommendation = str_replace("'", "&apos;", $recommendation);
 
-            $sql = "UPDATE `request` SET `status2`='Done', `late`='$late',`actual_finish_date`='$date',`action`='$action', `first_responded_date` = '$datetime', `completed_date` = '$datetime', `recommendation`='$recommendation' WHERE `id` = '$requestID';";
+            $sql = "UPDATE `request` SET `status2`='Done', `late`='$late',`actual_finish_date`='$date',`action`='$action', `first_responded_date` = 
+            CASE WHEN `first_responded_date` IS NULL THEN '$datetime' ELSE `first_responded_date` END, `completed_date` = '$datetime', `recommendation`='$recommendation' WHERE `id` = '$requestID';";
+
                $results = mysqli_query($con,$sql);
   
                if($results){
@@ -250,22 +273,34 @@
                 {
                 $account=$list["email"];
                 $accountpass=$list["password"];
-
-        
-                  }    
+                }    
                   $requestorApprovalLink = 'http://192.168.60.47/helpdesk-master/ticketApproval.php?id='.$requestID.'&requestor=true';
                 if ($request_type == "Technical Support")
                 {
                     $subject ='Ticket Closed';
                     $message = 'Hi '.$requestor.',<br> <br> Your ticket request with TS Number of TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> If you agree with the closure of this ticket, please click the link below to confirm: <br> Click <a href="'.$requestorApprovalLink.'">this</a>  to confirm. This is a generated email. Please do not reply. <br><br> Helpdesk';
 
-                    $subject ='Ticket Closed';
-                    $messageA = 'Hi '.$adminname.',<br> <br>  A ticket request with TS Number of TS-'.$completejoid.' has been closed. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    if($recommendation != ""){
+                    $subject ='Ticket Closed  - Recommendation Provided';
+                    $messageA = 'Hi '.$adminname.',<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please review the recommendation for approval and/or add remarks by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    }
+                    else{
+                        $subject ='Ticket Closed';
+                        $messageA = 'Hi '.$adminname.',<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    }
                 }  else {
                     $subject ='Completed Job Order';
-                    $message = 'Hi '.$requestor.',<br> <br> MIS has completed one of your job order requests. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
-                     $subjectA ='Finished JO';
-                    $messageA = 'Hi '.$adminname.',<br> <br> MIS has completed the job order requests with JO Number of '.$completejoid.'  Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $message = 'Hi '.$requestor.',<br> <br> MIS has completed one of your job order requests. Please check the details by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                   
+                    if($recommendation != ""){
+                        $subjectA ='Finished JO  with Recommendations';
+                        $messageA = 'Hi '.$adminname.',<br> <br> MIS has completed the job order requests with JO Number '.$completejoid.'  Please review the recommendation for approval and/or add remarks by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    }
+                    else{
+                        $subjectA ='Finished JO';
+                        $messageA = 'Hi '.$adminname.',<br> <br> MIS has completed the job order requests with JO Number of '.$completejoid.'  Please check the details by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    }
+                 
                 }
            
                 
@@ -298,8 +333,8 @@
                     
                     //Recipients
                     $mail->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-                    $mail->addAddress($email);   
-                    // $mail->addAddress('o.bugarin@glory.com.ph');            
+                    // $mail->addAddress($email);   
+                    $mail->addAddress('o.bugarin@glory.com.ph');            
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
                     $mail->Body    = $message;
@@ -328,8 +363,8 @@
                     
                     //Recipients
                     $mailA->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-                     $mailA->addAddress($adminemail);          
-                    // $mailA->addAddress('k.marero@glorylocal.com.ph');      
+                    //  $mailA->addAddress($adminemail);          
+                    $mailA->addAddress('k.marero@glorylocal.com.ph');      
                     $mailA->isHTML(true);                                  
                     $mailA->Subject = $subjectA;
                     $mailA->Body    = $messageA;
@@ -345,7 +380,7 @@
                         // header("location: form.php");
                     } catch (Exception $e) {
                         $_SESSION['message'] = 'Message could not be sent. Mailer Error: '.$mail->ErrorInfo;
-                    echo "<script>alert('Message could not be sent. Mailer Error.') </script>";
+                        echo "<script>alert('Message could not be sent. Mailer Error.') </script>";
 
                     }
 
@@ -926,6 +961,7 @@
             $sqlHoli="SELECT holidaysDate FROM holidays";
             $resultHoli = mysqli_query($con,$sqlHoli);
             $holidays = array();
+            $days;
             while($row=mysqli_fetch_assoc($resultHoli)){
                 $holidays[] = $row['holidaysDate'];
             }
@@ -935,13 +971,36 @@
                 $end_date = $end_date->format('Y-m-d');
                 $a=1;
                   $sql="SELECT * FROM `request`
-           WHERE `status2` ='inprogress'
-             AND `assignedPersonnel` = '$misusername'
-           ORDER BY id ASC;";
+                        WHERE `status2` ='inprogress'
+                        AND `assignedPersonnel` = '$misusername'
+                        ORDER BY id ASC;";
                   $result = mysqli_query($con,$sql);
 
-                while($row=mysqli_fetch_assoc($result)){
+                  
 
+                while($row=mysqli_fetch_assoc($result)){
+                        $cat_lvl =$row['category_level'];
+                        
+                        if( $cat_lvl  == "" || $cat_lvl == NULL)
+                        {
+                            
+                            $sql1="SELECT * FROM `categories`
+                            WHERE `req_type` = 'JO'";
+                            $result1 = mysqli_query($con,$sql1);
+                            $row1=mysqli_fetch_assoc($result1);
+                            $days = $row1['days'];
+                        }
+                        else
+                        {
+                            
+                            $sql1="SELECT * FROM `categories`
+                            WHERE `level` LIKE '$cat_lvl%' AND `req_type`= 'TS'";
+                            $result1 = mysqli_query($con,$sql1);
+                            $row1=mysqli_fetch_assoc($result1);
+                            $days = $row1['days'];
+                          
+                        }
+                     
                     $start = new DateTime($row['admin_approved_date']);
                     $start1= $start->format('Y-m-d');
                     // echo $start1;
@@ -951,7 +1010,9 @@
                     $count = 0;
                     // echo $start->format('N');
                     $start->add(new DateInterval('P1D')); // Increment by 1 day
-                
+                    
+                   
+
                     while ($start <= $end) {
                         // echo $start;
                         // echo $end;
@@ -964,6 +1025,7 @@
 
                         if ($start->format('N') < 6 && !in_array($start->format('Y-m-d'), $holidays)) {
                             // echo $start->format('Y-m-d') ;
+                            // echo  '<br>';
 
                             $count++;
                         }
@@ -972,24 +1034,27 @@
                     }
                 //    echo $count;
                 //    $resultdays = 2;
+                $dayminus =$days - 1;
+                $dayplus =$days + 1;
+                // echo $count;
                   ?>
 
-              <tr <?php if ($count ==7) {echo "style='background-color: #ef4444'";} else if($count ==6) {echo "style='background-color: #ffd78f'";}else if($count >=8) {echo "style='background-color: #000000'";}?> >
-              <td <?php if ($count >=7) {echo "style='color: white'";} ?>>
+              <tr <?php if ($count ==$days) {echo "$count style='background-color: #ef4444'";} else if($count ==$dayminus) {echo "style='background-color: #ffd78f'";}else if($count >=$dayplus) {echo "style='background-color: #000000'";}?> >
+              <td <?php if ($count >=$days) {echo "style='color: white'";} ?>>
               <?php 
               $date = new DateTime($row['date_filled']);
               $date = $date->format('ym');
               echo $date.'-'.$row['id'];?> 
              
-              <td <?php if ($count >=7) {echo "style='color: white'";} ?> >
+              <td <?php if ($count >=$days) {echo "style='color: white'";} ?> >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                     <button type="button" id="viewdetails" onclick="modalShow(this)"
                         data-action1="<?php echo $row['action1'] ?>"
                         data-action2="<?php echo $row['action2'] ?>" 
                         data-action3="<?php echo $row['action3'] ?>"
                         data-action1date="<?php echo $row['action1Date'] ?>" 
-                    data-action2date="<?php echo $row['action2Date'] ?>" 
-                    data-action3date="<?php echo $row['action3Date'] ?>" 
+                        data-action2date="<?php echo $row['action2Date'] ?>" 
+                        data-action3date="<?php echo $row['action3Date'] ?>" 
                         data-telephone="<?php echo $row['telephone']; ?>"
                         data-attachment="<?php echo $row['attachment']; ?>" 
                         data-action="<?php echo $row['action']; ?>"
@@ -997,15 +1062,14 @@
                         data-headremarks="<?php echo $row['head_remarks']; ?>" 
                         data-adminremarks="<?php echo $row['admin_remarks'];?>" 
                         data-headdate="<?php echo $row['head_approval_date']; ?>" 
-                    data-admindate="<?php echo $row['admin_approved_date']; ?>" 
+                        data-admindate="<?php echo $row['admin_approved_date']; ?>" 
                         data-joid="<?php echo $row['id']; ?>"
                         data-requestoremail="<?php echo $row['email']; ?>" 
                         data-department="<?php echo $row['department'] ?>" 
                         data-requestor="<?php echo $row['requestor']; ?>"  
                         data-status="<?php echo $row['status2'] ?>" 
                         data-assignedpersonnel="<?php echo $row['assignedPersonnelName'] ?> "
-                        data-datefiled="<?php $date = new DateTime($row['date_filled']); 
-                            $date = $date->format('F d, Y');echo $date;?>" 
+                        data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" 
                         data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "MIS";}?>"
                         data-category="<?php echo $row['request_category'];?>" 
                         data-comname="<?php echo $row['computerName']; ?>"
@@ -1013,32 +1077,32 @@
                         data-end="<?php echo $row['reqfinish_date']; ?>" 
                         data-details="<?php echo $row['request_details']; ?>"
                         data-numberOfDays="<?php echo $count; ?>"
-
-                                class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"> 
+                        data-requestype ="<?php echo $row['request_type'];?>"
+                                
+                        class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"> 
                     View more
                     </button>
                 </td>
 
-              <td <?php if ($count >=7) {echo "style='color: white'";}  ?> class="<?php echo $count; ?> text-sm  text-[#c00000] font-semibold font-sans px-6 py-4 whitespace-nowrap truncate max-w-xs">
+              <td <?php if ($count >=$days) {echo "style='color: white'";}  ?> class="<?php echo $count; ?> text-sm  text-[#c00000] font-semibold font-sans px-6 py-4 whitespace-nowrap truncate max-w-xs">
               <?php echo $row['request_details'];?> 
               </td>
 
 
-              <td <?php if ($count >=7) {echo "style='color: white'";} ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              <td <?php if ($count >=$days) {echo "style='color: white'";} ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
               <?php echo $row['requestor'];?> 
               </td>
               <!-- to view pdf -->
-              <td <?php if ($count >=7) {echo "style='color: white'";} ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              <td <?php if ($count >=$days) {echo "style='color: white'";} ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
               <?php 
               $date = new DateTime($row['admin_approved_date']);
               $date = $date->format('F d, Y');
               echo $date;?> 
-              
               </td>
-              <td <?php if ($count >=7) {echo "style='color: white'";} ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              <td <?php if ($count >=$days) {echo "style='color: white'";} ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
               <?php echo $row['request_category'];?> 
               </td>
-              <td <?php if ($count >=7) {echo "style='color: white'";} ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              <td <?php if ($count >=$days) {echo "style='color: white'";} ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
               <!-- <?php echo $row['expectedFinishDate'];?>  -->
               <?php 
               $date = new DateTime($row['expectedFinishDate']);
@@ -1221,6 +1285,8 @@
               <td >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                     <button type="button" id="viewdetails" onclick="modalShow(this)"  data-recommendation="<?php echo $row['recommendation'] ?>" 
+                    data-approved_reco="<?php echo $row['approved_reco'] ?>" 
+                    data-icthead_reco_remarks="<?php echo $row['icthead_reco_remarks'] ?>" 
                     data-requestorremarks="<?php echo $row['requestor_remarks'] ?>" 
                     data-quality="<?php echo $row['rating_quality'] ?>" 
                     data-delivery="<?php echo $row['rating_delivery'] ?>" 
@@ -1383,13 +1449,15 @@
             <input type="text" id="pratingRemarks" name="pratingRemarks" class="hidden">
             <input type="text" id="pratedDate" name="pratedDate" class="hidden">
             <input type="text" id="pNumberOfDays" name="pNumberOfDays" class="hidden">
-
+            <input type="text" id="requestType" name="requestType" class="hidden">
+            <input type="text" id="papproved_reco" name="papproved_reco" class="hidden">
+            <input type="text" id="picthead_reco_remarks" name="picthead_reco_remarks" class="hidden">
 
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                     Job Order Details
-                </h3>
-                <div class="ml-auto">
+                </h3>                                 
+        <div class="ml-auto">  
                 <!-- <label class="mr-2 relative inline-flex items-center mb-4 cursor-pointer">
   <input type="checkbox" value="" class="enable-edit sr-only peer">
   <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -1411,18 +1479,18 @@
   </svg> 
   Update
 </button>
-                <button type="submit" onclick="printreport()" name="print" class="  text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 ">
+<button type="submit" onclick="printreport()" name="print" class="  text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 ">
   <svg class="w-4 h-4 mr-2 -ml-1 " fill="none"  focusable="false"  stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z"></path>
 </svg> Print
 </button>
 
-                <button  onclick="modalHide()"type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5  inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+<button  onclick="modalHide()"type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5  inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
                     <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     <span class="sr-only">Close modal</span>
-                </button>
-                </div>
-                
+</button>
+</div>
+            
             </div>
             <!-- Modal body -->
             <div class=" items-center p-6 space-y-2">
@@ -1432,6 +1500,7 @@
            
             <input type="text" name="joid2" id="joid2" class="hidden col-span-2 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <input type="text" name="NumberOfDays" id="NumberOfDays" class="hidden col-span-2 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          
             
             <div id="targetElement" class="hidden flex items-center p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
   <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -1938,13 +2007,14 @@ function modalShow(element){
     document.getElementById("action3").innerHTML =element.getAttribute("data-action3");
     document.getElementById("recommendation").innerHTML =element.getAttribute("data-recommendation");
     document.getElementById("NumberOfDays").value = element.getAttribute("data-numberOfDays");
+    document.getElementById("requestType").value = element.getAttribute("data-requestype");
 
 
     document.getElementById("pjobOrderNo").value = element.getAttribute("data-joidprint");
-document.getElementById("pstatus").value = element.getAttribute("data-status");
-document.getElementById("prequestor").value = element.getAttribute("data-requestor");
-document.getElementById("pdepartment").value = element.getAttribute("data-department");
-document.getElementById("pdateFiled").value = element.getAttribute("data-datefiled");
+    document.getElementById("pstatus").value = element.getAttribute("data-status");
+    document.getElementById("prequestor").value = element.getAttribute("data-requestor");
+    document.getElementById("pdepartment").value = element.getAttribute("data-department");
+    document.getElementById("pdateFiled").value = element.getAttribute("data-datefiled");
 
 
 var department = element.getAttribute("data-department"); // Replace with the actual value
@@ -2008,7 +2078,8 @@ document.getElementById("userComments").innerHTML = element.getAttribute("data-r
 
 document.getElementById("pratedDate").value = element.getAttribute("data-daterate");
 document.getElementById("pNumberOfDays").value = element.getAttribute("data-numberOfDays");
-
+document.getElementById("papproved_reco").value = element.getAttribute("data-approved_reco");
+document.getElementById("picthead_reco_remarks").value = element.getAttribute("data-icthead_reco_remarks");
 
 var action1 = element.getAttribute("data-action1");
 var action2 = element.getAttribute("data-action2");
@@ -2408,7 +2479,7 @@ function goToRate(){
     const myElement = document.querySelector('#diamond');
     $("#buttonDiv").addClass("hidden");
     document.getElementById("action").disabled = true;
-    $("#ratingstar").removeClass("hidden");
+    // $("#ratingstar").removeClass("hidden");
     $("#recommendationDiv").removeClass("hidden");
 
     const currentTransform = myElement.style.transform = 'translateX(280px) translateY(2px) rotate(135deg)';

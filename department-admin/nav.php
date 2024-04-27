@@ -194,10 +194,7 @@ if(isset($_POST['excelReport'])){
     </div>
 
     <div>
-    <!-- <a class="mr-6 ml-2 text-sm font-medium text-gray-500 dark:text-white hover:underline">Hi <?php// echo $_SESSION['name']?> </a> -->
-      <!-- <a href="logout.php" id="logintext"  onmouseover="mouseOver()"  class="login text-sm font-medium text-blue-600 dark:text-blue-500 pr-4 ">Logout</a> -->
-      <!-- <a href="logout.php" id="loginicon" style="display: none" onmouseout="mouseOut()" class="iconlogin text-sm font-medium text-blue-600 dark:text-blue-500 pr-4 login">  -->
-      <!-- <i class="fa-solid fa-right-to-bracket"></i> -->
+
          
       </a>
 
@@ -450,10 +447,10 @@ if(isset($_POST['excelReport'])){
                     
         
             <select id="request_type" name="request_type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option  value="all">All</option>
-            <option  value="ts">Technical Support</option>
-            <option  value="jo">Job Order Request</option>
-            <option  value="sr">System Request</option>
+            <option  value="ALL">All</option>
+            <option  value="TS">Technical Support</option>
+            <option  value="JO">Job Order Request</option>
+            <!-- <option  value="SR">System Request</option> -->
             </select>
                         <label for="month" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Month</label>
         
@@ -466,7 +463,7 @@ if(isset($_POST['excelReport'])){
 
                           for($i=1; $i<=12; $i++){
                             $month = $date->format('F');
-                            ?> <option <?php if($monthNow == $month){ echo "selected";} ?> value="<?php echo $month; ?>"><?php echo $month; ?></option> <?php
+                            ?> <option <?php if($monthNow == $month){ echo "selected";} ?> value="<?php echo $i; ?>"><?php echo $month; ?></option> <?php
                             $date->modify('next month');
                           }
                           ?>
