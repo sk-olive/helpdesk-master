@@ -603,14 +603,14 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
         class="justify-center text-center flex items-start h-auto bg-gradient-to-r from-blue-900 to-teal-500 rounded-xl ">
         <div class="text-center py-2 m-auto lg:text-center w-full">
 
-            <div class="m-auto flex flex-col w-2/4  h-12">
+            <div class="m-auto flex flex-col w-2/4  h-12 hidden">
                 <h2 class="text-xl font-bold tracking-tight text-gray-100 sm:text-xl">Total numbers of pending Job Order
                 </h2>
 
             </div>
 
 
-            <div class="m-auto flex flex-col w-2/4">
+            <div class="m-auto flex flex-col w-2/4 hidden">
 
                 <div class="mt-0 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 ">
 
@@ -839,13 +839,13 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                                       
                                         }
                             ?>
-                        <img style="    max-width: 150%; width:150%; height: 150%;"src="../resources/img/parol.gif" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <img style="    max-width: 150%; width:150%; height: 150%;"src="../resources/img/adminapprove.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             
                         <!-- <img src="../resources/img/star.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> -->
 
                         </div>
                         </div>
-                        <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Rates</p>
+                        <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Finished</p>
                     </button></div>
                     </li>
                             </ul>

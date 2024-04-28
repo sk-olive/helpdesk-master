@@ -179,12 +179,9 @@ else
                          
                     //Message to ICT HEAD & Dept Head
                     $mail->clearAddresses();
-                    $mail->addAddress('o.bugarin@glory.com.ph');  // dept head      
-                    // $mail->addAddress($immediateHeadEmail);  // dept head      
-                    $mail->AddCC('demo@glory.com.ph');  // ict head       
-                    // $mail->AddCC('j.nemedez@glory.com.ph');  // ict head     
+                    $mail->addAddress($immediateHeadEmail);  // dept head          
+                    $mail->AddCC('j.nemedez@glory.com.ph');  // ict head     
                     
-                   
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
                     $mail->Body    = 'Hi,<br> <br>   A ticket request has been closed. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br>  This is a generated email. Please do not reply. <br><br> Helpdesk';;
@@ -195,10 +192,8 @@ else
                     {
                     $subject = 'Ticket Request Created';
                     // Message to Requestor & Dept Head
-                    // $mail->AddCC($immediateHeadEmail); // dept head   
-                    // $mail->addAddress($requestorEmail); // requestor
-                    $mail->addAddress('o.bugarin@glory.com.ph'); // requestor
-                    $mail->AddCC('demo@glory.com.ph');  // dept head   
+                    $mail->AddCC($immediateHeadEmail); // dept head   
+                    $mail->addAddress($requestorEmail); // requestor
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
                     $mail->Body    = 'Hi '.$requestor.',<br> <br>   Your ticket request has been created. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br>  Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br> You can check the status of your ticket by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';

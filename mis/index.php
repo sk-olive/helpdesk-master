@@ -635,14 +635,14 @@
         class="justify-center animated-gradient text-center flex items-start h-auto bg-gradient-to-r from-blue-900 to-teal-500 rounded-xl ">
         <div class="text-center py-2 m-auto lg:text-center w-full">
 
-            <div class="w-full m-auto flex flex-col   h-12">
+            <div class="w-full m-auto flex flex-col  hidden h-12">
                 <h2 class="text-xl font-bold tracking-tight text-gray-100 sm:text-xl">Total numbers of pending Job Order
                 </h2>
 
             </div>
 
 
-            <div class="m-auto flex flex-col w-11/12">
+            <div class="m-auto flex flex-col w-11/12 hidden">
 
                 <div class="mt-0 grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 ">
 
@@ -654,7 +654,7 @@
 
                         </div>
 
-                        <div class="ml-3">
+                        <div class="ml-3 ">
                             <h2 class="font-semibold text-gray-100 dark:text-gray-100">FEM Pending</h2>
                             <p class="mt-2 text-xl text-left text-gray-100"><?php 
                                         $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE request_to = 'fem' AND status2 = 'inprogress'";
@@ -867,11 +867,11 @@
                                       
                                         }
                             ?>
-                        <img style="    max-width: 150%; width:150%; height: 150%;"src="../resources/img/parol.gif" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <img style="    max-width: 150%; width:150%; height: 150%;"src="../resources/img/adminapprove.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
                         </div>
                         </div>
-                        <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Rates</p>
+                        <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Finished</p>
                     </button></div>
                     </li>
                             </ul>
