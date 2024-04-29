@@ -226,6 +226,8 @@
            $_SESSION['totalRating']= $_POST['ptotalRating'] ;
            $_SESSION['ratingRemarks']= $_POST['pratingRemarks'] ;
            $_SESSION['ratedDate']= $_POST['pratedDate'] ;
+           $_SESSION['approved_reco']= $_POST['papproved_reco'] ;
+           $_SESSION['icthead_reco_remarks']= $_POST['picthead_reco_remarks'] ;
         
            ?>
            <script type="text/javascript">
@@ -1440,6 +1442,9 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
             <input type="text" id="ptotalRating" name="ptotalRating" class="hidden">
             <input type="text" id="pratingRemarks" name="pratingRemarks" class="hidden">
             <input type="text" id="pratedDate" name="pratedDate" class="hidden">
+            <input type="text" id="papproved_reco" name="papproved_reco" class="hidden">
+            <input type="text" id="picthead_reco_remarks" name="picthead_reco_remarks" class="hidden">
+
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                     Job Order Details
@@ -1978,6 +1983,8 @@ document.getElementById("pquality").value = element.getAttribute("data-quality")
 document.getElementById("ptotalRating").value = element.getAttribute("data-ratings");
 document.getElementById("pratingRemarks").value = element.getAttribute("data-requestorremarks");
 document.getElementById("pratedDate").value = element.getAttribute("data-daterate");
+document.getElementById("papproved_reco").value = element.getAttribute("data-approved_reco");
+document.getElementById("picthead_reco_remarks").value = element.getAttribute("data-icthead_reco_remarks");
 
 var action1 = element.getAttribute("data-action1");
 var action2 = element.getAttribute("data-action2");
