@@ -271,38 +271,32 @@ if($dateFinished !=""){
             $html.='  </table>
 
             <hr>';
-            if($recommendation != "")
+            if($recommendation != "" && ($icthead_reco_remarks != ""  || $icthead_reco_remarks != NULL) && $approved_reco == 1)
             {
-              
-                if(($icthead_reco_remarks != ""  || $icthead_reco_remarks != NULL) && $approved_reco == 1)
-                {
-                    $html.='<table>
-                    <tr>
-                        <td colspan="2" class="category"><span class="label">RECOMMENDATION</span></td>
-                    </tr>
-                    <tr>
-                        <td class="first"><span class="label">Assigned Personnel Recommendation:</span></td>
-                        <td colspan="4"> <span class="child">'.$recommendation.'</span></td>
-                    </tr>';
-                    $html.= '<tr>
-                        <td class="first"><span class="label">ICT Head&apos;s Remarks:</span></td>
-                        <td colspan="4"> <span class="child">'.$icthead_reco_remarks.'</span></td>
-                        </tr>';
-                    $html.='  </table> <hr>';
-                }
-                elseif(($icthead_reco_remarks == "" || $icthead_reco_remarks == NULL ) && $approved_reco == 1)
-                        {
-                            $html.='<table>
-                            <tr>
-                                <td colspan="2" class="category"><span class="label">RECOMMENDATION</span></td>
-                            </tr>
-                            <tr>
-                                <td class="first"><span class="label">Assigned Personnel Recommendation:</span></td>
-                                <td colspan="4"> <span class="child">'.$recommendation.'</span></td>
-                            </tr>';
-                            $html.='  </table> <hr>';
-                        }            
+                $html.='<table>
+                <tr>
+                    <td colspan="2" class="category"><span class="label">RECOMMENDATION</span></td>
+                </tr>
+                <tr>
+                    <td class="first"><span class="label">Assigned Personnel Recommendation:</span></td>
+                    <td colspan="4"> <span class="child">'.$recommendation.'</span></td>
+                </tr>';
+                $html.= '<tr>
+                    <td class="first"><span class="label">ICT Head&apos;s Remarks:</span></td>
+                    <td colspan="4"> <span class="child">'.$icthead_reco_remarks.'</span></td>
+                    </tr></table> <hr>';   
             }
+            elseif($recommendation != "" && ($icthead_reco_remarks == "" || $icthead_reco_remarks == NULL ) && $approved_reco == 1)
+                    {
+                        $html.='<table>
+                        <tr>
+                            <td colspan="2" class="category"><span class="label">RECOMMENDATION</span></td>
+                        </tr>
+                        <tr>
+                            <td class="first"><span class="label">Assigned Personnel Recommendation:</span></td>
+                            <td colspan="4"> <span class="child">'.$recommendation.'</span></td>
+                        </tr></table> <hr>';   
+                    }      
                
             
 

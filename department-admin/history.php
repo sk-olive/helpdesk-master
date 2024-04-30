@@ -598,7 +598,7 @@ if(isset($_POST['rateJo'])){
                      <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Actual date finished : </span><span id="actualDateFinished"></span></h2>
                     </div>
 
-                    <div id="ratingstar" class="w-full grid grid-cols-12">
+                    <div id="ratingstar" class="w-full grid grid-cols-12 hidden">
                         <h2 class="col-span-2 font-semibold text-gray-900 dark:text-gray-900"><span
                                 class="text-gray-400">Delivery: </span> </h2>
                         <div id="starsdel" class="grid col-span-10">
@@ -1246,7 +1246,7 @@ function goToFinished(){
     document.getElementById("computername").disabled = true;
     $("#assignedPersonnelDiv").removeClass("hidden");
 
-    $("#ratingstar").removeClass("hidden");
+    // $("#ratingstar").removeClass("hidden");
 
     $("#actionDetailsDiv").removeClass("hidden");
     $("#actionsDiv").removeClass("hidden");

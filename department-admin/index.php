@@ -816,7 +816,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
 
 
 
-    	            $section =$_SESSION['leaderof'];
+    	                    $section =$_SESSION['leaderof'];
                             $date1 = new DateTime();
                             $dateMonth = $date1->format('M');
                             $dateYear = $date1->format('Y');
@@ -841,7 +841,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                                       
                                         }
                             ?>
-                        <img style="    max-width: 150%; width:150%; height: 150%;"src="../resources/img/adminapprove.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <img src="../resources/img/adminapprove.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             
                         <!-- <img src="../resources/img/star.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> -->
 
@@ -907,9 +907,10 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     </thead>
                     <tbody>
               <?php
+             
                 $a=1;
 
-                  $sql="select * from `request` order by id asc  ";
+                  $sql="select * from `request` where request_to = '$section' order by id asc  ";
                   $result = mysqli_query($con,$sql);
 
                 while($row=mysqli_fetch_assoc($result)){
@@ -943,7 +944,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
               <?php if($row['request_to'] == "fem"){
                 echo "FEM";}
                 else if($row['request_to'] == "mis"){
-                echo "MIS";
+                echo "ICT";
                 }
                 ?> 
               </td>
@@ -1036,7 +1037,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     data-requestor="<?php echo $row['requestor'] ?>"  
                     data-personnel="<?php echo $row['assignedPersonnel'] ?>"
                     data-action="<?php echo $dataAction = str_replace('"', '', $row['action']); ?>" 
-                    data-telephone="<?php echo $row['telephone']; ?>" data-attachment="<?php echo $row['attachment']; ?>" data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" data-headremarks="<?php echo $row['head_remarks']; ?>" data-adminremarks="<?php echo $row['admin_remarks']; ?>" data-joid="<?php echo $row['id']; ?>" data-requestoremail="<?php echo $row['email']; ?>"  data-requestor="<?php echo $row['requestor']; ?>"  data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "MIS";}?>" data-category="<?php echo $row['request_category']; ?>" data-comname="<?php echo $row['computerName']; ?>" data-start="<?php echo $row['reqstart_date']; ?>" data-end="<?php echo $row['reqfinish_date']; ?>" data-details="<?php echo $row['request_details']; ?>" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"> 
+                    data-telephone="<?php echo $row['telephone']; ?>" data-attachment="<?php echo $row['attachment']; ?>" data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" data-headremarks="<?php echo $row['head_remarks']; ?>" data-adminremarks="<?php echo $row['admin_remarks']; ?>" data-joid="<?php echo $row['id']; ?>" data-requestoremail="<?php echo $row['email']; ?>"  data-requestor="<?php echo $row['requestor']; ?>"  data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "ICT";}?>" data-category="<?php echo $row['request_category']; ?>" data-comname="<?php echo $row['computerName']; ?>" data-start="<?php echo $row['reqstart_date']; ?>" data-end="<?php echo $row['reqfinish_date']; ?>" data-details="<?php echo $row['request_details']; ?>" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"> 
                     View more
                     </button>
                 </td>
@@ -1072,7 +1073,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
               <?php if($row['request_to'] == "fem"){
                 echo "FEM";}
                 else if($row['request_to'] == "mis"){
-                echo "MIS";
+                echo "ICT";
                 }
                 ?> 
               </td>
@@ -1168,7 +1169,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     data-requestor="<?php echo $row['requestor'] ?>"  
                     data-personnel="<?php echo $row['assignedPersonnel'] ?>"
                     data-action="<?php echo $dataAction = str_replace('"', '', $row['action']); ?>" 
-                    data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" data-joid="<?php echo $row['id']; ?>" data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "MIS";}?>" 
+                    data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" data-joid="<?php echo $row['id']; ?>" data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "ICT";}?>" 
                     data-category="<?php echo $row['request_category']; ?>" 
                     data-telephone="<?php echo $row['telephone']; ?>" 
                     data-attachment="<?php echo $row['attachment']; ?>"  
@@ -1214,7 +1215,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
               <?php if($row['request_to'] == "fem"){
                 echo "FEM";}
                 else if($row['request_to'] == "mis"){
-                echo "MIS";
+                echo "ICT";
                 }
                 ?> 
               </td>
@@ -1288,64 +1289,43 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
               <td class="">
               <?php 
               $date = new DateTime($row['date_filled']);
+              $date_filled_ =  $date->format('F d, Y');
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> 
+              echo $date.'-'.$row['id'];
+              $date_temp = $date.'-'.$row['id'];
+              
+
+              if($row['request_to'] === "fem"){  $section_ = "FEM";} 
+                else if($row['request_to'] === "mis"){ $section_ = "ICT";}             
+              ?> 
              </td>
               <td >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
-                    <button type="button" id="viewdetails" onclick="modalShow(this)"  
-                    data-recommendation="<?php echo $row['recommendation'] ?>" 
-                    data-approved_reco="<?php echo $row['approved_reco'] ?>" 
-                    data-icthead_reco_remarks="<?php echo $row['icthead_reco_remarks'] ?>" 
-                    data-requestorremarks="<?php echo $row['requestor_remarks'] ?>" 
-                    data-quality="<?php echo $row['rating_quality'] ?>" 
-                    data-delivery="<?php echo $row['rating_delivery'] ?>" 
-                    data-ratedby="<?php echo $row['ratedBy'] ?>" 
-                    data-daterate="<?php echo $row['rateDate'] ?>" 
-                    data-action1date="<?php echo $row['action1Date'] ?>" 
-                    data-action2date="<?php echo $row['action2Date'] ?>" 
-                    data-action3date="<?php echo $row['action3Date'] ?>" 
-                    data-headremarks="<?php echo $row['head_remarks']; ?>" 
-                    data-adminremarks="<?php echo $row['admin_remarks']; ?>" 
-                    data-headdate="<?php echo $row['head_approval_date']; ?>" 
-                    data-admindate="<?php echo $row['admin_approved_date']; ?>"
-                    data-department="<?php echo $row['department'] ?>" 
-                    data-status="<?php echo $row['status2'] ?>" 
-                    data-action1="<?php echo $row['action1'] ?>" 
-                    data-action2="<?php echo $row['action2'] ?>" 
-                    data-action3="<?php echo $row['action3'] ?>" 
-                    data-ratings = "<?php echo $row['rating_final'];?>"
-                    data-actualdatefinished=""  
-                    data-assignedpersonnel="<?php echo $row['assignedPersonnelName'] ?> " 
-                    data-requestor="<?php echo $row['requestor'] ?>"  
-                    data-personnel="<?php echo $row['assignedPersonnel'] ?>"
-                    data-action="<?php echo $dataAction = str_replace('"', '', $row['action']); ?>" 
-                    data-requestoremail="<?php echo $row['email']; ?>" 
-                    data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" data-joid="<?php echo $row['id']; ?>" data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "MIS";}?>" 
-                    data-category="<?php echo $row['request_category']; ?>" 
-                    data-telephone="<?php echo $row['telephone']; ?>" 
-                    data-attachment="<?php echo $row['attachment']; ?>"  
-                    data-comname="<?php echo $row['computerName']; ?>" 
-                    data-start="<?php echo $row['reqstart_date']; ?>" 
-                    data-end="<?php echo $row['reqfinish_date']; ?>"
-                    data-details="<?php echo $row['request_details']; ?>"
-                        class="<?php if (($row['recommendation'] != "" || $row['recommendation'] != NULL) && $row['approved_reco'] == 0)
+                   <?php if (($row['recommendation'] != "" || $row['recommendation'] != NULL) && $row['approved_reco'] == 0)
                                 {
-                                    echo "inline-block px-6 py-2.5 bg-gradient-to-r from-purple-400 to-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-800 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out";
+                                    echo "<span id='viewdetails' onclick='modalShow(this)' data-recommendation=".$row['recommendation']." data-approved_reco=".$row['approved_reco']." data-icthead_reco_remarks=".$row['icthead_reco_remarks']." data-requestorremarks=".$row['requestor_remarks']." data-quality=".$row['rating_quality']." data-delivery=".$row['rating_delivery']." data-ratedby=".$row['ratedBy']." data-daterate=".$row['rateDate']." data-action1date=".$row['action1Date']." data-action2date=".$row['action2Date']." data-action3date=".$row['action3Date']." data-headremarks=".$row['head_remarks']." data-adminremarks=".$row['admin_remarks']." data-headdate=".$row['head_approval_date']." data-admindate=".$row['admin_approved_date']." data-department=".$row['department']."  data-status=".$row['status2']."   data-action1=".$row['action1']."   data-action2=".$row['action2']." data-action3=".$row['action3']."   data-ratings = ".$row['rating_final']." data-actualdatefinished='' data-assignedpersonnel=".$row['assignedPersonnelName']." data-requestor=".$row['requestor']." data-personnel=".$row['assignedPersonnel']." data-action=".$dataAction=str_replace('"', '', $row['action'])." data-requestoremail=".$row['email']."    data-joid=".$row['id']." 
+                                    data-category=". $row['request_category']." 
+                                    data-telephone=". $row['telephone']."
+                                    data-attachment=". $row['attachment']."  
+                                    data-comname=". $row['computerName']." 
+                                    data-start=". $row['reqstart_date']."
+                                    data-end=". $row['reqfinish_date']."
+                                    data-details=". $row['request_details']." data-joidprint=".$date_temp." data-section= ".$section_." datefiled=".$date_filled_.">
+
+                                    <span class= 'inline-block px-6 py-2.5 bg-gradient-to-r from-purple-400 to-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-800 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out' 
+                                    >VIEW RECO</span></span>";
                                 }
                             else{
-                                echo "inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out";
-                                }?>"> 
-                            <?php if (($row['recommendation'] != "" || $row['recommendation'] != NULL) && $row['approved_reco'] == 0)
-                                {
-                                    echo "VIEW RECO";
+                                  echo "<span id='viewdetails' onclick='modalShow(this)' data-recommendation=".$row['recommendation']." data-approved_reco=".$row['approved_reco']." data-icthead_reco_remarks=".$row['icthead_reco_remarks']." data-requestorremarks=".$row['requestor_remarks']." data-quality=".$row['rating_quality']." data-delivery=".$row['rating_delivery']." data-ratedby=".$row['ratedBy']." data-daterate=".$row['rateDate']." data-action1date=".$row['action1Date']." data-action2date=".$row['action2Date']." data-action3date=".$row['action3Date']." data-headremarks=".$row['head_remarks']." data-adminremarks=".$row['admin_remarks']." data-headdate=".$row['head_approval_date']." data-admindate=".$row['admin_approved_date']." data-department=".$row['department']."  data-status=".$row['status2']."   data-action1=".$row['action1']."   data-action2=".$row['action2']." data-action3=".$row['action3']."   data-ratings = ".$row['rating_final']." data-actualdatefinished='' data-assignedpersonnel=".$row['assignedPersonnelName']." data-requestor=".$row['requestor']." data-personnel=".$row['assignedPersonnel']." data-action=".$dataAction=str_replace('"', '', $row['action'])." data-requestoremail=".$row['email']."    data-joid=".$row['id']." 
+                                    data-category=". $row['request_category']." 
+                                    data-telephone=". $row['telephone']."
+                                    data-attachment=". $row['attachment']."  
+                                    data-comname=". $row['computerName']." 
+                                    data-start=". $row['reqstart_date']."
+                                    data-end=". $row['reqfinish_date']."
+                                    data-details=". $row['request_details']." data-joidprint=".$date_temp." data-section= ".$section_." datefiled=".$date_filled_."><span class='inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out'>VIEW MORE</span></span>";
                                 }
-                            else{
-                                    echo "VIEW MORE";
-                                }
-                            ?>
-                   
-                    </button>
+?>
                 </td>
 
               <td class="text-sm text-red-700 font-light px-6 py-4 whitespace-nowrap truncate max-w-xs">
@@ -1377,7 +1357,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
             <?php if($row['request_to'] == "fem"){
             echo "FEM";}
             else if($row['request_to'] == "mis"){
-            echo "MIS";
+            echo "ICT";
             }
             ?> 
             </td>

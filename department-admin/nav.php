@@ -284,30 +284,30 @@ if(isset($_POST['excelReport'])){
             <i class="fa-solid fa-clock-rotate-left"></i> <span class="flex-1 ml-3 whitespace-nowrap">History</span>
             </a>
          </li>
-         <li>
+         <!-- <li>
             <a href="Ratings.php" id="sideratings" class="flex items-center p-4 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
               
             <i class="text-yellow-400 fa-solid fa-star"></i> <span class="flex-1 ml-3 whitespace-nowrap">Ratings</span>
             </a>
-         </li>
-         <li>
+         </li> -->
+         <!-- <li>
             <a href="devices.php" id="sidedevice" class="  flex items-center p-4 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
               
             <i class="fa-solid fa-computer"></i> <span class="flex-1 ml-3 whitespace-nowrap">Devices</span>
             </a>
-         </li>
+         </li> -->
          <li>
             <a href="user.php" id="sideuser" class="flex items-center p-4 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
               
             <i class="fa-solid fa-user"></i> <span class="flex-1 ml-3 whitespace-nowrap">User</span>
             </a>
          </li>
-         <li>
+         <!-- <li>
             <a href="pms.php" id="sidepms" class="flex items-center p-4 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
               
             <i class="fa-solid fa-broom"></i> <span class="flex-1 ml-3 whitespace-nowrap">PMS</span>
             </a>
-         </li>
+         </li> -->
       </ul>
    </div>
 </div>

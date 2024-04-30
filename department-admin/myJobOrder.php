@@ -395,9 +395,9 @@
 <div id="mainContent"class=" ml-72 flex mt-16  left-10 right-5  flex-col  px-14 sm:px-8  pt-6 pb-14 z-50 ">
     <div
         class="justify-center text-center flex items-start h-auto bg-gradient-to-r from-blue-900 to-teal-500 rounded-xl ">
-        <div class="text-center py-2 m-auto lg:text-center w-full">
+        <div class="text-center py-2 m-auto lg:text-center w-full ">
 
-            <div class="m-auto flex flex-col w-2/4  h-12">
+            <div class="m-auto flex flex-col w-2/4  h-12 hidden">
                 <h2 class="text-xl font-bold tracking-tight text-gray-100 sm:text-xl">Total numbers of pending Job Order
                 </h2>
 
@@ -406,9 +406,9 @@
 
             <div class="m-auto flex flex-col w-10/12">
 
-                <div class="mt-0 grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 ">
+                <div class="mt-0 grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 hidden">
 
-                    <div class="flex items-start rounded-xl bg-teal-700 dark:bg-white p-4 shadow-lg">
+                    <div class="flex items-start rounded-xl bg-teal-700 dark:bg-white p-4 shadow-lg ">
                         <div
                             class="flex h-12 w-12 overflow-hidden items-center justify-center rounded-full border border-red-100 bg-red-50">
                             <img src="../resources/img/Engineer.png" class="h-full w-full text-blue-400" fill="none"
@@ -416,7 +416,7 @@
 
                         </div>
 
-                        <div class="ml-3">
+                        <div class="ml-3 ">
                             <h2 class="font-semibold text-gray-100 dark:text-gray-900">FEM Pending</h2>
                             <p class="mt-2 text-xl text-left text-gray-100"><?php 
                                         $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE request_to = 'fem' AND status2 = 'inprogress'";
@@ -647,11 +647,11 @@
                                       
                                         }
                             ?>
-                        <img src="../resources/img/star.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                         <img src="../resources/img/adminapprove.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
                         </div>
                         </div>
-                        <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Rates</p>
+                        <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Finished</p>
                     </button></div>
                     </li>
                             </ul>
@@ -751,7 +751,7 @@
                         data-assignedpersonnel="<?php echo $row['assignedPersonnelName'] ?> "
                         data-datefiled="<?php $date = new DateTime($row['date_filled']); 
                             $date = $date->format('F d, Y');echo $date;?>" 
-                        data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "MIS";}?>"
+                        data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "ICT";}?>"
                         data-category="<?php echo $row['request_category'];?>" 
                         data-comname="<?php echo $row['computerName']; ?>"
                         data-start="<?php echo $row['reqstart_date']; ?>"
@@ -874,7 +874,7 @@
                         data-assignedpersonnel="<?php echo $row['assignedPersonnelName'] ?> "
                         data-datefiled="<?php $date = new DateTime($row['date_filled']); 
                             $date = $date->format('F d, Y');echo $date;?>" 
-                        data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "MIS";}?>"
+                        data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "ICT";}?>"
                         data-category="<?php echo $row['request_category'];?>" 
                         data-comname="<?php echo $row['computerName']; ?>"
                         data-start="<?php echo $row['reqstart_date']; ?>"
@@ -937,7 +937,7 @@
                             <th>Requestor</th>
                             <th>Date Finished</th>
                             <th>Comments</th>
-                            <th>Ratings</th>
+                            <!-- <th>Ratings</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -992,7 +992,7 @@
                        data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" 
                        data-joid="<?php echo $row['id']; ?>" 
                        data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" 
-                       data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "MIS";  }?> " 
+                       data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "ICT";  }?> " 
                        data-category="<?php echo $row['request_category']; ?>" 
                        data-telephone="<?php echo $row['telephone']; ?>" 
                        data-attachment="<?php echo $row['attachment']; ?>"  
@@ -1022,7 +1022,7 @@
               <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap truncate " style="max-width: 40px;">
               <?php echo $row['requestor_remarks'];?> 
               </td>
-              <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              <!-- <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                 <h2>
                 <span class="flex justify-center items-center">
                 <?php for($i = 1; $i<=5; $i++){
@@ -1058,9 +1058,9 @@
                        
          
                 <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo  $row['rating_final'];?> </span> 
-               <!-- <?php echo ' '.$row['rating_final']?>   -->
+              <?php echo ' '.$row['rating_final']?>  
                 </span></h2>
-              </td>
+              </td> -->
 
 
 

@@ -366,18 +366,40 @@ if(isset($_POST['rateJo'])){
 </div>  -->
 <div class="FrD3PA">
     <div class="QnQnDA" tabindex="-1">
-        <div  role="tablist" class="_6TVppg sJ9N9w">
+        <div  role="tablist" style="overflow:inherit" class="_6TVppg sJ9N9w" style="overflow-x: auto;">
             <div class="uGmi4w">
             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400" id="tabExample" role="tablist">
                 <li  role="presentation">
                 <div class="p__uwg" style="width: 106px; margin-right: 0px;">
                     <button id="headApprovalTab"  onclick="goToFinished()" type="button" role="tab" aria-controls="headApproval"  class="_1QoxDw o4TrkA CA2Rbg Di_DSA cwOZMg zQlusQ uRvRjQ POMxOg _lWDfA"  aria-selected="false">
                         <div class="_1cZINw">
-                        <div class="_qiHHw Ut_ecQ kHy45A">
+                        <div style="overflow:inherit" class="_qiHHw Ut_ecQ kHy45A">
+                            <span  class=" sr-only">Notifications</span>
+                                   <?php 
 
-<img src="../resources/img/list.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                   $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE  (`status2` = 'rated' OR `status2` = 'Done') and `assignedPersonnel` = '$misusername'";
+                                   $result = mysqli_query($con, $sql1);
+                                   while($count=mysqli_fetch_assoc($result))
+                                   {
+                               
+                                   if($count["pending"] > 0){
+                                       ?>
+                                       <div  class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-border-white"> <?php 
+                                                    $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE  (`status2` = 'rated' OR `status2` = 'Done') and `assignedPersonnel` = '$misusername'";
+                                                  $result = mysqli_query($con, $sql1);
+                                                  while($count=mysqli_fetch_assoc($result))
+                                                  {
+                                                  echo $count["pending"];
+                                                  }
+                                                  ?></div><?php
+                                   }
+                                   }
 
-</div>
+                                   ?>     
+
+
+                            <img src="../resources/img/list.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            </div>
                         </div>
                         <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Finished J.O.</p>
                     </button></div>
@@ -389,9 +411,30 @@ if(isset($_POST['rateJo'])){
                                             class="_1QoxDw o4TrkA CA2Rbg Di_DSA cwOZMg zQlusQ uRvRjQ POMxOg _lWDfA"
                                             aria-selected="false">
                                             <div class="_1cZINw">
-                                                <div class="_qiHHw Ut_ecQ kHy45A">
-
-                                                <span class="gkK1Zg jxuDbQ"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><path fill="currentColor" d="M24 0C10.7 0 0 10.7 0 24s10.7 24 24 24 24-10.7 24-24S37.3 0 24 0zM11.9 15.2c.1-.1.2-.1.2-.1 1.6-.5 2.5-1.4 3-3 0 0 0-.1.1-.2l.1-.1c.1 0 .2-.1.3-.1.4 0 .5.3.5.3.5 1.6 1.4 2.5 3 3 0 0 .1 0 .2.1s.1.2.1.3c0 .4-.3.5-.3.5-1.6.5-2.5 1.4-3 3 0 0-.1.3-.4.3-.6.1-.7-.2-.7-.2-.5-1.6-1.4-2.5-3-3 0 0-.4-.1-.4-.5l.3-.3zm24.2 18.6c-.5.2-.9.6-1.3 1s-.7.8-1 1.3c0 0 0 .1-.1.2-.1 0-.1.1-.3.1-.3-.1-.4-.4-.4-.4-.2-.5-.6-.9-1-1.3s-.8-.7-1.3-1c0 0-.1 0-.1-.1-.1-.1-.1-.2-.1-.3 0-.3.2-.4.2-.4.5-.2.9-.6 1.3-1s.7-.8 1-1.3c0 0 .1-.2.4-.2.3 0 .4.2.4.2.2.5.6.9 1 1.3s.8.7 1.3 1c0 0 .2.1.2.4 0 .4-.2.5-.2.5zm-.7-8.7s-4.6 1.5-5.7 2.4c-1 .6-1.9 1.5-2.4 2.5-.9 1.5-2.2 5.4-2.2 5.4-.1.5-.5.9-1 .9v-.1.1c-.5 0-.9-.4-1.1-.9 0 0-1.5-4.6-2.4-5.7-.6-1-1.5-1.9-2.5-2.4-1.5-.9-5.4-2.2-5.4-2.2-.5-.1-.9-.5-.9-1h.1-.1c0-.5.4-.9.9-1.1 0 0 4.6-1.5 5.7-2.4 1-.6 1.9-1.5 2.4-2.5.9-1.5 2.2-5.4 2.2-5.4.1-.5.5-.9 1-.9s.9.4 1 .9c0 0 1.5 4.6 2.4 5.7.6 1 1.5 1.9 2.5 2.4 1.5.9 5.4 2.2 5.4 2.2.5.1.9.5.9 1h-.1.1c.1.5-.2.9-.8 1.1z"></path></svg></span>
+                                                <div style="overflow:inherit" class="_qiHHw Ut_ecQ kHy45A">
+                                                <span  class=" sr-only">Notifications</span>
+                        <?php 
+                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE (`status2` = 'rated' OR `status2` = 'Done')and `request_to` = 'mis'";
+                                        $result = mysqli_query($con, $sql1);
+                                        while($count=mysqli_fetch_assoc($result))
+                                        {
+                                    
+                                        if($count["pending"] > 0){
+                                            ?>
+                                            <div  class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-border-white"> <?php 
+                                                       $sql1 = "SELECT COUNT(id) as 'pending' FROM request  WHERE (`status2` = 'rated' OR `status2` = 'Done')and `request_to` = 'mis'";
+                                                       $result = mysqli_query($con, $sql1);
+                                                       while($count=mysqli_fetch_assoc($result))
+                                                       {
+                                                       echo $count["pending"];
+                                                     
+                                                       }
+                                                       ?></div><?php
+                                        }
+                                      
+                                        }
+                            ?>
+                                                <span class="gkK1Zg"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><path fill="currentColor" d="M24 0C10.7 0 0 10.7 0 24s10.7 24 24 24 24-10.7 24-24S37.3 0 24 0zM11.9 15.2c.1-.1.2-.1.2-.1 1.6-.5 2.5-1.4 3-3 0 0 0-.1.1-.2l.1-.1c.1 0 .2-.1.3-.1.4 0 .5.3.5.3.5 1.6 1.4 2.5 3 3 0 0 .1 0 .2.1s.1.2.1.3c0 .4-.3.5-.3.5-1.6.5-2.5 1.4-3 3 0 0-.1.3-.4.3-.6.1-.7-.2-.7-.2-.5-1.6-1.4-2.5-3-3 0 0-.4-.1-.4-.5l.3-.3zm24.2 18.6c-.5.2-.9.6-1.3 1s-.7.8-1 1.3c0 0 0 .1-.1.2-.1 0-.1.1-.3.1-.3-.1-.4-.4-.4-.4-.2-.5-.6-.9-1-1.3s-.8-.7-1.3-1c0 0-.1 0-.1-.1-.1-.1-.1-.2-.1-.3 0-.3.2-.4.2-.4.5-.2.9-.6 1.3-1s.7-.8 1-1.3c0 0 .1-.2.4-.2.3 0 .4.2.4.2.2.5.6.9 1 1.3s.8.7 1.3 1c0 0 .2.1.2.4 0 .4-.2.5-.2.5zm-.7-8.7s-4.6 1.5-5.7 2.4c-1 .6-1.9 1.5-2.4 2.5-.9 1.5-2.2 5.4-2.2 5.4-.1.5-.5.9-1 .9v-.1.1c-.5 0-.9-.4-1.1-.9 0 0-1.5-4.6-2.4-5.7-.6-1-1.5-1.9-2.5-2.4-1.5-.9-5.4-2.2-5.4-2.2-.5-.1-.9-.5-.9-1h.1-.1c0-.5.4-.9.9-1.1 0 0 4.6-1.5 5.7-2.4 1-.6 1.9-1.5 2.4-2.5.9-1.5 2.2-5.4 2.2-5.4.1-.5.5-.9 1-.9s.9.4 1 .9c0 0 1.5 4.6 2.4 5.7.6 1 1.5 1.9 2.5 2.4 1.5.9 5.4 2.2 5.4 2.2.5.1.9.5.9 1h-.1.1c.1.5-.2.9-.8 1.1z"></path></svg></span>
 
                                                 </div>
                                             </div>
@@ -400,12 +443,36 @@ if(isset($_POST['rateJo'])){
                                 </li>
                 <li  role="presentation">
                     
-                <div class="p__uwg" style="width: 113px; margin-left: 16px; margin-right: 0px;">
+                <div class="p__uwg" style="width: 96px; margin-left: 16px; margin-right: 0px;">
                 <button id="adminApprovalTab" onclick="goToCancelled()"
                         class="_1QoxDw o4TrkA CA2Rbg cwOZMg zQlusQ uRvRjQ POMxOg" type="button" tabindex="-1" role="tab" aria-controls="adminApproval" aria-selected="false">
                         <div class="_1cZINw">
-                            <div class="_qiHHw Ut_ecQ kHy45A">
+                            <div style="overflow:inherit" class="_qiHHw Ut_ecQ kHy45A">
+                            <span  class=" sr-only">Notifications</span>
+                            <?php 
+                            $date1 = new DateTime();
+                            $dateMonth = $date1->format('M');
+                            $dateYear = $date1->format('Y');
 
+                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE  `request_to` = 'mis' and `status2` = 'cancelled'";
+                                        $result = mysqli_query($con, $sql1);
+                                        while($count=mysqli_fetch_assoc($result))
+                                        {
+                                    
+                                        if($count["pending"] > 0){
+                                            ?>
+                                            <div  class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-border-white">  <?php 
+                                                       $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `request_to` = 'mis' and `status2` = 'cancelled'";
+                                                       $result = mysqli_query($con, $sql1);
+                                                       while($count=mysqli_fetch_assoc($result))
+                                                       {
+                                                       echo $count["pending"];
+                                                       }
+                                                       ?></div><?php
+                                        }
+                                      
+                                        }
+                            ?>
                             <img src="../resources/img/disapprove.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
                             </div>
@@ -557,7 +624,9 @@ if(isset($_POST['rateJo'])){
                     <h2 class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Date filed: </span><span id="datefiled"></span></h2>
                 </div>
                 <div class="w-full grid gap-4 grid-cols-2">
-                     <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Requested Section: </span><span id="sectionmodal"></span></h2>
+                     <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Requested Section: </span>
+                     <span id="sectionmodal"></span>
+                    </h2>
                      <h2 class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Type: </span><span id="category"></span></h2>
                 </div>
                 <div class="w-full grid gap-4 grid-cols-2">
@@ -616,7 +685,7 @@ if(isset($_POST['rateJo'])){
                      <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Actual date finished : </span><span id="actualDateFinished"></span></h2>
                     </div>
 
-                    <div id="ratingstar" class="w-full grid grid-cols-12">
+                    <div id="ratingstar" class="w-full grid grid-cols-12 hidden">
                         <h2 class="col-span-2 font-semibold text-gray-900 dark:text-gray-900"><span
                                 class="text-gray-400">Delivery: </span> </h2>
                         <div id="starsdel" class="grid col-span-10">
@@ -1318,7 +1387,7 @@ function goToFinished(){
     document.getElementById("computername").disabled = true;
     $("#assignedPersonnelDiv").removeClass("hidden");
 
-    $("#ratingstar").removeClass("hidden");
+    $("#ratingstar").addClass("hidden");
 
     $("#actionDetailsDiv").removeClass("hidden");
     $("#actionsDiv").removeClass("hidden");
@@ -1343,7 +1412,8 @@ function goToOverall(){
     document.getElementById("computername").disabled = true;
     $("#assignedPersonnelDiv").removeClass("hidden");
 
-    $("#ratingstar").removeClass("hidden");
+    //  $("#ratingstar").removeClass("hidden");
+   
 
     $("#actionDetailsDiv").removeClass("hidden");
     $("#actionsDiv").removeClass("hidden");

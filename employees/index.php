@@ -104,7 +104,8 @@ $_SESSION['quality'] = "";
 $_SESSION['totalRating'] = "";
 $_SESSION['ratingRemarks'] = "";
 $_SESSION['ratedDate'] = "";
-
+$_SESSION['approved_reco'] = "";
+$_SESSION['icthead_reco_remarks'] = "";
 
 
 
@@ -137,6 +138,8 @@ if(isset($_POST['print'])){
    $_SESSION['totalRating']= $_POST['ptotalRating'] ;
    $_SESSION['ratingRemarks']= $_POST['pratingRemarks'] ;
    $_SESSION['ratedDate']= $_POST['pratedDate'] ;
+   $_SESSION['approved_reco']= $_POST['papproved_reco'] ;
+   $_SESSION['icthead_reco_remarks']= $_POST['picthead_reco_remarks'] ;
 
    ?>
    <script type="text/javascript">
@@ -621,7 +624,7 @@ $final_rating = ($rateScore + $rateScoreQuality)/2;
 
                         </div>
                         </div>
-                        <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">To rate</p>
+                        <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Finished</p>
                     </button></div>
                     </li>
                     </ul>
@@ -731,6 +734,8 @@ $final_rating = ($rateScore + $rateScoreQuality)/2;
             <input type="text" id="ptotalRating" name="ptotalRating" class="hidden">
             <input type="text" id="pratingRemarks" name="pratingRemarks" class="hidden">
             <input type="text" id="pratedDate" name="pratedDate" class="hidden">
+            <input type="text" id="papproved_reco" name="papproved_reco" class="hidden">
+            <input type="text" id="picthead_reco_remarks" name="picthead_reco_remarks" class="hidden">
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -842,7 +847,7 @@ $final_rating = ($rateScore + $rateScoreQuality)/2;
             <button type="button" onclick="cancellation()" data-modal-target="popup-modal" data-modal-toggle="popup-modal"  class="shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-pink-800/80  w-full text-white bg-gradient-to-br from-red-400 to-pink-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-200 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cancel Request</button>
      
             </div>
-            <div id="buttonRateDiv" class="hidden items-center p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
+            <div id="buttonRateDiv" class="hidden items-center p-4 border-t border-gray-200 rounded-b dark:border-gray-600 hidden">
             <button  type="button" data-modal-target="rateModal" data-modal-toggle="rateModal"   class="shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80  w-full text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Rate</button>
             </div>
             <div id="buttonPrintDiv" class="hidden items-center px-4 rounded-b dark:border-gray-600">
@@ -1192,11 +1197,12 @@ function modalShow(element){
     document.getElementById("action3").innerHTML =element.getAttribute("data-action3");
     document.getElementById("recommendation").innerHTML =element.getAttribute("data-recommendation");
     
+    
     document.getElementById("pjobOrderNo").value = element.getAttribute("data-joidprint");
-document.getElementById("pstatus").value = element.getAttribute("data-status");
-document.getElementById("prequestor").value = element.getAttribute("data-requestor");
-document.getElementById("pdepartment").value = element.getAttribute("data-department");
-document.getElementById("pdateFiled").value = element.getAttribute("data-datefiled");
+    document.getElementById("pstatus").value = element.getAttribute("data-status");
+    document.getElementById("prequestor").value = element.getAttribute("data-requestor");
+    document.getElementById("pdepartment").value = element.getAttribute("data-department");
+    document.getElementById("pdateFiled").value = element.getAttribute("data-datefiled");
 
 const dateStart = new Date(element.getAttribute("data-start")); // Get the current date
 const optionsStart = { year: 'numeric', month: 'long', day: 'numeric' }; // Specify the format options
@@ -1229,6 +1235,8 @@ document.getElementById("pquality").value = element.getAttribute("data-quality")
 document.getElementById("ptotalRating").value = element.getAttribute("data-ratings");
 document.getElementById("pratingRemarks").value = element.getAttribute("data-requestorremarks");
 document.getElementById("pratedDate").value = element.getAttribute("data-daterate");
+document.getElementById("papproved_reco").value = element.getAttribute("data-approved_reco");
+document.getElementById("picthead_reco_remarks").value = element.getAttribute("data-icthead_reco_remarks");
 
 var action1 = element.getAttribute("data-action1");
 var action2 = element.getAttribute("data-action2");
@@ -1495,7 +1503,7 @@ function goToRate(){
     $("#assignedPersonnelDiv").removeClass("hidden");
     $("#recommendationDiv").removeClass("hidden");
 
-    $("#buttonRateDiv").removeClass("hidden");
+    // $("#buttonRateDiv").removeClass("hidden");
     $("#actionDetailsDiv").removeClass("hidden");
 
     $("#buttondiv").addClass("hidden");

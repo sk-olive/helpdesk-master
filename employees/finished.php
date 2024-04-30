@@ -24,7 +24,7 @@ $username=$_SESSION['username'];
               <?php
                 $a=1;
 
-                  $sql="select * from `request` WHERE `requestorUsername` = '$username' and `status2` = 'rated' order by id asc  ";
+                  $sql="select * from `request` WHERE `requestorUsername` = '$username' and (`status2` = 'rated' or `status2` ='Done') order by id asc";
                   $result = mysqli_query($con,$sql);
 
                 while($row=mysqli_fetch_assoc($result)){
@@ -40,6 +40,8 @@ $username=$_SESSION['username'];
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                     <button type="button" id="viewdetails" onclick="modalShow(this)" 
                     data-recommendation="<?php echo $row['recommendation'] ?>" 
+                    data-approved_reco="<?php echo $row['approved_reco'] ?>" 
+                    data-icthead_reco_remarks="<?php echo $row['icthead_reco_remarks'] ?>" 
                     data-requestorremarks="<?php echo $row['requestor_remarks'] ?>" 
                     data-quality="<?php echo $row['rating_quality'] ?>" 
                     data-delivery="<?php echo $row['rating_delivery'] ?>" 
@@ -63,7 +65,7 @@ $username=$_SESSION['username'];
                        data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" 
                        data-joid="<?php echo $row['id']; ?>" 
                        data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" 
-                       data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "MIS";  }?> " 
+                       data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "ICT";  }?> " 
                        data-category="<?php echo $row['request_category']; ?>" 
                        data-telephone="<?php echo $row['telephone']; ?>" 
                        data-attachment="<?php echo $row['attachment']; ?>"  
@@ -96,7 +98,7 @@ $username=$_SESSION['username'];
               <?php if($row['request_to'] == "fem"){
                 echo "FEM";}
                 else if($row['request_to'] == "mis"){
-                echo "MIS";
+                echo "ICT";
                 }
                 ?> 
               </td>

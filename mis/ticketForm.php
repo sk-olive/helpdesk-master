@@ -422,12 +422,12 @@ else
                     <option disabled selected>Search Personnel</option>
 
                     <?php
-                                //    $sql1 = "Select * FROM `user` WHERE `username`='$username'";
-                                $sql1 = "SELECT u.*, 
+            //    $sql1 = "Select * FROM `user` WHERE `username`='$username'";
+             $sql1 = "SELECT u.*, 
             (SELECT COUNT(id) FROM request 
              WHERE  `status2` = 'inprogress' 
              AND `assignedPersonnel` = u.username) AS 'pending'
-     FROM `user` u WHERE u.level = 'mis' or u.level = 'admin' AND u.leader = 'mis'";
+            FROM `user` u WHERE u.level = 'mis' or u.level = 'admin' AND u.leader = 'mis'";
                                 $result = mysqli_query($con, $sql1);
                                     while($row=mysqli_fetch_assoc($result))
                                     {

@@ -330,13 +330,13 @@ $final_rating = ($rateScore + $rateScoreQuality)/2;
 <div class="justify-center text-center flex items-start h-auto bg-gradient-to-r from-blue-900 to-teal-500 rounded-xl ">
 <div class="text-center py-2 m-auto lg:text-center w-full">
         <!-- <h6 class="text-sm  tracking-tight text-gray-200 sm:text-lg">Good Day</h6> -->
-        <div class="m-auto flex flex-col w-2/4  h-12">
+        <div class="m-auto flex flex-col w-2/4  h-12 hidden">
 <h2 class="text-xl font-bold tracking-tight text-gray-100 sm:text-xl">Total numbers of pending Job Order</h2>
 
 </div>
 
        
-<div class="m-auto flex flex-col w-2/4">
+<div class="m-auto flex flex-col w-2/4 hidden">
 
 <div class="mt-0 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 ">
 

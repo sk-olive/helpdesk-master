@@ -39,15 +39,16 @@ if(isset($_POST['approveRequest'])){
                 <th>Category</th>
                 <th>Assigned to</th>
                 <th>Assigned Section</th>
-                <th>Rate</th>
+                <!-- <th>Rate</th> -->
 
             </tr>
         </thead>
         <tbody>
               <?php
+              $section =$_SESSION['leaderof'];
                 $a=1;
 
-                  $sql="select * from `request` WHERE `status2` = 'rated' order by id asc  ";
+                  $sql="select * from `request` WHERE `status2` = 'rated' and `request_to` = '$section' order by id asc  ";
                   $result = mysqli_query($con,$sql);
 
                 while($row=mysqli_fetch_assoc($result)){
@@ -86,7 +87,7 @@ if(isset($_POST['approveRequest'])){
                        data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" 
                        data-joid="<?php echo $row['id']; ?>" 
                        data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" 
-                       data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "MIS";  }?> " 
+                       data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "ICT";  }?> " 
                        data-category="<?php echo $row['request_category']; ?>" 
                        data-telephone="<?php echo $row['telephone']; ?>" 
                        data-attachment="<?php echo $row['attachment']; ?>"  
@@ -94,7 +95,7 @@ if(isset($_POST['approveRequest'])){
                        data-start="<?php echo $row['reqstart_date']; ?>" 
                        data-end="<?php echo $row['reqfinish_date']; ?>" 
                        data-details="<?php echo $row['request_details']; ?>" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"> 
-                    View more
+                    View more 
                     </button>
                 </td>
 
@@ -125,11 +126,11 @@ if(isset($_POST['approveRequest'])){
 <?php if($row['request_to'] == "fem"){
 echo "FEM";}
 else if($row['request_to'] == "mis"){
-echo "MIS";
+echo "ICT";
 }
 ?> 
 </td>
-  <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+  <!-- <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
     <h2>
     <span class="flex justify-center items-center">
     <?php for($i = 1; $i<=5; $i++){
@@ -165,9 +166,9 @@ echo "MIS";
            
 
     <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo  $row['rating_final'];?> </span> 
-   <!-- <?php echo ' '.$row['rating_final']?>   -->
+   <?php echo ' '.$row['rating_final']?>   
     </span></h2>
-  </td>
+  </td> -->
 
 
 

@@ -23,7 +23,7 @@ $username=$_SESSION['username'];
                 <th>Category</th>
                 <th>PC</th>
                 <th>Assigned to</th>
-                <th>Rate</th>
+                <!-- <th>Rate</th> -->
 
             </tr>
         </thead>
@@ -78,7 +78,7 @@ $username=$_SESSION['username'];
                        data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" 
                        data-joid="<?php echo $row['id']; ?>" 
                        data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" 
-                       data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "MIS";  }?> " 
+                       data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "ICT";  }?> " 
                        data-category="<?php echo $row['request_category']; ?>" 
                        data-telephone="<?php echo $row['telephone']; ?>" 
                        data-attachment="<?php echo $row['attachment']; ?>"  
@@ -127,7 +127,7 @@ $username=$_SESSION['username'];
 ?> 
 </td>
 
-   <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+   <!-- <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
     <h2>
     <span class="flex justify-center items-center">
     <?php for($i = 1; $i<=5; $i++){
@@ -163,9 +163,9 @@ $username=$_SESSION['username'];
            
 
     <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo  $row['rating_final'];?> </span> 
-   <!-- <?php echo ' '.$row['rating_final']?>   -->
+    <?php echo ' '.$row['rating_final']?>   
     </span></h2>
-  </td>
+  </td> -->
 
 
 

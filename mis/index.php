@@ -854,7 +854,7 @@
                                     
                                         if($count["pending"] > 0){
                                             ?>
-                                            <div  class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-border-white"> <?php 
+                                            <div  class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-border-white">  <?php 
                                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` = 'Done'  and `assignedPersonnel` = '$misusername' ";
                                                        $result = mysqli_query($con, $sql1);
                                                        while($count=mysqli_fetch_assoc($result))
@@ -867,7 +867,7 @@
                                       
                                         }
                             ?>
-                        <img style="    max-width: 150%; width:150%; height: 150%;"src="../resources/img/adminapprove.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <img src="../resources/img/adminapprove.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
                         </div>
                         </div>
@@ -1070,7 +1070,7 @@
                         data-status="<?php echo $row['status2'] ?>" 
                         data-assignedpersonnel="<?php echo $row['assignedPersonnelName'] ?> "
                         data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" 
-                        data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "MIS";}?>"
+                        data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "ICT";}?>"
                         data-category="<?php echo $row['request_category'];?>" 
                         data-comname="<?php echo $row['computerName']; ?>"
                         data-start="<?php echo $row['reqstart_date']; ?>"
@@ -1193,7 +1193,7 @@
                         data-assignedpersonnel="<?php echo $row['assignedPersonnelName'] ?> "
                         data-datefiled="<?php $date = new DateTime($row['date_filled']); 
                             $date = $date->format('F d, Y');echo $date;?>" 
-                        data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "MIS";}?>"
+                        data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "ICT";}?>"
                         data-category="<?php echo $row['request_category'];?>" 
                         data-comname="<?php echo $row['computerName']; ?>"
                         data-start="<?php echo $row['reqstart_date']; ?>"
@@ -1256,7 +1256,7 @@
                             <th data-priority="3">Requestor</th>
                             <th data-priority="6">Date Finished</th>
                             <th data-priority="7">Comments</th>
-                            <th data-priority="2">Ratings</th>
+                            <!-- <th data-priority="2">Ratings</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -1314,7 +1314,7 @@
                        data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" 
                        data-joid="<?php echo $row['id']; ?>" 
                        data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" 
-                       data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "MIS";  }?> " 
+                       data-section="<?php if($row['request_to'] === "fem"){  echo "FEM";} else if($row['request_to'] === "mis"){ echo "ICT";  }?> " 
                        data-category="<?php echo $row['request_category']; ?>" 
                        data-telephone="<?php echo $row['telephone']; ?>" 
                        data-attachment="<?php echo $row['attachment']; ?>"  
@@ -1344,7 +1344,7 @@
               <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap truncate " style="max-width: 40px;">
               <?php echo $row['requestor_remarks'];?> 
               </td>
-              <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              <!-- <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                 <h2>
                 <span class="flex justify-center items-center">
                 <?php for($i = 1; $i<=5; $i++){
@@ -1380,9 +1380,9 @@
                        
          
                 <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo  $row['rating_final'];?> </span> 
-               <!-- <?php echo ' '.$row['rating_final']?>   -->
+                <?php echo ' '.$row['rating_final']?>  
                 </span></h2>
-              </td>
+              </td> -->
 
 
 

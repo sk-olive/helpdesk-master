@@ -54,6 +54,7 @@ session_start();
     
 // connection php and transfer of session
 include ("../includes/connect.php");
+require '../vendor/autoload.php';
 $user_dept = $_SESSION['department'];
 $user_level=$_SESSION['level'];
 $username = $_SESSION['username'];
@@ -121,6 +122,8 @@ if(isset($_POST['print'])){
    $_SESSION['totalRating']= $_POST['ptotalRating'] ;
    $_SESSION['ratingRemarks']= $_POST['pratingRemarks'] ;
    $_SESSION['ratedDate']= $_POST['pratedDate'] ;
+   $_SESSION['approved_reco']= $_POST['papproved_reco'] ;
+   $_SESSION['icthead_reco_remarks']= $_POST['picthead_reco_remarks'] ;
 
 
 //    header("location:Job Order Report.php", true, 302);
@@ -197,7 +200,7 @@ if(isset($_POST['rateJo'])){
         $message = 'Hi '.$perseonnelName.',<br> <br> Mr./Ms. '.$requestor.' rated your Job Order with '.$rateScore.'. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
         
 
-         require '../vendor/autoload.php';
+       
 
          $mail = new PHPMailer(true);       
         //  email the admin               
@@ -364,20 +367,43 @@ if(isset($_POST['rateJo'])){
  
 </div>
 </div>  -->
+<?php require_once 'nav.php';
+$username = $_SESSION['username']?>
 <div class="FrD3PA">
     <div class="QnQnDA" tabindex="-1">
-        <div  role="tablist" class="_6TVppg sJ9N9w">
+        <div  role="tablist" style="overflow:inherit" class="_6TVppg sJ9N9w" style="overflow-x: auto;">
             <div class="uGmi4w">
             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400" id="tabExample" role="tablist">
                 <li  role="presentation">
                 <div class="p__uwg" style="width: 106px; margin-right: 0px;">
                     <button id="headApprovalTab"  onclick="goToFinished()" type="button" role="tab" aria-controls="headApproval"  class="_1QoxDw o4TrkA CA2Rbg Di_DSA cwOZMg zQlusQ uRvRjQ POMxOg _lWDfA"  aria-selected="false">
                         <div class="_1cZINw">
-                        <div class="_qiHHw Ut_ecQ kHy45A">
+                        <div style="overflow:inherit" class="_qiHHw Ut_ecQ kHy45A">
+                            <span  class=" sr-only">Notifications</span>
+                                   <?php 
 
-<img src="../resources/img/list.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                   $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE  `requestorUsername` = '$username' and (`status2` = 'rated' or `status2` = 'Done')";
+                                   $result = mysqli_query($con, $sql1);
+                                   while($count=mysqli_fetch_assoc($result))
+                                   {
+                                   if($count["pending"] > 0){
+                                       ?>
+                                       <div  class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-border-white"> <?php 
+                                                    $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE  `requestorUsername` = '$username' and (`status2` = 'rated' or `status2` = 'Done')";
+                                                  $result = mysqli_query($con, $sql1);
+                                                  while($count=mysqli_fetch_assoc($result))
+                                                  {
+                                                  echo $count["pending"];
+                                                  }
+                                                  ?></div><?php
+                                   }
+                                   }
 
-</div>
+                                   ?>     
+
+
+                            <img src="../resources/img/list.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            </div>
                         </div>
                         <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Finished J.O.</p>
                     </button></div>
@@ -388,8 +414,30 @@ if(isset($_POST['rateJo'])){
                 <button id="adminApprovalTab" onclick="goToCancelled()"
                         class="_1QoxDw o4TrkA CA2Rbg cwOZMg zQlusQ uRvRjQ POMxOg" type="button" tabindex="-1" role="tab" aria-controls="adminApproval" aria-selected="false">
                         <div class="_1cZINw">
-                            <div class="_qiHHw Ut_ecQ kHy45A">
+                        <div style="overflow:inherit" class="_qiHHw Ut_ecQ kHy45A">
+                            <span  class=" sr-only">Notifications</span>
+                        
+                                  
+                                   <?php 
 
+                                    $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `requestorUsername` = '$username' and `status2` = 'cancelled'";
+                                    $result = mysqli_query($con, $sql1);
+                                    while($count=mysqli_fetch_assoc($result))
+                                    {
+                                    if($count["pending"] > 0){
+                                        ?>
+                                        <div  class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-border-white"> <?php 
+                                                    $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `requestorUsername` = '$username' and `status2` = 'cancelled'";
+                                                $result = mysqli_query($con, $sql1);
+                                                while($count=mysqli_fetch_assoc($result))
+                                                {
+                                                echo $count["pending"];
+                                                }
+                                                ?></div><?php
+                                    }
+                                    }
+
+                                    ?>     
                             <img src="../resources/img/disapprove.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
                             </div>
@@ -502,6 +550,8 @@ if(isset($_POST['rateJo'])){
             <input type="text" id="ptotalRating" name="ptotalRating" class="hidden">
             <input type="text" id="pratingRemarks" name="pratingRemarks" class="hidden">
             <input type="text" id="pratedDate" name="pratedDate" class="hidden">
+            <input type="text" id="papproved_reco" name="papproved_reco" class="hidden">
+            <input type="text" id="picthead_reco_remarks" name="picthead_reco_remarks" class="hidden">
 
 
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
@@ -591,7 +641,7 @@ if(isset($_POST['rateJo'])){
                      <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Actual date finished : </span><span class="dark:text-white" id="actualDateFinished"></span></h2>
                     </div>
 
-                    <div id="ratingstar" class="w-full grid grid-cols-12">
+                    <div id="ratingstar" class="w-full grid grid-cols-12 hidden">
                         <h2 class="col-span-2 font-semibold text-gray-900 dark:text-gray-900"><span
                                 class="text-gray-400">Delivery: </span> </h2>
                         <div id="starsdel" class="grid col-span-10">
@@ -868,6 +918,8 @@ document.getElementById("ptotalRating").value = element.getAttribute("data-ratin
 document.getElementById("pratingRemarks").value = element.getAttribute("data-requestorremarks");
 document.getElementById("userComments").innerHTML = element.getAttribute("data-requestorremarks");
 document.getElementById("pratedDate").value = element.getAttribute("data-daterate");
+document.getElementById("papproved_reco").value = element.getAttribute("data-approved_reco");
+document.getElementById("picthead_reco_remarks").value = element.getAttribute("data-icthead_reco_remarks");
 
 
 var action1 = element.getAttribute("data-action1");
@@ -1280,7 +1332,7 @@ function goToFinished(){
     document.getElementById("computername").disabled = true;
     $("#assignedPersonnelDiv").removeClass("hidden");
 
-    $("#ratingstar").removeClass("hidden");
+    // $("#ratingstar").removeClass("hidden");
 
     $("#actionDetailsDiv").removeClass("hidden");
     $("#actionsDiv").removeClass("hidden");
