@@ -39,8 +39,8 @@
     $icthead_reco_remarks = $_SESSION['icthead_reco_remarks'];
 
  
-   $headsDate =  $_SESSION['headsDate'];
-   $adminsDate =  $_SESSION['adminsDate'];
+    $headsDate =  $_SESSION['headsDate'];
+    $adminsDate =  $_SESSION['adminsDate'];
 
     if($_SESSION['status']=="inprogress"){
         $status = "In Progress";

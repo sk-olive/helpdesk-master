@@ -110,7 +110,10 @@ else
                 $recommendation = NULL;
                 $status = "admin";
             } 
-
+            $_SESSION['requestor'] = $_POST['r_name'];
+            $_SESSION['pdepartment'] = $_POST['r_department'];
+            $_SESSION['dateFiled'] = $_POST['r_department'];
+         
         
             $sql = mysqli_query($con,"INSERT INTO request (date_filled, status2, requestor, requestorUsername, email, department, request_type, request_to, request_details, assignedPersonnel, assignedPersonnelName, action, recommendation, onthespot_ticket, ticket_category, category_level, ticket_filer)
             VALUES ('$datenow', '$status', '$requestor','$requestorIdnumber', '$requestorEmail', '$requestorDepartment', 'Technical Support', 'mis', '$detailsOfRequest', '$r_personnels', '$r_personnelsName', '$action', '$recommendation', '$onthespot_ticket', '$ticket_category', '$r_cat_level', '$user_name')");
@@ -132,9 +135,10 @@ else
                 $date = new DateTime($datenow);
                 $date = $date->format('ym');
                 $ticketNumber = 'TS-'.$date.'-'.$id.'';
-
-                $headApprovalLink = 'http://192.168.60.47/helpdesk-master/ticketApproval.php?id='.$id.'&head=true';
-                $requestorApprovalLink = 'http://192.168.60.47/helpdesk-master/ticketApproval.php?id='.$id.'&requestor=true';
+                
+                $headApprovalLink = 'http://helpdesk.glory.ph/helpdesk/ticketApproval.php?id='.$id.'&head=true';
+                
+                $requestorApprovalLink = 'http://helpdesk.glory.ph/helpdesk/ticketApproval.php?id='.$id.'&requestor=true';
                 $sql2 = "Select * FROM `sender`";
                 $result2 = mysqli_query($con, $sql2);
                 while($list=mysqli_fetch_assoc($result2))
@@ -142,7 +146,14 @@ else
                 $account=$list["email"];
                 $accountpass=$list["password"];
                 }    
-
+                $ict_leader = array();
+                $query = "Select * FROM `user` WHERE `level` = 'admin' and `leader` = 'mis'";
+                $heademail = mysqli_query($con, $query);
+                while($li=mysqli_fetch_assoc($heademail))
+                {
+                    $ict_leader[] = $li;
+                }    
+               
                  require '../vendor/autoload.php';
     
                  $mail = new PHPMailer(true);                      
@@ -180,11 +191,14 @@ else
                     //Message to ICT HEAD & Dept Head
                     $mail->clearAddresses();
                     $mail->addAddress($immediateHeadEmail);  // dept head          
-                    $mail->AddCC('j.nemedez@glory.com.ph');  // ict head     
+                    foreach($ict_leader as $item){
+                        $mail->AddCC($item['email']);  // ict head / leader
+
+                    }
                     
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
-                    $mail->Body    = 'Hi,<br> <br>   A ticket request has been closed. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br>  This is a generated email. Please do not reply. <br><br> Helpdesk';;
+                    $mail->Body    = 'Hi ,<br> <br>   A ticket request has been closed. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br>  This is a generated email. Please do not reply. <br><br> Helpdesk';;
 
                     $mail->send();                               
                     }
@@ -192,37 +206,36 @@ else
                     {
                     $subject = 'Ticket Request Created';
                     // Message to Requestor & Dept Head
-                    $mail->AddCC($immediateHeadEmail); // dept head   
                     $mail->addAddress($requestorEmail); // requestor
+                    $mail->AddCC($immediateHeadEmail); // dept head   
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
-                    $mail->Body    = 'Hi '.$requestor.',<br> <br>   Your ticket request has been created. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br>  Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br> You can check the status of your ticket by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $mail->Body    = 'Hi '.$requestor.',<br> <br>   Your ticket request has been created. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br>  Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br> You can check the status of your ticket by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
             
                     $mail->send();
 
                     //Message to ICT HEAD
                     $mail->clearAddresses();
-                    $mail->clearCCs();
-                      // $mail->AddCC('j.nemedez@glory.com.ph');  // ict head     
-                    $mail->addAddress('o.bugarin@glory.com.ph');   // ict head        
+                    $mail->clearCCs(); 
+                      foreach($ict_leader as $item){
+                        $mail->addAddress($item['email']);  // ict head / leader
+
+                    }
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
-                    $mail->Body    = 'Hi,<br> <br>   A ticket request has been created. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br>  Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br>  Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br> Please approve or reject the ticket by signing in into our Helpdesk <br> Click this '.$link.' to signin. Or just click the link below to approve: <br> Click <a href="'.$headApprovalLink.'">this</a> to approve.<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $mail->Body    = 'Hi Admin,<br> <br>   A ticket request has been created. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br>  Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br>  Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br> Please approve or reject the ticket by signing in into our Helpdesk <br> Click this '.$link.' to sign in. Or just click the link below to approve: <br> Click <a href="'.$headApprovalLink.'">this</a> to approve.<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
 
                     $mail->send();     
                     }
                     $_SESSION['message'] = 'Message has been sent';
                     echo "<script>alert('Thank you! Your request has been sent.') </script>";
                     echo "<script> location.href='index.php'; </script>";
-
                         // header("location: form.php");
                     } catch (Exception $e) {
                         $_SESSION['message'] = 'Message could not be sent. Mailer Error: '.$mail->ErrorInfo;
                         $error = $_SESSION['message'];
                     echo "<script>alert('Message could not be sent. Mailer Error. $error') </script>";
-
                     }
-
                
                
             }

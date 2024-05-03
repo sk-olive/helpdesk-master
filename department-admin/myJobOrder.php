@@ -724,7 +724,14 @@
               <?php 
               $date = new DateTime($row['date_filled']);
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> 
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              ?> 
              
               <td>
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
@@ -848,7 +855,14 @@
               <?php 
               $date = new DateTime($row['date_filled']);
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> 
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              ?> 
              
               <td >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
@@ -960,7 +974,14 @@
               <?php 
               $date = new DateTime($row['date_filled']);
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> 
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              ?> 
              
               <td >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
@@ -1248,7 +1269,7 @@
                 </div>
 
 
-                <div id="ratingstar" class="hidden w-full grid grid-cols-12">
+                <div id="ratingstar" class="hidden w-full grid grid-cols-12 hidden">
                         <h2 class="col-span-2 font-semibold text-gray-900 dark:text-gray-900"><span
                                 class="text-gray-400">Delivery: </span> </h2>
                         <div id="starsdel" class="grid col-span-10">
@@ -1878,7 +1899,7 @@ function goToRate(){
     const myElement = document.querySelector('#diamond');
     $("#buttonDiv").addClass("hidden");
     document.getElementById("action").disabled = true;
-    $("#ratingstar").removeClass("hidden");
+    // $("#ratingstar").removeClass("hidden");
     $("#recommendationDiv").removeClass("hidden");
 
     const currentTransform = myElement.style.transform = 'translateX(280px) translateY(2px) rotate(135deg)';

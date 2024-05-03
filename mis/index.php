@@ -273,20 +273,29 @@
                 {
                 $account=$list["email"];
                 $accountpass=$list["password"];
-                }    
-                  $requestorApprovalLink = 'http://192.168.60.47/helpdesk-master/ticketApproval.php?id='.$requestID.'&requestor=true';
+                } 
+                
+                $ict_leader = array();
+                $query = "Select * FROM `user` WHERE `level` = 'admin' and `leader` = 'mis'";
+                $heademail = mysqli_query($con, $query);
+                while($li=mysqli_fetch_assoc($heademail))
+                {
+                    $ict_leader[] = $li;
+                }  
+
+                  $requestorApprovalLink = 'http://helpdesk.glory.ph/helpdesk/ticketApproval.php?id='.$requestID.'&requestor=true';
                 if ($request_type == "Technical Support")
                 {
                     $subject ='Ticket Closed';
-                    $message = 'Hi '.$requestor.',<br> <br> Your ticket request with TS Number of TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> If you agree with the closure of this ticket, please click the link below to confirm: <br> Click <a href="'.$requestorApprovalLink.'">this</a>  to confirm. This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $message = 'Hi '.$requestor.',<br> <br> Your ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> If you agree with the closure of this ticket, please click the link below to confirm: <br> Click <a href="'.$requestorApprovalLink.'">this</a>  to confirm. This is a generated email. Please do not reply. <br><br> Helpdesk';
 
                     if($recommendation != ""){
-                    $subject ='Ticket Closed  - Recommendation Provided';
-                    $messageA = 'Hi '.$adminname.',<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please review the recommendation for approval and/or add remarks by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $subjectA ='Ticket Closed  - Recommendation Provided';
+                    $messageA = 'Hi Admin,<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please review the recommendation for approval and/or add remarks by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                     }
                     else{
-                        $subject ='Ticket Closed';
-                        $messageA = 'Hi '.$adminname.',<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        $subjectA ='Ticket Closed';
+                        $messageA = 'Hi Admin,<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                     }
                 }  else {
                     $subject ='Completed Job Order';
@@ -294,11 +303,11 @@
                    
                     if($recommendation != ""){
                         $subjectA ='Finished JO  with Recommendations';
-                        $messageA = 'Hi '.$adminname.',<br> <br> MIS has completed the job order requests with JO Number '.$completejoid.'  Please review the recommendation for approval and/or add remarks by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        $messageA = 'Hi Admin,<br> <br> MIS has completed the job order requests with JO Number '.$completejoid.'  Please review the recommendation for approval and/or add remarks by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                     }
                     else{
                         $subjectA ='Finished JO';
-                        $messageA = 'Hi '.$adminname.',<br> <br> MIS has completed the job order requests with JO Number of '.$completejoid.'  Please check the details by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        $messageA = 'Hi Admin,<br> <br> MIS has completed the job order requests with JO Number '.$completejoid.'  Please check the details by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                     }
                  
                 }
@@ -306,7 +315,7 @@
                 
 
                  require '../vendor/autoload.php';
-    
+         
                  $mail = new PHPMailer(true);   
                  $mailA = new PHPMailer(true);       
 
@@ -333,10 +342,11 @@
                     
                     //Recipients
                     $mail->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-                    // $mail->addAddress($email);   
-                    $mail->addAddress('o.bugarin@glory.com.ph');            
+                    $mail->addAddress($email);   
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
+                 
+            
                     $mail->Body    = $message;
             
                     $mail->send();
@@ -364,7 +374,9 @@
                     //Recipients
                     $mailA->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
                     //  $mailA->addAddress($adminemail);          
-                    $mailA->addAddress('k.marero@glorylocal.com.ph');      
+                    foreach($ict_leader as $item){
+                        $mailA->addAddress($item['email']);  // ict head   
+                    }
                     $mailA->isHTML(true);                                  
                     $mailA->Subject = $subjectA;
                     $mailA->Body    = $messageA;
@@ -396,12 +408,7 @@
           
           
             }
-          
-          
-          
-          
-          
-          
+
             if(isset($_POST['cancelJO'])){
                 $joid = $_POST['joid2'];
                 $reasonCancel = $_POST['reasonCancel'];
@@ -466,17 +473,12 @@
                               echo "<script>alert('The request was successfully cancelled.') </script>";
                               echo "<script> location.href='index.php'; </script>";
           
-    
                             // header("location: form.php");
                         } catch (Exception $e) {
                             $_SESSION['message'] = 'Message could not be sent. Mailer Error: '.$mail->ErrorInfo;
                         echo "<script>alert('Message could not be sent. Mailer Error.') </script>";
-    
                         }
-    
-                   
                    }
-                
                 }
 
 
@@ -1044,7 +1046,15 @@
               <?php 
               $date = new DateTime($row['date_filled']);
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> 
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              
+              ?> 
              
               <td <?php if ($count >=$days) {echo "style='color: white'";} ?> >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
@@ -1167,7 +1177,15 @@
               <?php 
               $date = new DateTime($row['date_filled']);
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> 
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              
+              ?> 
              
               <td >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
@@ -1280,7 +1298,15 @@
               <?php 
               $date = new DateTime($row['date_filled']);
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> 
+
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              ?> 
              
               <td >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->

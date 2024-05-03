@@ -334,7 +334,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                 }    
 
                 $subject ='Job order request';
-                $message = 'Hi '.$personnelName.',<br> <br>   You have a new job order from '.$requestor.' Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                $message = 'Hi '.$personnelName.',<br> <br>   You have a new job order from '.$requestor.' Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                 
 
                  require '../vendor/autoload.php';
@@ -375,7 +375,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
 
                     
                     $subject2 ='Approved Job Order';
-                    $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number of '.$completejoid.' is now approved by the administrator. It is now in progress. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number '.$completejoid.' is now approved by the administrator. It is now in progress. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                     
                     // email this requestor
             
@@ -400,8 +400,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                           
                           //Recipients
                           $mail2->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-                        $mail2->addAddress($requestorEmail);     
-                        // $mail2->addAddress('o.bugarin@glory.com.ph');            
+                          $mail2->addAddress($requestorEmail);        
                           $mail2->isHTML(true);                                  
                           $mail2->Subject = $subject2;
                           $mail2->Body    = $message2;
@@ -459,7 +458,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                       //Server settings
                        
                         $subject2 ='Cancelled Job Order';
-                        $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number of '.$completejoid.' is CANCELLED by the administrator. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number '.$completejoid.' is CANCELLED by the administrator. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                         
                         // email this requestor
                 
@@ -920,7 +919,15 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
               <?php 
               $date = new DateTime($row['head_approval_date']);
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> 
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              
+              ?> 
              </td>
              
 
@@ -1006,7 +1013,15 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
               <?php 
               $date = new DateTime($row['head_approval_date']);
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> 
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              
+              ?> 
              </td>
             
               <td >
@@ -1138,7 +1153,15 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
               <?php 
               $date = new DateTime($row['date_filled']);
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> 
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              
+              ?> 
              </td>
               <td >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
@@ -1291,7 +1314,13 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
               $date = new DateTime($row['date_filled']);
               $date_filled_ =  $date->format('F d, Y');
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
               $date_temp = $date.'-'.$row['id'];
               
 
@@ -1303,27 +1332,91 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                    <?php if (($row['recommendation'] != "" || $row['recommendation'] != NULL) && $row['approved_reco'] == 0)
                                 {
-                                    echo "<span id='viewdetails' onclick='modalShow(this)' data-recommendation=".$row['recommendation']." data-approved_reco=".$row['approved_reco']." data-icthead_reco_remarks=".$row['icthead_reco_remarks']." data-requestorremarks=".$row['requestor_remarks']." data-quality=".$row['rating_quality']." data-delivery=".$row['rating_delivery']." data-ratedby=".$row['ratedBy']." data-daterate=".$row['rateDate']." data-action1date=".$row['action1Date']." data-action2date=".$row['action2Date']." data-action3date=".$row['action3Date']." data-headremarks=".$row['head_remarks']." data-adminremarks=".$row['admin_remarks']." data-headdate=".$row['head_approval_date']." data-admindate=".$row['admin_approved_date']." data-department=".$row['department']."  data-status=".$row['status2']."   data-action1=".$row['action1']."   data-action2=".$row['action2']." data-action3=".$row['action3']."   data-ratings = ".$row['rating_final']." data-actualdatefinished='' data-assignedpersonnel=".$row['assignedPersonnelName']." data-requestor=".$row['requestor']." data-personnel=".$row['assignedPersonnel']." data-action=".$dataAction=str_replace('"', '', $row['action'])." data-requestoremail=".$row['email']."    data-joid=".$row['id']." 
-                                    data-category=". $row['request_category']." 
-                                    data-telephone=". $row['telephone']."
-                                    data-attachment=". $row['attachment']."  
-                                    data-comname=". $row['computerName']." 
-                                    data-start=". $row['reqstart_date']."
-                                    data-end=". $row['reqfinish_date']."
-                                    data-details=". $row['request_details']." data-joidprint=".$date_temp." data-section= ".$section_." datefiled=".$date_filled_.">
+                                    echo "<button id='viewdetails' onclick='modalShow(this)' 
+                                    data-recommendation='".$row['recommendation']."' 
+                                    data-approved_reco='".$row['approved_reco']."' 
+                                    data-icthead_reco_remarks='".$row['icthead_reco_remarks']."' 
+                                    data-requestorremarks='".$row['requestor_remarks']."' 
+                                    data-quality='".$row['rating_quality']."' 
+                                    data-delivery='".$row['rating_delivery']."' 
+                                    data-ratedby='".$row['ratedBy']."' 
+                                    data-daterate='".$row['rateDate']."' 
+                                    data-action1date='".$row['action1Date']."' 
+                                    data-action2date='".$row['action2Date']."' 
+                                    data-action3date='".$row['action3Date']."' 
+                                    data-headremarks='".$row['head_remarks']."' 
+                                    data-adminremarks='".$row['admin_remarks']."' 
+                                    data-headdate='".$row['head_approval_date']."' 
+                                    data-admindate='".$row['admin_approved_date']."' 
+                                    data-department='".$row['department']."'  
+                                    data-status='".$row['status2']."'   
+                                    data-action1='".$row['action1']."'   
+                                    data-action2='".$row['action2']."' 
+                                    data-action3='".$row['action3']."'   
+                                    data-ratings = '".$row['rating_final']."' 
+                                    data-actualdatefinished='' 
+                                    data-assignedpersonnel='".$row['assignedPersonnelName']."'
+                                    data-requestor='".$row['requestor']."' 
+                                    data-personnel='".$row['assignedPersonnel']."' 
+                                    data-action='".$dataAction=str_replace('"', '', $row['action'])."' 
+                                    data-requestoremail='".$row['email']."'    
+                                    data-joid='".$row['id']."' 
+                                    data-category='". $row['request_category']."' 
+                                    data-telephone='". $row['telephone']."'
+                                    data-attachment='". $row['attachment']."'  
+                                    data-comname='". $row['computerName']."' 
+                                    data-start='". $row['reqstart_date']."'
+                                    data-end='". $row['reqfinish_date']."'
+                                    data-details='". $row['request_details']."' 
+                                    data-joidprint='".$date_temp."' 
+                                    data-section= '".$section_."' 
+                                    data-datefiled='".$date_filled_."'>
 
                                     <span class= 'inline-block px-6 py-2.5 bg-gradient-to-r from-purple-400 to-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-800 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out' 
-                                    >VIEW RECO</span></span>";
+                                    >VIEW RECO</span></button>";
                                 }
                             else{
-                                  echo "<span id='viewdetails' onclick='modalShow(this)' data-recommendation=".$row['recommendation']." data-approved_reco=".$row['approved_reco']." data-icthead_reco_remarks=".$row['icthead_reco_remarks']." data-requestorremarks=".$row['requestor_remarks']." data-quality=".$row['rating_quality']." data-delivery=".$row['rating_delivery']." data-ratedby=".$row['ratedBy']." data-daterate=".$row['rateDate']." data-action1date=".$row['action1Date']." data-action2date=".$row['action2Date']." data-action3date=".$row['action3Date']." data-headremarks=".$row['head_remarks']." data-adminremarks=".$row['admin_remarks']." data-headdate=".$row['head_approval_date']." data-admindate=".$row['admin_approved_date']." data-department=".$row['department']."  data-status=".$row['status2']."   data-action1=".$row['action1']."   data-action2=".$row['action2']." data-action3=".$row['action3']."   data-ratings = ".$row['rating_final']." data-actualdatefinished='' data-assignedpersonnel=".$row['assignedPersonnelName']." data-requestor=".$row['requestor']." data-personnel=".$row['assignedPersonnel']." data-action=".$dataAction=str_replace('"', '', $row['action'])." data-requestoremail=".$row['email']."    data-joid=".$row['id']." 
-                                    data-category=". $row['request_category']." 
-                                    data-telephone=". $row['telephone']."
-                                    data-attachment=". $row['attachment']."  
-                                    data-comname=". $row['computerName']." 
-                                    data-start=". $row['reqstart_date']."
-                                    data-end=". $row['reqfinish_date']."
-                                    data-details=". $row['request_details']." data-joidprint=".$date_temp." data-section= ".$section_." datefiled=".$date_filled_."><span class='inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out'>VIEW MORE</span></span>";
+                                echo "<span id='viewdetails' onclick='modalShow(this)' 
+                                data-recommendation='".$row['recommendation']."' 
+                                data-approved_reco='".$row['approved_reco']."' 
+                                data-icthead_reco_remarks='".$row['icthead_reco_remarks']."' 
+                                data-requestorremarks='".$row['requestor_remarks']."' 
+                                data-quality='".$row['rating_quality']."' 
+                                data-delivery='".$row['rating_delivery']."' 
+                                data-ratedby='".$row['ratedBy']."' 
+                                data-daterate='".$row['rateDate']."' 
+                                data-action1date='".$row['action1Date']."' 
+                                data-action2date='".$row['action2Date']."' 
+                                data-action3date='".$row['action3Date']."' 
+                                data-headremarks='".$row['head_remarks']."' 
+                                data-adminremarks='".$row['admin_remarks']."' 
+                                data-headdate='".$row['head_approval_date']."' 
+                                data-admindate='".$row['admin_approved_date']."' 
+                                data-department='".$row['department']."'  
+                                data-status='".$row['status2']."'   
+                                data-action1='".$row['action1']."'   
+                                data-action2='".$row['action2']."' 
+                                data-action3='".$row['action3']."'   
+                                data-ratings = '".$row['rating_final']."' 
+                                data-actualdatefinished='' 
+                                data-assignedpersonnel='".$row['assignedPersonnelName']."'
+                                data-requestor='".$row['requestor']."' 
+                                data-personnel='".$row['assignedPersonnel']."' 
+                                data-action='".$dataAction=str_replace('"', '', $row['action'])."' 
+                                data-requestoremail='".$row['email']."'    
+                                data-joid='".$row['id']."' 
+                                data-category='". $row['request_category']."' 
+                                data-telephone='". $row['telephone']."'
+                                data-attachment='". $row['attachment']."'  
+                                data-comname='". $row['computerName']."' 
+                                data-start='". $row['reqstart_date']."'
+                                data-end='". $row['reqfinish_date']."'
+                                data-details='". $row['request_details']."' 
+                                data-joidprint='".$date_temp."' 
+                                data-section= '".$section_."' 
+                                data-datefiled='".$date_filled_."'>
+                                    
+                                    <span class='inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out'>VIEW MORE</span></span>";
                                 }
 ?>
                 </td>

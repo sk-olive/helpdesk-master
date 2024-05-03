@@ -31,7 +31,15 @@ $user_level=$_SESSION['level'];
               <td class=""><?php
               $date = new DateTime($row['date_filled']);
               $date = $date->format('ym');
-              echo $date.'-'.$row['id'];?> </td>
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              
+              ?> </td>
               <td >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                     <button type="button" id="viewdetails" onclick="modalShow(this)"

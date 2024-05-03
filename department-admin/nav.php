@@ -72,7 +72,7 @@ if(isset($_POST['pdfReport'])){
   $_SESSION['year']= $_POST['year'] ;
   $_SESSION['request_type']= $_POST['request_type'] ;
 
-  header("location: http://192.168.60.47/helpdesk-master/summary_report_xls.php");
+  header("location: http://helpdesk.glory.ph/helpdesk/summary_report_xls.php");
   ?>
  <script type="text/javascript">
       window.open('../PDF Summary Report.php', '_blank');
@@ -84,20 +84,12 @@ if(isset($_POST['excelReport'])){
   $_SESSION['month']= $_POST['month'] ;
   $_SESSION['year']= $_POST['year'] ;
   $_SESSION['request_type']= $_POST['request_type'] ;
-
-  // header("location: http://192.168.60.47/helpdesk-master/summary_report_xls.php");
-  ?>
-  <script type="text/javascript">
-      
-      window.location = '../summary_report_xls.php?request_type=<?php echo $_SESSION['request_type'];?>&month=<?php echo $_SESSION['month'];?>&year=<?php echo $_SESSION['year'];?>';
-
-    
-  </script>
-<?php
-
+  header('Location: ../summary_report_xls.php?request_type=' . $_SESSION['request_type'] . '&month=' . $_SESSION['month'] . '&year=' . $_SESSION['year']);
+ 
+  echo "<script>$('#generateReportModal').modal('hide');</script>";
+   exit;
 }
 ?>
-
 
 <nav class="drop-shadow-md  bg-white px-2 sm:px-4 py-2 dark:bg-gray-900 fixed w-full z-20 top-0  left-0 border-b border-gray-200 dark:border-gray-600">
 
