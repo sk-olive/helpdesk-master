@@ -186,7 +186,7 @@
       </div>
 
       <div>
-      <!-- <a class="mr-6 ml-2 text-sm font-medium text-gray-500 dark:text-white hover:underline">Hi <?php// echo $_SESSION['name']?> </a> -->
+      <!-- <a class="mr-6 ml-2 text-sm font-medium text-gray-500 dark:text-white hover:underline">Hi// echo $_SESSION['name']?> </a> -->
         <!-- <a href="logout.php" id="logintext"  onmouseover="mouseOver()"  class="login text-sm font-medium text-blue-600 dark:text-blue-500 pr-4 ">Logout</a> -->
         <!-- <a href="logout.php" id="loginicon" style="display: none" onmouseout="mouseOut()" class="iconlogin text-sm font-medium text-blue-600 dark:text-blue-500 pr-4 login">  -->
         <!-- <i class="fa-solid fa-right-to-bracket"></i> -->
@@ -598,7 +598,7 @@ if ($first_two_letters != "GP") {
           <option selected  value="user">Employee</option>
           <option   value="head">Department Head</option>
           <option   value="admin">Administrator</option>
-          <option   value="mis">MIS</option>
+          <option   value="mis">ICT</option>
           <option   value="fem">FEM</option>
 
 

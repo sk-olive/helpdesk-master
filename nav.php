@@ -201,7 +201,7 @@ while($field=mysqli_fetch_assoc($resultLevel))
          <li>
             <a href="#" class="<?php if ($llevel=="head"||$llevel=="user"||$llevel=="fem"){?>hidden<?php }?> flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
             <img aria-hidden="true"src="resources/img/mis.png" class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" >
-               <span class="flex-1 ml-3 whitespace-nowrap">MIS Pending </span>
+               <span class="flex-1 ml-3 whitespace-nowrap">ICT Pending </span>
                <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-600 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-200">3</span>
             </a>
          </li>
@@ -263,7 +263,7 @@ while($field=mysqli_fetch_assoc($resultLevel))
 
 
 <footer class="fixed bottom-0 left-0 z-40 p-4 w-full  border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 bg-white dark:bg-gray-900 "style="padding-top: 0.25px;">
-    <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© <?php echo date('Y') ?> <a href="https://flowbite.com/" class="hover:underline">GPI FEM/MIS </a>: All Rights Reserved
+    <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© <?php echo date('Y') ?> <a href="https://flowbite.com/" class="hover:underline">GPI FEM/ICT </a>: All Rights Reserved
     </span>
     
     <!-- <a href="mailto:j.nemedez@glory.com.ph" class="font-thin text-gray-400 text-left italic font-serif">Powered by: naith.<u class="text-blue-600">ph</u></a> -->

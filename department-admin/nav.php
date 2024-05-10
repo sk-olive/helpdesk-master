@@ -68,11 +68,19 @@ $results = mysqli_query($con,$sql);
 }
 
 if(isset($_POST['pdfReport'])){
+  $sqllink = "SELECT `link` FROM `setting`";
+  $resultlink = mysqli_query($con, $sqllink);
+  $link = "";
+  while($listlink=mysqli_fetch_assoc($resultlink))
+  {
+  $link=$listlink["link"];
+  }
+
   $_SESSION['month']= $_POST['month'] ;
   $_SESSION['year']= $_POST['year'] ;
   $_SESSION['request_type']= $_POST['request_type'] ;
 
-  header("location: http://helpdesk.glory.ph/helpdesk/summary_report_xls.php");
+  header("location: $link/summary_report_xls.php");
   ?>
  <script type="text/javascript">
       window.open('../PDF Summary Report.php', '_blank');
@@ -349,7 +357,7 @@ if(isset($_POST['excelReport'])){
         <option selected  value="user">Employee</option>
         <option   value="head">Department Head</option>
         <option   value="admin">Administrator</option>
-        <option   value="mis">MIS</option>
+        <option   value="mis">ICT</option>
         <option   value="fem">FEM</option>
 
 
@@ -384,7 +392,7 @@ if(isset($_POST['excelReport'])){
                     <label for="section" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
         
         <select id="section" name="section" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option  value="mis">MIS</option>
+        <option  value="mis">ICT</option>
         <option  value="fem">FEM</option>
 
         </select>

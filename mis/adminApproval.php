@@ -57,7 +57,7 @@ $user_level=$_SESSION['level'];
               <?php if($row['request_to'] == "fem"){
                 echo "FEM";}
                 else if($row['request_to'] == "mis"){
-                echo "MIS";
+                echo "ICT";
                 }
                 ?> 
               </td>

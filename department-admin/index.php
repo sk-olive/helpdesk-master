@@ -526,7 +526,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FEM MIS Helpdesk</title>
+    <title>Helpdesk</title>
 
     <link rel="stylesheet" href="../fontawesome-free-6.2.0-web/css/all.min.css">
 
@@ -645,7 +645,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                         </div>
 
                         <div class="ml-3">
-                            <h2 class="font-semibold text-gray-100 dark:text-gray-900">MIS Pending</h2>
+                            <h2 class="font-semibold text-gray-100 dark:text-gray-900">ICT Pending</h2>
                             <p class="mt-2 text-xl text-left text-gray-100"><?php 
                                         $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE request_to = 'mis' AND status2 = 'inprogress'";
                                         $result = mysqli_query($con, $sql1);
@@ -669,7 +669,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                                 <li role="presentation">
                                     <div class="p__uwg" style="width: 106px; margin-right: 0px;">
                                         <button id="overallTab" onclick="goToOverall()" type="button" role="tab"
-                                            aria-controls="overall"
+                                            aria-controls="overAll"
                                             class="_1QoxDw o4TrkA CA2Rbg Di_DSA cwOZMg zQlusQ uRvRjQ POMxOg _lWDfA"
                                             aria-selected="false">
                                             <div class="_1cZINw">
@@ -701,6 +701,58 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                                                 </div>
                                             </div>
                                             <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Overall</p>
+                                        </button></div>
+                                </li>
+                                <li role="presentation">
+                                    <div class="p__uwg" style="width: 106px; margin-right: 0px;">
+                                        <button id="headApprovalTab1" onclick="goToHeadApproval()" type="button" role="tab"
+                                            aria-controls="headApprovalMain"
+                                            class="_1QoxDw o4TrkA CA2Rbg Di_DSA cwOZMg zQlusQ uRvRjQ POMxOg _lWDfA"
+                                            aria-selected="false">
+                                            <div class="_1cZINw">
+                                                <div style="overflow:inherit" class="_qiHHw Ut_ecQ kHy45A">
+                                                <span  class=" sr-only">Notifications</span>
+                        <?php 
+
+                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `department` = '$user_dept' AND `status2` ='head'";
+                                        $result = mysqli_query($con, $sql1);
+                                        while($count=mysqli_fetch_assoc($result))
+                                        {
+                                    
+                                        if($count["pending"] > 0){
+                                            ?>
+                                            <div  class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900"> <?php 
+                                                                     if($_SESSION['leaderof'] == "fem"){
+                                                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` ='admin' AND `request_to` ='fem'";
+                                                       $result = mysqli_query($con, $sql1);
+                                                                       }
+                                                                       else if($_SESSION['leaderof'] == "mis"){
+                                                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `department` = '$user_dept' AND `status2` ='head' AND `request_to` ='fem'";
+                                                                        $result = mysqli_query($con, $sql1);
+                                                                       }
+                                                                       else{
+                                                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` ='admin'";
+                                                                        $result = mysqli_query($con, $sql1);
+                                                                       }
+
+                                                     
+                                                       while($count=mysqli_fetch_assoc($result))
+                                                       {
+                                                       echo $count["pending"];
+                                                     
+                                                       }
+                                                       ?></div><?php
+                                        }
+                                      
+                                        }
+                            ?>
+                                                    <img src="../resources/img/list.png"
+                                                        class="h-full w-full text-blue-400" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+
+                                                </div>
+                                            </div>
+                                            <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Head approval</p>
                                         </button></div>
                                 </li>
                                 <li role="presentation">
@@ -752,7 +804,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
 
                                                 </div>
                                             </div>
-                                            <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Admin approval</p>
+                                            <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Final approval</p>
                                         </button></div>
                                 </li>
                                 <li role="presentation">
@@ -806,7 +858,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                                 <li role="presentation">
                     <div class="p__uwg" style="width: 96px; margin-left: 16px; margin-right: 0px;">
                     <button id="toRateTab" onclick="goToRate()"
-                        class="_1QoxDw o4TrkA CA2Rbg cwOZMg zQlusQ uRvRjQ POMxOg" tabindex="-1" type="button" role="tab" aria-controls="toRate"
+                        class="_1QoxDw o4TrkA CA2Rbg cwOZMg zQlusQ uRvRjQ POMxOg" tabindex="-1" type="button" role="tab" aria-controls="forRating"
                         aria-selected="false">
                         <div class="_1cZINw">
                         <div style="overflow:inherit" class="_qiHHw Ut_ecQ kHy45A">
@@ -960,6 +1012,142 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
 
               
 
+
+
+
+                </tr>
+                  <?php
+
+            }
+               ?>
+          </tbody>
+                </table>
+
+            </section>
+        </div>
+        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="headApprovalMain" role="tabpanel"
+            aria-labelledby="profile-tab">
+            <section class="mt-10">
+                <table id="headApprovalTable" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>JO Number</th>
+                            <th>Action</th>
+                            <th>Details</th>
+                            <th>Requestor</th>
+                            <th>Date Approved</th>
+                            <th>Approving Head</th>
+                            <th>Category</th>
+                            <th>Assigned Section</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+              <?php
+                $a=1;
+                if($_SESSION['leaderof'] == "fem"){
+                    $sql="select * from `request` WHERE `status2` ='head' AND `request_to` = 'fem' order by id asc  ";
+                    $result = mysqli_query($con,$sql);
+                }
+                else if($_SESSION['leaderof'] == "mis"){
+                    $sql="select * from `request` WHERE department = '$user_dept' AND `status2` ='head' AND `request_to` = 'fem' order by id asc";
+                    $result = mysqli_query($con,$sql);
+                }
+                else{
+                    $sql="select * from `request` WHERE `status2` ='head' order by id asc  ";
+                    $result = mysqli_query($con,$sql);
+                }
+                 
+
+                while($row=mysqli_fetch_assoc($result)){
+                  ?>
+              <tr class="">
+              <td class="">
+              <?php 
+              $date = new DateTime($row['head_approval_date']);
+              $date = $date->format('ym');
+              if($row['ticket_category'] != NULL)
+              {
+                echo 'TS-'.$date.'-'.$row['id'];
+              }
+              else{
+                echo 'JO-'.$date.'-'.$row['id'];
+              }
+              
+              ?> 
+             </td>
+            
+              <td >
+                    <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
+                   
+                    <button type="button" id="viewdetails" onclick="modalShow(this)" 
+                    data-recommendation="<?php echo $row['recommendation'] ?>" 
+                    data-requestorremarks="<?php echo $row['requestor_remarks'] ?>" 
+                    data-quality="<?php echo $row['rating_quality'] ?>" 
+                    data-delivery="<?php echo $row['rating_delivery'] ?>" 
+                    data-ratedby="<?php echo $row['ratedBy'] ?>" 
+                    data-daterate="<?php echo $row['rateDate'] ?>" 
+                    data-action1date="<?php echo $row['action1Date'] ?>" 
+                    data-action2date="<?php echo $row['action2Date'] ?>" 
+                    data-action3date="<?php echo $row['action3Date'] ?>" 
+                    data-headremarks="<?php echo $row['head_remarks']; ?>" 
+                    data-adminremarks="<?php echo $row['admin_remarks']; ?>" 
+                    data-headdate="<?php echo $row['head_approval_date']; ?>" 
+                    data-admindate="<?php echo $row['admin_approved_date']; ?>"
+                    data-department="<?php echo $row['department'] ?>" 
+                    data-status="<?php echo $row['status2'] ?>" 
+                    data-action1="<?php echo $row['action1'] ?>" 
+                    data-action2="<?php echo $row['action2'] ?>" 
+                    data-action3="<?php echo $row['action3'] ?>" 
+                    data-ratings = "<?php echo $row['rating_final'];?>"
+                    data-actualdatefinished=""  
+                    data-assignedpersonnel="<?php echo $row['assignedPersonnelName'] ?> " 
+                    data-requestor="<?php echo $row['requestor'] ?>"  
+                    data-personnel="<?php echo $row['assignedPersonnel'] ?>"
+                    data-action="<?php echo $dataAction = str_replace('"', '', $row['action']); ?>" 
+                    data-telephone="<?php echo $row['telephone']; ?>" data-attachment="<?php echo $row['attachment']; ?>" data-joidprint="<?php $date = new DateTime($row['date_filled']); $date = $date->format('ym');  echo $date.'-'.$row['id']; ?>" data-headremarks="<?php echo $row['head_remarks']; ?>" data-adminremarks="<?php echo $row['admin_remarks']; ?>" data-joid="<?php echo $row['id']; ?>" data-requestoremail="<?php echo $row['email']; ?>"  data-requestor="<?php echo $row['requestor']; ?>"  data-datefiled="<?php $date = new DateTime($row['date_filled']); $date = $date->format('F d, Y');echo $date;?>" data-section="<?php if($row['request_to'] == "fem"){  echo "FEM";} else if($row['request_to'] == "mis"){ echo "ICT";}?>" data-category="<?php echo $row['request_category']; ?>" data-comname="<?php echo $row['computerName']; ?>" data-start="<?php echo $row['reqstart_date']; ?>" data-end="<?php echo $row['reqfinish_date']; ?>" data-details="<?php echo $row['request_details']; ?>" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"> 
+                    View more
+                    </button>
+                </td>
+
+              <td class="text-sm text-red-700 font-light px-6 py-4 whitespace-nowrap truncate max-w-xs">
+              <?php echo $row['request_details'];?> 
+              </td>
+
+              <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              <?php echo $row['requestor'];?> 
+              </td>
+              <!-- to view pdf -->
+              <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              <?php 
+              $date = new DateTime($row['head_approval_date']);
+              $date = $date->format('F d, Y');
+              if($row['head_approval_date'] == ""){
+                $date="";
+              }
+              echo $date;?> 
+              
+              </td>
+              <td class="">
+              <?php 
+              echo $row['approving_head'];
+              ?> 
+             </td>
+              <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              <?php echo $row['request_category'];?> 
+              </td>
+              <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+
+              <?php if($row['request_to'] == "fem"){
+                echo "FEM";}
+                else if($row['request_to'] == "mis"){
+                echo "ICT";
+                }
+                ?> 
+              </td>
+
+
+
+              
 
 
 
@@ -1547,7 +1735,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
     
          
                 </div>
-            <div id="chooseAssignedDiv" class="w-full grid gap-4 grid-cols-3">
+            <div id="chooseAssignedDiv" class="w-full grid gap-4 grid-cols-3 hidden">
 
         <h2 class="float-left font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Assigned Personnel</span></h2>
         <select required id="assigned" name="assigned" class="bg-gray-50 col-span-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -1572,7 +1760,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
 
             </select>
             </div>
-<hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+<!-- <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"> -->
 
             <div class="w-full grid gap-4 grid-cols-2">
                      <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Requestor : </span><span id="requestor"></span></h2>
@@ -2412,6 +2600,11 @@ const tabElements= [
         targetEl: document.querySelector('#overAll')
     },
     {
+        id: 'headApprovalmain',
+        triggerEl: document.querySelector('#headApprovalTab1'),
+        targetEl: document.querySelector('#headApprovalMain')
+    },
+    {
         id: 'headApproval1',
         triggerEl: document.querySelector('#headApprovalTab'),
         targetEl: document.querySelector('#headApproval')
@@ -2464,6 +2657,7 @@ $("#transferButton").addClass("hidden");
 
 
 }
+
 function goToAdmin(){
     const myElement = document.querySelector('#diamond');
     $("#actionDetailsDiv").addClass("hidden");
@@ -2477,6 +2671,54 @@ document.getElementById("datestart").disabled = true;
     document.getElementById("datefinish").disabled = true;
 
 }
+
+
+function goToHeadApproval(){
+    const myElement = document.querySelector('#diamond');
+    $("#adminremarksDiv").addClass("hidden");
+    $("#remarksDiv").removeClass("hidden");
+    // $("#buttonDiv").removeClass("hidden");
+    $("#assignedPersonnelDiv").addClass("hidden");
+    $("#chooseAssignedDiv").addClass("hidden");
+     $("#buttonPrintDiv").addClass("hidden");
+    $("#buttonPrintDiv").removeClass("hidden");
+    $("#actionDetailsDiv").addClass("hidden");
+    $("#ratingstar").addClass("hidden");
+    const currentTransform = myElement.style.transform = 'translateX(165px) translateY(2px) rotate(135deg)';
+    // document.getElementById("reasonCancel").required = false;document.getElementById("telephone").disabled = true;
+    // document.getElementById("assigned").required = true;
+    // document.getElementById("telephone").disabled = true;
+    // document.getElementById("datestart").disabled = false;
+    // document.getElementById("datefinish").disabled = false;
+
+    $("#recommendationDiv").addClass("hidden");
+    $("#transferButton").addClass("hidden");
+
+
+}
+function goToHead(){
+    const myElement = document.querySelector('#diamond');
+    $("#adminremarksDiv").addClass("hidden");
+    $("#remarksDiv").removeClass("hidden");
+    $("#buttonDiv").removeClass("hidden");
+    $("#assignedPersonnelDiv").addClass("hidden");
+    $("#chooseAssignedDiv").removeClass("hidden");
+    $("#buttonPrintDiv").addClass("hidden");
+    $("#actionDetailsDiv").addClass("hidden");
+    $("#ratingstar").addClass("hidden");
+const currentTransform = myElement.style.transform = 'translateX(275px) translateY(2px) rotate(135deg)';
+document.getElementById("reasonCancel").required = false;document.getElementById("telephone").disabled = true;
+    document.getElementById("assigned").required = true;
+    document.getElementById("telephone").disabled = true;
+    document.getElementById("datestart").disabled = false;
+    document.getElementById("datefinish").disabled = false;
+
+    $("#recommendationDiv").addClass("hidden");
+    $("#transferButton").addClass("hidden");
+
+
+}
+
 
 function goToMis(){
     const myElement = document.querySelector('#diamond');
@@ -2495,11 +2737,12 @@ function goToMis(){
 $("#transferButton").removeClass("hidden");
 document.getElementById("datestart").disabled = true;
     document.getElementById("datefinish").disabled = true;
-    const currentTransform = myElement.style.transform = 'translateX(275px) translateY(2px) rotate(135deg)';
+    const currentTransform = myElement.style.transform = 'translateX(385px) translateY(2px) rotate(135deg)';
 
 
 
 }
+
 function goToRate(){
     const myElement = document.querySelector('#diamond');
     $("#adminremarksDiv").removeClass("hidden");
@@ -2510,35 +2753,13 @@ function goToRate(){
     $("#actionDetailsDiv").removeClass("hidden");
     $("#buttonPrintDiv").removeClass("hidden");
 
-const currentTransform = myElement.style.transform = 'translateX(385px) translateY(2px) rotate(135deg)';
+const currentTransform = myElement.style.transform = 'translateX(495px) translateY(2px) rotate(135deg)';
 $("#recommendationDiv").removeClass("hidden");
 
 document.getElementById("reasonCancel").required = false;
     document.getElementById("assigned").required = false;
     document.getElementById("datestart").disabled = true;
     document.getElementById("datefinish").disabled = true;
-    $("#transferButton").addClass("hidden");
-
-
-}
-function goToHead(){
-    const myElement = document.querySelector('#diamond');
-    $("#adminremarksDiv").addClass("hidden");
-    $("#remarksDiv").removeClass("hidden");
-    $("#buttonDiv").removeClass("hidden");
-    $("#assignedPersonnelDiv").addClass("hidden");
-    $("#chooseAssignedDiv").removeClass("hidden");
-    $("#buttonPrintDiv").addClass("hidden");
-    $("#actionDetailsDiv").addClass("hidden");
-    $("#ratingstar").addClass("hidden");
-const currentTransform = myElement.style.transform = 'translateX(160px) translateY(2px) rotate(135deg)';
-document.getElementById("reasonCancel").required = false;document.getElementById("telephone").disabled = true;
-    document.getElementById("assigned").required = true;
-    document.getElementById("telephone").disabled = true;
-    document.getElementById("datestart").disabled = false;
-    document.getElementById("datefinish").disabled = false;
-
-    $("#recommendationDiv").addClass("hidden");
     $("#transferButton").addClass("hidden");
 
 

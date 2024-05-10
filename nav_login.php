@@ -19,7 +19,7 @@
 
     <!-- <a class="flex items-center" data-drawer-target="drawer-navigation" data-drawer-show="drawer-navigation" aria-controls="drawer-navigation"> -->
         <img src="resources/img/helpdesk.png" class="mr-3 h-6 sm:h-9" alt="Flowbite Logo" >
-        <span class="self-center text-xl font-semibold whitespace-nowrap text-white">MIS x FEM
+        <span class="self-center text-xl font-semibold whitespace-nowrap text-white">HELPDESK
         
         </span>
     <!-- </a> -->

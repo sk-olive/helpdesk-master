@@ -309,7 +309,7 @@ if(isset($_POST['rateJo'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FEM MIS Helpdesk</title>
+    <title>Helpdesk</title>
     <link rel="shortcut icon" href="../resources/img/helpdesk.png">
     
     <!-- font awesome -->
@@ -556,7 +556,7 @@ if(isset($_POST['rateJo'])){
         <option selected  value="user">Employee</option>
         <option   value="head">Department Head</option>
         <option   value="admin">Administrator</option>
-        <option   value="mis">MIS</option>
+        <option   value="mis">ICT</option>
         <option   value="fem">FEM</option>
 
 

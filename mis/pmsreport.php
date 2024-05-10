@@ -83,7 +83,7 @@ padding-top: 0px;
       
         <table>
         <tr>
-                <td class="first"><span class="label">MIS Preventive Maintenance Service</span><span style="align-text: right"></span></td>
+                <td class="first"><span class="label">ICT Preventive Maintenance Service</span><span style="align-text: right"></span></td>
                 <td class="first" style="text-align: right"><span class="label">Date: '.$date.'</span><span style="align-text: right"></span></td>
           
                

@@ -226,7 +226,7 @@ $html.=' </table>';
 <tr>
 <th class="first"><span class="label">Prepared by: </span></th>
 <th class="first"><span class="label">Noted by Dept Head: </span></th>
-<th class="first"><span class="label">Checked by MIS: </span></th>
+<th class="first"><span class="label">Checked by ICT: </span></th>
 
 </tr>
 <br>

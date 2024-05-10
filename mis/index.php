@@ -283,7 +283,7 @@
                     $ict_leader[] = $li;
                 }  
 
-                  $requestorApprovalLink = 'http://helpdesk.glory.ph/helpdesk/ticketApproval.php?id='.$requestID.'&requestor=true';
+                  $requestorApprovalLink = $link.'/ticketApproval.php?id='.$requestID.'&requestor=true';
                 if ($request_type == "Technical Support")
                 {
                     $subject ='Ticket Closed';
@@ -299,15 +299,15 @@
                     }
                 }  else {
                     $subject ='Completed Job Order';
-                    $message = 'Hi '.$requestor.',<br> <br> MIS has completed one of your job order requests. Please check the details by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $message = 'Hi '.$requestor.',<br> <br> ICT has completed one of your job order requests. Please check the details by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                    
                     if($recommendation != ""){
                         $subjectA ='Finished JO  with Recommendations';
-                        $messageA = 'Hi Admin,<br> <br> MIS has completed the job order requests with JO Number '.$completejoid.'  Please review the recommendation for approval and/or add remarks by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        $messageA = 'Hi Admin,<br> <br> ICT has completed the job order requests with JO Number '.$completejoid.'  Please review the recommendation for approval and/or add remarks by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                     }
                     else{
                         $subjectA ='Finished JO';
-                        $messageA = 'Hi Admin,<br> <br> MIS has completed the job order requests with JO Number '.$completejoid.'  Please check the details by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        $messageA = 'Hi Admin,<br> <br> ICT has completed the job order requests with JO Number '.$completejoid.'  Please check the details by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                     }
                  
                 }
@@ -315,7 +315,10 @@
                 
 
                  require '../vendor/autoload.php';
-         
+                 require '../dompdf/vendor/autoload.php';
+                 ob_start();
+                 require 'Job Order Report copy.php'; // Replace 'your_php_file.php' with the path to your PHP file
+                 $html = ob_get_clean();
                  $mail = new PHPMailer(true);   
                  $mailA = new PHPMailer(true);       
 
@@ -345,8 +348,17 @@
                     $mail->addAddress($email);   
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
-                 
-            
+                    // Generate PDF content using Dompdf
+                    // $html = '<h1>Hello, World!</h1>'; // Your HTML content
+                    $dompdf = new Dompdf\Dompdf();
+                    $dompdf->loadHtml($html);
+                    $dompdf->setPaper('A4', 'portrait'); // Set paper size and orientation
+                    $dompdf->render();
+                    $pdfContent = $dompdf->output();
+                            
+                    // Attach PDF to the email
+                    $mail->addStringAttachment($pdfContent, 'example.pdf', 'base64', 'application/pdf');
+
                     $mail->Body    = $message;
             
                     $mail->send();
@@ -508,7 +520,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FEM MIS Helpdesk</title>
+    <title>Helpdesk</title>
     <link rel="shortcut icon" href="../resources/img/helpdesk.png">
 
     <link rel="stylesheet" href="../fontawesome-free-6.2.0-web/css/all.min.css">
@@ -678,7 +690,7 @@
                         </div>
 
                         <div class="ml-3">
-                            <h2 class="font-semibold text-gray-100 dark:text-gray-100">MIS Pending</h2>
+                            <h2 class="font-semibold text-gray-100 dark:text-gray-100">ICT Pending</h2>
                             <p class="mt-2 text-xl text-left text-gray-100"><?php 
                                         $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE request_to = 'mis' AND status2 = 'inprogress'";
                                         $result = mysqli_query($con, $sql1);
@@ -1126,7 +1138,7 @@
               <?php if($row['request_to'] == "fem"){
                 echo "FEM";}
                 else if($row['request_to'] == "mis"){
-                echo "MIS";
+                echo "ICT";
                 }
                 ?> 
               </td> -->
@@ -1479,6 +1491,7 @@
             <input type="text" id="papproved_reco" name="papproved_reco" class="hidden">
             <input type="text" id="picthead_reco_remarks" name="picthead_reco_remarks" class="hidden">
 
+        
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                     Job Order Details
@@ -1549,7 +1562,7 @@
                 </div>
                 <div class="w-full grid gap-4 grid-cols-2">
                      <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Requested Section: </span><span class="dark:text-white" id="sectionmodal"></span></h2>
-                     <h2  class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Type: </span><span class="dark:text-white" id="category"></span></h2>
+                     <h2  class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Category: </span><span class="dark:text-white" id="category"></span></h2>
                 </div>
                 <div class="w-full grid gap-4 grid-cols-2">
                 <div id="categoryDivParent" class="grid gap-4 grid-cols-2">
@@ -1562,11 +1575,12 @@
                 <!-- <input disabled type="text" name="computername" id="computername"class="col-span-1 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"> -->
                     
                 </div>
-                     <div class="grid gap-4 grid-cols-2">
+
+                <div class="grid gap-4 grid-cols-2 hidden">
                 <h2 id="telephoneh2" class="pl-10 float-left font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Telephone</span></h2>
-                <input disabled type="text" name="telephone" id="telephone"class="col-span-1 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    
+                <input disabled type="text" name="telephone" id="telephone"class="col-span-1 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">   
                 </div>
+
                 </div>
                 <a type="button" name="attachment" id="attachment" target="_blank" class="shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80  w-full text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">View Attachment</a>
 

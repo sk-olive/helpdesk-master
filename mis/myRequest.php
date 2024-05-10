@@ -278,7 +278,7 @@ $final_rating = ($rateScore + $rateScoreQuality)/2;
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FEM MIS Helpdesk</title>
+    <title>Helpdesk</title>
     <link rel="shortcut icon" href="../resources/img/helpdesk.png">
     
     <!-- font awesome -->
@@ -366,7 +366,7 @@ $final_rating = ($rateScore + $rateScoreQuality)/2;
     </div>
 
     <div class="ml-3">
-      <h2 class="font-semibold text-gray-100 dark:text-gray-900">MIS Pending</h2>
+      <h2 class="font-semibold text-gray-100 dark:text-gray-900">ICT Pending</h2>
       <p class="mt-2 text-xl text-left text-gray-100"><?php 
                                         $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE request_to = 'mis' AND status2 = 'inprogress'";
                                         $result = mysqli_query($con, $sql1);
@@ -399,7 +399,7 @@ $final_rating = ($rateScore + $rateScoreQuality)/2;
 
                             </div>
                         </div>
-                        <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Admin approval</p>
+                        <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Final approval</p>
                     </button></div>
                 </li>   
             

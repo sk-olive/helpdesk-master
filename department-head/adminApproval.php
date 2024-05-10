@@ -93,7 +93,7 @@ $headusername= $_SESSION['username'];
               <?php if($row['request_to'] == "fem"){
                 echo "FEM";}
                 else if($row['request_to'] == "mis"){
-                echo "MIS";
+                echo "ICT";
                 }
                 ?> 
               </td>

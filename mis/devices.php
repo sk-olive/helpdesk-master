@@ -1079,7 +1079,7 @@ if(isset($_POST['rateJo'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FEM MIS Helpdesk</title>
+    <title>Helpdesk</title>
     
     <!-- font awesome -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" /> -->
@@ -2860,7 +2860,7 @@ console.log(options);
     }
     else{
         options.forEach(function(option) {
-                historyHTML += "<div class=' mt-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 w-full p-6 '><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Request ID: " + option.id + "</h4></div><div class='text-right'><h4>Date: " + option.admin_approved_date + "</h4></div></div><p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>Problem:  </span>" + option.request_details + "</p><div class='mt-2'><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Action</h4></div><div class='text-right'><h4>Date: " + option.actual_finish_date + "</h4></div></div><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action1 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action2 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action3 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action + "</p></div> <p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>MIS:  </span>" + option.assignedPersonnelName + "</p><p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>Requestor:  </span>" + option.requestor + "</p></div>";
+                historyHTML += "<div class=' mt-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 w-full p-6 '><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Request ID: " + option.id + "</h4></div><div class='text-right'><h4>Date: " + option.admin_approved_date + "</h4></div></div><p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>Problem:  </span>" + option.request_details + "</p><div class='mt-2'><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Action</h4></div><div class='text-right'><h4>Date: " + option.actual_finish_date + "</h4></div></div><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action1 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action2 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action3 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action + "</p></div> <p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>ICT:  </span>" + option.assignedPersonnelName + "</p><p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>Requestor:  </span>" + option.requestor + "</p></div>";
             });
     }
 
@@ -2898,7 +2898,7 @@ console.log(options2);
     }
     else{
         options2.forEach(function(option) {
-                historyHTMLPms += "<div class=' mt-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 w-full p-6 '><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Date: " + option.Date + "</h4></div></div><div class='mt-2'><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Action</h4></div></div><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action + "</p></div> <p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>MIS:  </span>" + option.performedBy + "</p></div>";
+                historyHTMLPms += "<div class=' mt-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 w-full p-6 '><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Date: " + option.Date + "</h4></div></div><div class='mt-2'><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Action</h4></div></div><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action + "</p></div> <p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>ICT:  </span>" + option.performedBy + "</p></div>";
             });
     }
 
@@ -3060,7 +3060,7 @@ console.log(options);
     }
     else{
         options.forEach(function(option) {
-                historyHTML += "<div class=' mt-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 w-full p-6 '><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Request ID: " + option.id + "</h4></div><div class='text-right'><h4>Date: " + option.admin_approved_date + "</h4></div></div><p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>Problem:  </span>" + option.request_details + "</p><div class='mt-2'><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Action</h4></div><div class='text-right'><h4>Date: " + option.actual_finish_date + "</h4></div></div><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action1 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action2 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action3 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action + "</p></div> <p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>MIS:  </span>" + option.assignedPersonnelName + "</p><p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>Requestor:  </span>" + option.requestor + "</p></div>";
+                historyHTML += "<div class=' mt-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 w-full p-6 '><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Request ID: " + option.id + "</h4></div><div class='text-right'><h4>Date: " + option.admin_approved_date + "</h4></div></div><p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>Problem:  </span>" + option.request_details + "</p><div class='mt-2'><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Action</h4></div><div class='text-right'><h4>Date: " + option.actual_finish_date + "</h4></div></div><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action1 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action2 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action3 + "</p><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action + "</p></div> <p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>ICT:  </span>" + option.assignedPersonnelName + "</p><p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>Requestor:  </span>" + option.requestor + "</p></div>";
             });
     }
 
@@ -3098,7 +3098,7 @@ console.log(options2);
     }
     else{
         options2.forEach(function(option) {
-                historyHTMLPms += "<div class=' mt-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 w-full p-6 '><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Date: " + option.Date + "</h4></div></div><div class='mt-2'><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Action</h4></div></div><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action + "</p></div> <p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>MIS:  </span>" + option.performedBy + "</p></div>";
+                historyHTMLPms += "<div class=' mt-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 w-full p-6 '><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Date: " + option.Date + "</h4></div></div><div class='mt-2'><div class='grid grid-cols-2 gap-4 place-content-between '><div><h4>Action</h4></div></div><p class='text-base leading-relaxed text-gray-500 dark:text-gray-400'>" + option.action + "</p></div> <p class='mt-0 text-gray-500 dark:text-gray-400'><span class='text-gray-900'>ICT:  </span>" + option.performedBy + "</p></div>";
             });
     }
 

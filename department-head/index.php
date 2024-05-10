@@ -504,7 +504,7 @@ if(isset($_POST['print'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FEM MIS Helpdesk</title>
+    <title>Helpdesk</title>
 
     <link rel="stylesheet" href="../fontawesome-free-6.2.0-web/css/all.min.css">
     <link rel="stylesheet" href="../node_modules/DataTables/datatables.min.css">
@@ -577,7 +577,7 @@ if(isset($_POST['print'])){
                         </div>
 
                         <div class="ml-3">
-                            <h2 class="font-semibold text-gray-100 dark:text-gray-900">MIS Pending</h2>
+                            <h2 class="font-semibold text-gray-100 dark:text-gray-900">ICT Pending</h2>
                             <p class="mt-2 text-xl text-left text-gray-100"><?php 
                                         $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE request_to = 'mis' AND status2 = 'inprogress'";
                                         $result = mysqli_query($con, $sql1);
@@ -672,7 +672,7 @@ if(isset($_POST['print'])){
     
                                 </div>
                             </div>
-                            <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Admin approval</p>
+                            <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Final approval</p>
                         </button></div>
                     </li>   
                 
@@ -884,7 +884,7 @@ if(isset($_POST['print'])){
               <?php if($row['request_to'] == "fem"){
                 echo "FEM";}
                 else if($row['request_to'] == "mis"){
-                echo "MIS";
+                echo "ICT";
                 }
                 ?> 
               </td>

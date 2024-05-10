@@ -84,7 +84,7 @@ if(isset($_POST['approveRequest'])){
             }
              
 $email='j.nemedez@glory.com.ph';
-$subject ='JO Request for Admin Approval'." ";
+$subject ='JO Request for Final Approval'." ";
 $message = 'Hi '." ". 'Admin' .' You have pending JO for your Approval.<br/>'.
 'Please login to http://192.168.5.246/helpdesk.com <br/>'.
 'This is a system generated email. Please do not reply to this message.';
@@ -261,7 +261,7 @@ try {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FEM MIS Helpdesk</title>
+    <title>Helpdesk</title>
 
 
     <!-- font awesome -->

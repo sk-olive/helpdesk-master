@@ -52,9 +52,7 @@ else
     while($listlink=mysqli_fetch_assoc($resultlink))
     {
     $link=$listlink["link"];
-    
-    
-      }
+    }
 
 
     $user_dept = $_SESSION['department'];
@@ -115,8 +113,8 @@ else
             $_SESSION['dateFiled'] = $_POST['r_department'];
          
         
-            $sql = mysqli_query($con,"INSERT INTO request (date_filled, status2, requestor, requestorUsername, email, department, request_type, request_to, request_details, assignedPersonnel, assignedPersonnelName, action, recommendation, onthespot_ticket, ticket_category, category_level, ticket_filer)
-            VALUES ('$datenow', '$status', '$requestor','$requestorIdnumber', '$requestorEmail', '$requestorDepartment', 'Technical Support', 'mis', '$detailsOfRequest', '$r_personnels', '$r_personnelsName', '$action', '$recommendation', '$onthespot_ticket', '$ticket_category', '$r_cat_level', '$user_name')");
+            $sql = mysqli_query($con,"INSERT INTO request (date_filled, status2, requestor, requestorUsername, email, department, request_type, request_to, request_category, request_details, assignedPersonnel, assignedPersonnelName, action, recommendation, onthespot_ticket, ticket_category, category_level, ticket_filer)
+            VALUES ('$datenow', '$status', '$requestor','$requestorIdnumber', '$requestorEmail', '$requestorDepartment', 'Technical Support', 'mis', '$ticket_category','$detailsOfRequest', '$r_personnels', '$r_personnelsName', '$action', '$recommendation', '$onthespot_ticket', '$ticket_category', '$r_cat_level', '$user_name')");
             
 
 
@@ -136,9 +134,9 @@ else
                 $date = $date->format('ym');
                 $ticketNumber = 'TS-'.$date.'-'.$id.'';
                 
-                $headApprovalLink = 'http://helpdesk.glory.ph/helpdesk/ticketApproval.php?id='.$id.'&head=true';
+                $headApprovalLink = $link.'/ticketApproval.php?id='.$id.'&head=true';
                 
-                $requestorApprovalLink = 'http://helpdesk.glory.ph/helpdesk/ticketApproval.php?id='.$id.'&requestor=true';
+                $requestorApprovalLink = $link.'/ticketApproval.php?id='.$id.'&requestor=true';
                 $sql2 = "Select * FROM `sender`";
                 $result2 = mysqli_query($con, $sql2);
                 while($list=mysqli_fetch_assoc($result2))
@@ -191,14 +189,14 @@ else
                     //Message to ICT HEAD & Dept Head
                     $mail->clearAddresses();
                     $mail->addAddress($immediateHeadEmail);  // dept head          
-                    foreach($ict_leader as $item){
+                    foreach($ict_leader as $item)
+                    {
                         $mail->AddCC($item['email']);  // ict head / leader
-
                     }
                     
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
-                    $mail->Body    = 'Hi ,<br> <br>   A ticket request has been closed. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br>  This is a generated email. Please do not reply. <br><br> Helpdesk';;
+                    $mail->Body    = 'Hi Admin,<br> <br>   A ticket request has been closed. Please find the details below: <br><br> Ticket No.: '.$ticketNumber.'<br> Requestor: '.$requestor.'<br> Requestor Email: '.$requestorEmail.'<br> Requestor Department: '.$requestorDepartment.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br>  This is a generated email. Please do not reply. <br><br> Helpdesk';;
 
                     $mail->send();                               
                     }
@@ -360,7 +358,7 @@ else
   </select>
     </div>
     <div class="relative z-0 w-full  group">
-    <label for="r_IdNumber" class="block mb-2 text- font-medium text-gray-900 dark:text-white">ID Number</label>
+    <label for="r_IdNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Number</label>
     <input type="text" id="r_IdNumber" name="r_IdNumber" class="bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  required />
     </div>
 
