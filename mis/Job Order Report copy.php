@@ -1,6 +1,6 @@
 
     <?php 
-    session_start();
+    // session_start();
     $date = new DateTime(); 
     $date = $date->format('F d, Y');
 
@@ -35,22 +35,29 @@
     $ratedDate = $_SESSION['ratedDate'] ;
     $approved_reco = $_SESSION['approved_reco'];
     $icthead_reco_remarks = $_SESSION['icthead_reco_remarks'];
+    $request_type = $_SESSION['requestType'];
 
- 
     $headsDate =  $_SESSION['headsDate'];
     $adminsDate =  $_SESSION['adminsDate'];
 
-    if($_SESSION['status']=="inprogress"){
-        $status = "In Progress";
+    // if($_SESSION['status']=="inprogress"){
+    //     $status = "In Progress";
+    // }
+    // else if($_SESSION['status']=="rated"){
+    //     $status = "Done";
+
+    // } 
+    // else if($_SESSION['status']=="Done"){
+    //     $status = "Done";
+
+    // }  
+    $status = "Done";
+    if($_SESSION['requestType'] === "Technical Support"){
+        $jobOrderNo = 'TS-'.$jobOrderNo;
+    }else{
+        $jobOrderNo =  'JO-'.$jobOrderNo;
     }
-    else if($_SESSION['status']=="rated"){
-        $status = "Done";
 
-    } 
-    else if($_SESSION['status']=="Done"){
-        $status = "Done";
-
-    }  
     ?>
 
 
@@ -60,7 +67,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Job Order Report</title>
+        <title>Helpdesk Report</title>
         <link rel="shortcut icon" href="../resources/img/helpdesk.png">
 
         <style>
@@ -124,19 +131,19 @@ padding-top: 5px;
     </head>
     <body style="margin: 0px; padding: 0px; ">
         <div style="text-align: center">
-            <p style="font-size: 11px; margin: 0">Glory (Philippines) Inc.</p>
-            <p style="font-size: 11px; margin: 0">Administration Department</p>
+        <p style="font-size: 11px; margin: 0">GLORY (PHILIPPINES) INC.</p>
+            <!-- <p style="font-size: 11px; margin: 0">Administration Department</p> -->
             <p style="font-size: 10px; margin: 0">http://glory-helpdesk.com</p>
-            <p style="font-size: 11px; margin: 0; font-weight: bold">Job Order Report</p>
+            <p style="font-size: 11px; margin: 0; font-weight: bold">Helpdesk Report</p>
         </div>
 
 
         <table>
             <tr>
                 <td class="first"><span class="label">Job Order No</span><span style="align-text: right">:</span></td>
-                <td class="second"> <span class="child">'.$jobOrderNo.'</span></td>
+                <td class="second"> <span class="child"><?php echo $jobOrderNo;?></span></td>
                 <td><span class="label">Status: </span></td>
-                <td class="fourth"><span class="child">'.$status .'</span></td>
+                <td class="fourth"><span class="child"><?php echo $status ;?></span></td>
              
 
 
@@ -144,9 +151,9 @@ padding-top: 5px;
 
             <tr>
                 <td class="first"><span class="label">Requestor: </span></td>
-                <td class="second"> <span class="child">'.$requestor .'</span></td>
+                <td class="second"> <span class="child"><?php echo $requestor;?></span></td>
                 <td><span class="label">Department: </span></td>
-                <td class="fourth"><span class="child">'.$department.'</span></td>
+                <td class="fourth"><span class="child"><?php echo $department;?></span></td>
             </tr>
         </table>
         <hr>
@@ -157,64 +164,66 @@ padding-top: 5px;
             </tr>
             <tr>
                 <td><span class="label">Date Filed: </span></td>
-                <td> <span class="child">'.$dateFiled.'</span></td>
+                <td> <span class="child"><?php echo $dateFiled;?></span></td>
             </tr>
             <tr style="display: none">
                 <td><span class="label">Requested Schedule: </span></td>
-                <td> <span class="child">'.$requestedSchedule .'</span></td>
+                <td> <span class="child"><?php echo $requestedSchedule; ?></span></td>
 
             </tr>
             <tr>
-                <td class="first"><span class="label">Type: </span></td>
-                <td class="second"> <span class="child">'.$type.'</span></td>';
-if($type == "Computer"){
+                <td class="first"><span class="label">Category: </span></td>
+                <td class="second"> <span class="child"><?php echo $type; ?></span></td>
 
-    $html.='<td class="third"><span class="label">PC Number: </span></td>
-    <td><span class="child">'.$pcNumber.'</span></td>';
-}
-           $html.=' </tr>
+
+                <?php if($type == "Computer"){;?>
+
+                    <td class="third"><span class="label">PC Number: </span></td>
+                    <td><span class="child"><?php echo $pcNumber ;?></span></td>
+                <?php } ?>
+            </tr>
             <tr>
                 <td class="first"><span class="label">Details</span></td>
-                <td  colspan="4"> <span class="child"> '.$details.'
-                    </span></td>
-            </tr>';
-            if($headsRemarks !=""){
+                <td  colspan="4"> <span class="child"> <?php echo $details; ?></span></td>
+            </tr>
+            <?php 
+            if($headsRemarks !=""){ ?>
                 
-                $html.='<tr>
-            <td class="second"> <span class="child">'.$headsRemarks .'</span></td>
+        <tr>
+            <td class="second"> <span class="child"><?php echo $headsRemarks; ?></span></td>
             <td><span class="label">Date: </span></td>
-            <td class="fourth"><span class="child">'.$headsDate.'</span></td>
+            <td class="fourth"><span class="child"></span> <?php echo $headsDate; ?></span></td>
         </tr>
-        ';
-            }
-            else{
-                $html.='<tr>
+        
+            <?php  } 
+            else{?>
+            <tr>
                 <td class="first"><span class="label">Head&apos;s Remarks</span></td>
                 <td class="second"> <span class="child">n/a</span></td>
                 <td><span class="label">Date: </span></td>
-                <td class="fourth"><span class="child">'.$headsDate.'</span></td>
-            </tr>';
-            }
+                <td class="fourth"><span class="child"><?php echo $headsDate; ?></span></td>
+            </tr>
+         <?php   }
              
-            if($adminsRemarks !="" ){
-                $html.=' <tr>
+            if($adminsRemarks !="" ){ ?>
+                <tr>
                 <td class="first"><span class="label">Admin&apos;s Remarks</span></td>
-                <td class="second"> <span class="child">'.$adminsRemarks .'</span></td>
+                <td class="second"> <span class="child"><?php echo $adminsRemarks; ?></span></td>
                 <td><span class="label">Date: </span></td>
-                <td class="fourth"><span class="child">'.$adminsDate.'</span></td>
-            </tr>';
-            }
-            else{
-                $html.='<tr>
+                <td class="fourth"><span class="child"><?php echo $adminsDate; ?></span></td>
+            </tr>
+           <?php }
+            else{?>
+            <tr>
                 <td class="first"><span class="label">Admin&apos;s Remarks</span></td>
                 <td class="second"> <span class="child">n/a</span></td>
                 <td><span class="label">Date: </span></td>
-                <td class="fourth"><span class="child">'.$adminsDate.'</span></td>
-            </tr>';
-            }
+                <td class="fourth"><span class="child"><?php echo $adminsDate; ?></span></td>
+            </tr>
+          <?php  } ?>
              
          
-       $html.=' </table>
+       </table>
         <hr>
 
         <table>
@@ -224,92 +233,83 @@ if($type == "Computer"){
             </tr>
             <tr>
                 <td class="first"><span class="label">Assigned Personnel: </span></td>
-                <td class="second"> <span class="child">'.$assignedPersonnel.'</span></td>
+                <td class="second"> <span class="child"><?php echo $assignedPersonnel; ?></span></td>
                 <td class="third"><span class="label">Section: </span></td>
-                <td><span class="child">'.$section.'</span></td>
-            </tr>';
-if($firstAction !=""){
-    $html.='<tr>
+                <td><span class="child"><?php echo $section; ?></span></td>
+            </tr>
+            <?php 
+if($firstAction !=""){?>
+    <tr>
     <td class="first"><span class="label">1st Action: </span></td>
-    <td class="second"> <span class="child">'.$firstAction.'</span></td>
+    <td class="second"> <span class="child"><?php echo $firstAction; ?></span></td>
     <td style="width: 10%"><span class="label">Date: </span></td>
-    <td><span class="child">'.$firstDate.'</span></td>
-</tr>';
-}
- if($secondAction !=""){
-    $html.='<tr>
+    <td><span class="child"><?php echo $firstDate; ?></span></td>
+</tr>
+<?php }
+ if($secondAction !=""){ ?>
+    <tr>
     <td class="first"><span class="label">2nd Action: </span></td>
-    <td class="second"> <span class="child">'.$secondAction.'</span></td>
+    <td class="second"> <span class="child"><?php echo $secondAction; ?></span></td>
     <td><span class="label">Date: </span></td>
-    <td><span class="child">'.$secondDate.'</span></td>
-</tr>';
-}
- if($thirdAction !=""){
-    $html.='  <tr>
+    <td><span class="child"><?php echo $secondDate; ?></span></td>
+</tr>
+<?php }
+ if($thirdAction !=""){ ?>
+ <tr>
     <td class="first"><span class="label">3rd Action: </span></td>
-    <td class="second"> <span class="child">'.$thirdAction.'</span></td>
+    <td class="second"> <span class="child"><?php echo $thirdAction; ?></span></td>
     <td><span class="label">Date: </span></td>
-    <td><span class="child">'.$thirdDate.'</span></td>
-</tr>';
-}
- if($finalAction !=""){
-    $html.=' <tr>
+    <td><span class="child"><?php echo $thirdDate; ?></span></td>
+</tr>
+<?php }
+ if($finalAction !=""){ ?>
+    <tr>
     <td class="first"><span class="label">Final Solution: </span></td>
-    <td colspan="4"> <span class="child">'.$finalAction.'</span></td>
+    <td colspan="4"> <span class="child"><?php echo $finalAction ?></span></td>
 
-</tr>';
-}
+</tr>
+<?php }
     
-if($dateFinished !=""){
-        $html.='  <tr>
+if($dateFinished !=""){ ?>
+        <tr>
                 <td class="first"><span class="label">Date Finished:</span></td>
-                <td colspan="4"> <span class="child">'.$dateFinished.'
-                    </span></td>
-                 </tr>';
-}
+                <td colspan="4"> <span class="child"><?php echo  $dateFinished ?></span></td>
+        </tr>
+<?php } ?>
     
-  
-            $html.='  </table>
+        </table>
 
-            <hr>';
+            <hr>
+            <?php 
             if($recommendation != "" && ($icthead_reco_remarks != ""  || $icthead_reco_remarks != NULL) && $approved_reco == 1)
-            {
-                $html.='<table>
+            { ?>
+            <table>
                 <tr>
                     <td colspan="2" class="category"><span class="label">RECOMMENDATION</span></td>
                 </tr>
                 <tr>
                     <td class="first"><span class="label">Assigned Personnel Recommendation:</span></td>
-                    <td colspan="4"> <span class="child">'.$recommendation.'</span></td>
-                </tr>';
-                $html.= '<tr>
+                    <td colspan="4"> <span class="child"><?php echo $recommendation; ?></span></td>
+                </tr>
+                <tr>
                     <td class="first"><span class="label">ICT Head&apos;s Remarks:</span></td>
-                    <td colspan="4"> <span class="child">'.$icthead_reco_remarks.'</span></td>
-                    </tr></table> <hr>';   
-            }
+                    <td colspan="4"> <span class="child"><?php echo $icthead_reco_remarks; ?></span></td>
+                    </tr></table> <hr>
+         <?php   }
             elseif($recommendation != "" && ($icthead_reco_remarks == "" || $icthead_reco_remarks == NULL ) && $approved_reco == 1)
-                    {
-                        $html.='<table>
+                    { ?>
+                    <table>
                         <tr>
                             <td colspan="2" class="category"><span class="label">RECOMMENDATION</span></td>
                         </tr>
                         <tr>
                             <td class="first"><span class="label">Assigned Personnel Recommendation:</span></td>
-                            <td colspan="4"> <span class="child">'.$recommendation.'</span></td>
-                        </tr></table> <hr>';   
-                    }      
+                            <td colspan="4"> <span class="child"><?php echo $recommendation; ?></span></td>
+                        </tr></table> <hr>  
+                  <?php  }?>      
                
-            
-
-<table style="bottom: 35px; position: absolute;">
-<tr>
-<td class="first"><span class="label">Printed by: </span></td>
-<td class="second"> <span class="child">'.$wholename.'</span></td>
-<td class="third"><span class="label">Date: </span></td>
-<td><span class="child">'.$date.'</span></td>
-</tr>
-</table>
+        
     </body>
-    </html>;   
+    </html>
 
 

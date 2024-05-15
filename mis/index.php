@@ -199,8 +199,42 @@
         $adminemail=$list["email"];
         $adminname=$list["name"];
         } 
-
         if(isset($_POST['approveRequest'])){
+            $_SESSION['jobOrderNo']= $_POST['pjobOrderNo'] ;
+            $_SESSION['status']= $_POST['pstatus'] ;
+            $_SESSION['requestor']= $_POST['prequestor'] ;
+            $_SESSION['pdepartment']= $_POST['pdepartment'] ;
+            $_SESSION['dateFiled']= $_POST['pdateFiled'] ;
+            $_SESSION['requestedSchedule']= $_POST['prequestedSchedule'] ;
+            $_SESSION['type']= $_POST['ptype'] ;
+            $_SESSION['pcNumber']= $_POST['ppcNumber'] ;
+            $_SESSION['details']= $_POST['pdetails'] ;
+            $_SESSION['headsRemarks']= $_POST['pheadsRemarks'] ;
+            $_SESSION['adminsRemarks']= $_POST['padminsRemarks'] ;
+            $_SESSION['headsDate']= $_POST['pheadsDate'] ;
+            $_SESSION['adminsDate']= $_POST['padminsDate'] ;
+            $_SESSION['assignedPersonnel']= $_POST['passignedPersonnel'] ;
+            $_SESSION['section']= $_POST['psection'] ;
+            $_SESSION['firstAction']= $_POST['pfirstAction'] ;
+            $_SESSION['firstDate']= $_POST['pfirstDate'] ;
+            $_SESSION['secondAction']= $_POST['psecondAction'] ;
+            $_SESSION['secondDate']= $_POST['psecondDate'] ;
+            $_SESSION['thirdAction']= $_POST['pthirdAction'] ;
+            $_SESSION['thirdDate']= $_POST['pthirdDate'] ;
+            $_SESSION['finalAction']= $_POST['pfinalAction'] ;
+            $_SESSION['recommendation']= $_POST['precommendation'] ;
+            $_SESSION['dateFinished']= $_POST['pdateFinished'] ;
+            $_SESSION['ratedBy']= $_POST['pratedBy'] ;
+            $_SESSION['delivery']= $_POST['pdelivery'] ;
+            $_SESSION['quality']= $_POST['pquality'] ;
+            $_SESSION['totalRating']= $_POST['ptotalRating'] ;
+            $_SESSION['ratingRemarks']= $_POST['pratingRemarks'] ;
+            $_SESSION['ratedDate']= $_POST['pratedDate'] ;
+            $_SESSION['approved_reco']= $_POST['papproved_reco'] ;
+            $_SESSION['icthead_reco_remarks']= $_POST['picthead_reco_remarks'] ;
+            $_SESSION['requestType']= $_POST['prequestType'] ;
+            
+
             $requestID = $_POST['joid2'];
             $cat_lvl ;
             $sql1 = "Select * FROM `request` WHERE `id` = '$requestID'";
@@ -262,7 +296,7 @@
             $recommendation = str_replace("'", "&apos;", $recommendation);
 
             $sql = "UPDATE `request` SET `status2`='Done', `late`='$late',`actual_finish_date`='$date',`action`='$action', `first_responded_date` = 
-            CASE WHEN `first_responded_date` IS NULL THEN '$datetime' ELSE `first_responded_date` END, `completed_date` = '$datetime', `recommendation`='$recommendation' WHERE `id` = '$requestID';";
+            CASE WHEN `first_responded_date` IS NULL THEN '$datetime' ELSE `first_responded_date` END, `completed_date` = '$datetime', `recommendation`='$recommendation' WHERE `id` = '$requestID'";
 
                $results = mysqli_query($con,$sql);
   
@@ -287,32 +321,32 @@
                 if ($request_type == "Technical Support")
                 {
                     $subject ='Ticket Closed';
-                    $message = 'Hi '.$requestor.',<br> <br> Your ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Action: '.$action.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> If you agree with the closure of this ticket, please click the link below to confirm: <br> Click <a href="'.$requestorApprovalLink.'">this</a>  to confirm. This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $message = 'Hi '.$requestor.',<br> <br> Your ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> If you agree with the closure of this ticket, please click the link below to confirm: <br> Click <a href="'.$requestorApprovalLink.'">this</a>  to confirm. This is a generated email. Please do not reply. <br><br> HELPDESK';
 
                     if($recommendation != ""){
                     $subjectA ='Ticket Closed  - Recommendation Provided';
-                    $messageA = 'Hi Admin,<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please review the recommendation for approval and/or add remarks by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $messageA = 'Hi Admin,<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please review the recommendation for approval and/or add remarks by signing into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.' <br>Recommendation:  '.$recommendation.'<br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
                     }
                     else{
                         $subjectA ='Ticket Closed';
-                        $messageA = 'Hi Admin,<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        $messageA = 'Hi Admin,<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk.  <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> This is a generated email. Please do not reply. <br><br>  HELPDESK';
                     }
                 }  else {
                     $subject ='Completed Job Order';
-                    $message = 'Hi '.$requestor.',<br> <br> ICT has completed one of your job order requests. Please check the details by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $message = 'Hi '.$requestor.',<br> <br> ICT has completed one of your job order requests. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
                    
                     if($recommendation != ""){
                         $subjectA ='Finished JO  with Recommendations';
-                        $messageA = 'Hi Admin,<br> <br> ICT has completed the job order requests with JO Number '.$completejoid.'  Please review the recommendation for approval and/or add remarks by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        $messageA = 'Hi Admin,<br> <br> ICT has completed the job order requests with JO Number JO-'.$completejoid.'  Please review the recommendation for approval and/or add remarks by signing into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.' <br>Recommendation:  '.$recommendation.'<br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
                     }
                     else{
                         $subjectA ='Finished JO';
-                        $messageA = 'Hi Admin,<br> <br> ICT has completed the job order requests with JO Number '.$completejoid.'  Please check the details by signing into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        $messageA = 'Hi Admin,<br> <br> ICT has completed the job order requests with JO Number JO-'.$completejoid.'  Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
                     }
                  
                 }
            
-                
+            
 
                  require '../vendor/autoload.php';
                  require '../dompdf/vendor/autoload.php';
@@ -325,10 +359,10 @@
                 //  email the admin               
                  try {
                   //Server settings
-                    $mail->isSMTP();                                      // Set mailer to use SMTP
-                    $mail->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
-                    $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                    $mail->Username = $account;     // Your Email/ Server Email
+                    $mail->isSMTP();                                    // Set mailer to use SMTP
+                    $mail->Host = 'mail.glorylocal.com.ph';             // Specify main and backup SMTP servers
+                    $mail->SMTPAuth = true;                             // Enable SMTP authentication
+                    $mail->Username = $account;                         // Your Email/ Server Email
                     $mail->Password = $accountpass;                     // Your Password
                     $mail->SMTPOptions = array(
                         'ssl' => array(
@@ -340,7 +374,7 @@
                     $mail->SMTPSecure = 'none';                           
                     $mail->Port = 465;                                   
             
-                    //Send Email
+                    //Send Email to Requestor
                     // $mail->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
                     
                     //Recipients
@@ -349,26 +383,23 @@
                     $mail->isHTML(true);                                  
                     $mail->Subject = $subject;
                     // Generate PDF content using Dompdf
-                    // $html = '<h1>Hello, World!</h1>'; // Your HTML content
                     $dompdf = new Dompdf\Dompdf();
                     $dompdf->loadHtml($html);
-                    $dompdf->setPaper('A4', 'portrait'); // Set paper size and orientation
+                    $dompdf->setPaper('A5', 'portrait'); // Set paper size and orientation
                     $dompdf->render();
                     $pdfContent = $dompdf->output();
                             
                     // Attach PDF to the email
-                    $mail->addStringAttachment($pdfContent, 'example.pdf', 'base64', 'application/pdf');
-
+                    $mail->addStringAttachment($pdfContent, 'Helpdesk Report.pdf', 'base64', 'application/pdf');
+                    
                     $mail->Body    = $message;
-            
                     $mail->send();
 
-
                     $mailA->isSMTP();                                      // Set mailer to use SMTP
-                    $mailA->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
+                    $mailA->Host = 'mail.glorylocal.com.ph';               // Specify main and backup SMTP servers
                     $mailA->SMTPAuth = true;                               // Enable SMTP authentication
-                    $mailA->Username = $account;     // Your Email/ Server Email
-                    $mailA->Password = $accountpass;                     // Your Password
+                    $mailA->Username = $account;                           // Your Email/ Server Email
+                    $mailA->Password = $accountpass;                       // Your Password
                     $mailA->SMTPOptions = array(
                         'ssl' => array(
                         'verify_peer' => false,
@@ -380,7 +411,7 @@
                     $mailA->Port = 465;                                   
                     
                     
-                    //Send Email
+                    //Send Email to Administrator
                     // $mailA->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
                     
                     //Recipients
@@ -389,11 +420,21 @@
                     foreach($ict_leader as $item){
                         $mailA->addAddress($item['email']);  // ict head   
                     }
-                    $mailA->isHTML(true);                                  
+                    $mailA->isHTML(true);    
+
+                    $dompdf = new Dompdf\Dompdf();
+                    $dompdf->loadHtml($html);
+                    $dompdf->setPaper('A5', 'portrait'); // Set paper size and orientation
+                    $dompdf->render();
+                    $pdfContent = $dompdf->output();
+                            
+                    // Attach PDF to the email
+                    $mailA->addStringAttachment($pdfContent, 'Helpdesk Report.pdf', 'base64', 'application/pdf');                              
                     $mailA->Subject = $subjectA;
                     $mailA->Body    = $messageA;
             
                     $mailA->send();
+
 
                     
                           $_SESSION['message'] = 'Message has been sent';
@@ -450,16 +491,16 @@
                       //Server settings
                        
                         $subject2 ='Cancelled Job Order';
-                        $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number of '.$completejoid.' is CANCELLED by the administrator. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number of '.$completejoid.' is CANCELLED by the administrator. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
                         
                         // email this requestor
                 
                             //Server settings
                               $mail->isSMTP();                                      // Set mailer to use SMTP
-                              $mail->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
+                              $mail->Host = 'mail.glorylocal.com.ph';               // Specify main and backup SMTP servers
                               $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                              $mail->Username = $account;     // Your Email/ Server Email
-                              $mail->Password = $accountpass;                     // Your Password
+                              $mail->Username = $account;                           // Your Email/ Server Email
+                              $mail->Password = $accountpass;                       // Your Password
                               $mail->SMTPOptions = array(
                                   'ssl' => array(
                                   'verify_peer' => false,
@@ -494,21 +535,21 @@
                 }
 
 
-                
-// $uploadDir = '../src/Photo/';
-// $uploadFile = $uploadDir . $username . '.png';
+                                    
+                    // $uploadDir = '../src/Photo/';
+                    // $uploadFile = $uploadDir . $username . '.png';
 
-// $response = array();
+                    // $response = array();
 
-// if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
-//     $response['success'] = true;
-// } else {
-//     $response['success'] = false;
-// }
+                    // if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+                    //     $response['success'] = true;
+                    // } else {
+                    //     $response['success'] = false;
+                    // }
 
-// header('Content-Type: application/json');
-// echo json_encode($response);
-?>
+                    // header('Content-Type: application/json');
+                    // echo json_encode($response);
+                    ?>
 
 
 
@@ -1487,7 +1528,7 @@
             <input type="text" id="pratingRemarks" name="pratingRemarks" class="hidden">
             <input type="text" id="pratedDate" name="pratedDate" class="hidden">
             <input type="text" id="pNumberOfDays" name="pNumberOfDays" class="hidden">
-            <input type="text" id="requestType" name="requestType" class="hidden">
+            <input type="text" id="prequestType" name="prequestType" class="hidden">
             <input type="text" id="papproved_reco" name="papproved_reco" class="hidden">
             <input type="text" id="picthead_reco_remarks" name="picthead_reco_remarks" class="hidden">
 
@@ -2047,7 +2088,7 @@ function modalShow(element){
     document.getElementById("action3").innerHTML =element.getAttribute("data-action3");
     document.getElementById("recommendation").innerHTML =element.getAttribute("data-recommendation");
     document.getElementById("NumberOfDays").value = element.getAttribute("data-numberOfDays");
-    document.getElementById("requestType").value = element.getAttribute("data-requestype");
+    document.getElementById("prequestType").value = element.getAttribute("data-requestype");
 
 
     document.getElementById("pjobOrderNo").value = element.getAttribute("data-joidprint");

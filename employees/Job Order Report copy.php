@@ -118,10 +118,9 @@ padding-top: 5px;
     </head>
     <body style="margin: 0px; padding: 0px; ">
         <div style="text-align: center">
-            <p style="font-size: 11px; margin: 0">Glory (Philippines) Inc.</p>
-            <p style="font-size: 11px; margin: 0">Administration Department</p>
-            <p style="font-size: 10px; margin: 0">http://glory-helpdesk.com</p>
-            <p style="font-size: 11px; margin: 0; font-weight: bold">Job Order Report</p>
+        <p style="font-size: 11px; margin: 0">GLORY (PHILIPPINES) INC.</p>
+        <p style="font-size: 10px; margin: 0">http://glory-helpdesk.com</p>
+        <p style="font-size: 11px; margin: 0; font-weight: bold">Helpdesk Report</p>
         </div>
 
 

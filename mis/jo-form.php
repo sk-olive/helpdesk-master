@@ -235,12 +235,9 @@ else
                     $mail->Body    = $message;
                
                     $mail->send();
-                    $_SESSION['message'] = 'Message has been sent';  
-                 
-                        echo "<script>alert('Thank you for filing a JO. This request is now sent to requestor's head.') </script>";               
-                        echo "<script> location.href='index.php'; </script>";
-                   
-                   
+                    $_SESSION['message'] = 'Message has been sent';
+                    echo "<script>alert('Thank you for filing a JO. $messageUpload') </script>";
+                    echo "<script> location.href='index.php'; </script>";
 
                         // header("location: form.php");
                     } catch (Exception $e) {
@@ -250,8 +247,6 @@ else
 
                     }
 
-               
-               
             }
             else{
                 echo "<script>alert('There is a problem with filing. Please contact your administrator.') </script>";

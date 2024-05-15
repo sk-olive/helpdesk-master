@@ -60,7 +60,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Job Order Report</title>
+        <title>Helpdesk Report</title>
         <link rel="shortcut icon" href="../resources/img/helpdesk.png">
 
         <style>
@@ -124,10 +124,9 @@ padding-top: 5px;
     </head>
     <body style="margin: 0px; padding: 0px; ">
         <div style="text-align: center">
-            <p style="font-size: 11px; margin: 0">Glory (Philippines) Inc.</p>
-            <p style="font-size: 11px; margin: 0">Administration Department</p>
-            <p style="font-size: 10px; margin: 0">http://glory-helpdesk.com</p>
-            <p style="font-size: 11px; margin: 0; font-weight: bold">Job Order Report</p>
+        <p style="font-size: 11px; margin: 0">GLORY (PHILIPPINES) INC.</p>
+        <p style="font-size: 10px; margin: 0">http://glory-helpdesk.com</p>
+        <p style="font-size: 11px; margin: 0; font-weight: bold">Helpdesk Report</p>
         </div>
 
 
@@ -284,7 +283,8 @@ if($dateFinished !=""){
                 $html.= '<tr>
                     <td class="first"><span class="label">ICT Head&apos;s Remarks:</span></td>
                     <td colspan="4"> <span class="child">'.$icthead_reco_remarks.'</span></td>
-                    </tr></table> <hr>';   
+                    </tr></table> <hr>';
+
             }
             elseif($recommendation != "" && ($icthead_reco_remarks == "" || $icthead_reco_remarks == NULL ) && $approved_reco == 1)
                     {
@@ -300,21 +300,21 @@ if($dateFinished !=""){
                
             
 
-$html.='<table style="bottom: 35px; position: absolute;">
-<tr>
-<td class="first"><span class="label">Printed by: </span></td>
-<td class="second"> <span class="child">'.$wholename.'</span></td>
-<td class="third"><span class="label">Date: </span></td>
-<td><span class="child">'.$date.'</span></td>
-</tr>
-</table>
-    </body>
-    </html>';   
+        $html.='<table style="bottom: 35px; position: absolute;">
+        <tr>
+        <td class="first"><span class="label">Printed by: </span></td>
+        <td class="second"> <span class="child">'.$wholename.'</span></td>
+        <td class="third"><span class="label">Date: </span></td>
+        <td><span class="child">'.$date.'</span></td>
+        </tr>
+        </table>
+            </body>
+            </html>';   
     $dompdf = new Dompdf();
 
-$dompdf->loadHtml($html);
-$dompdf->setPaper('A5', 'portrait');
-$dompdf->render();
-$dompdf->stream('Job Order Report.pdf', ['Attachment' => 0]);
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A5', 'portrait');
+    $dompdf->render();
+    $dompdf->stream('Job Order Report.pdf', ['Attachment' => 0]);
 ?>
 

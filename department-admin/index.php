@@ -255,18 +255,22 @@
         
             return date('Y-m-d', $currentDate);
         }
+
         if(isset($_POST['approveRequest'])){
             $requestID = $_POST['joid2'];
             $completejoid = $_POST['completejoid'];
-
+            $section = $_POST['psection'];
             $remarks = $_POST['remarks'];
             $requestor = $_POST['requestor'];
             $requestorEmail = $_POST['requestoremail'];
-            $assigned = $_POST['assigned'];
+
+            if(isset($_POST['assigned']))
+            {
+                $assigned = $_POST['assigned'];
+            }
             $start = $_POST['start'];
             $finish = $_POST['finish'];
             
-
             $sql1 = "Select * FROM `user` WHERE `username` = '$assigned'";
             $result = mysqli_query($con, $sql1);
             while($list=mysqli_fetch_assoc($result))
@@ -277,51 +281,60 @@
              
 
 
-// Function to add weekdays, excluding weekends and holidays
-$sqlHoli = "SELECT holidaysDate FROM holidays";
-$resultHoli = mysqli_query($con, $sqlHoli);
-$holidays = array();
-while ($row = mysqli_fetch_assoc($resultHoli)) {
-    $holidays[] = $row['holidaysDate'];
-}
+        // Function to add weekdays, excluding weekends and holidays
+        $sqlHoli = "SELECT holidaysDate FROM holidays";
+        $resultHoli = mysqli_query($con, $sqlHoli);
+        $holidays = array();
+        while ($row = mysqli_fetch_assoc($resultHoli)) {
+            $holidays[] = $row['holidaysDate'];
+        }
 
-// Function to add weekdays, excluding weekends and holidays
-function addWeekdays2($startDate, $daysToAdd, $holidays) {
-    $currentDate = strtotime($startDate); // ict approval date
-    $weekdaysAdded = 0;
+        // Function to add weekdays, excluding weekends and holidays
+        function addWeekdays2($startDate, $daysToAdd, $holidays) {
+            $currentDate = strtotime($startDate); // ict approval date
+            $weekdaysAdded = 0;
 
-    while ($weekdaysAdded < $daysToAdd) {
-        $currentDayOfWeek = date('N', $currentDate);
+        while ($weekdaysAdded < $daysToAdd) 
+        {
+            $currentDayOfWeek = date('N', $currentDate);
 
         // Exclude weekends (Saturday and Sunday)
-        if ($currentDayOfWeek < 6) {
-            $isHoliday = in_array(date('Y-m-d', $currentDate), $holidays);
+            if ($currentDayOfWeek < 6) 
+            {
+                $isHoliday = in_array(date('Y-m-d', $currentDate), $holidays);
 
-            // Exclude holidays
-            if (!$isHoliday) {
-                $weekdaysAdded++;
+                // Exclude holidays
+                if (!$isHoliday) {
+                    $weekdaysAdded++;
+                }
             }
-        }
 
         // Move to the next day
         $currentDate = strtotime('+1 day', $currentDate);
-    }
+        }
 
-    return date('Y-m-d', $currentDate);
-}
-$dateToday = date('Y-m-d H:i:s', time());
-// Your existing code to set the start date and add 7 weekdays
-$date = date("Y-m-d");
-$startDate = $date; // Replace with your start date
-$daysToAdd = 5; // Number of weekdays to add
+        return date('Y-m-d', $currentDate);
+        }
+        $dateToday = date('Y-m-d H:i:s', time());
+        // Your existing code to set the start date and add 7 weekdays
+        $date = date("Y-m-d");
+        $startDate = $date; // Replace with your start date
+        $daysToAdd = 5; // Number of weekdays to add
 
-$newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
-// echo "Start Date: $startDate<br>";
-// echo "New Date (after adding 7 weekdays excluding weekends and holidays): $newDate";
+        $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
+        // echo "Start Date: $startDate<br>";
+        // echo "New Date (after adding 7 weekdays excluding weekends and holidays): $newDate";
 
             $username = $_SESSION['name'];
-            $sql = "UPDATE `request` SET `status2`='inprogress',`reqstart_date` = '$start',`reqfinish_date` = '$finish',`admin_approved_date`='$date',`expectedFinishDate` = '$newDate',`admin_remarks`='$remarks',`assignedPersonnel`='$assigned',`assignedPersonnelName`='$personnelName', `ict_approval_date`= '$dateToday' WHERE `id` = '$requestID';";
-               $results = mysqli_query($con,$sql);
+            if ( $section  === "ICT" || $section === "mis")
+            {
+                $sql = "UPDATE `request` SET `status2`='inprogress',`reqstart_date` = '$start',`reqfinish_date` = '$finish',`admin_approved_date`='$date',`expectedFinishDate` = '$newDate',`admin_remarks`='$remarks',`assignedPersonnel`='$assigned',`assignedPersonnelName`='$personnelName', `ict_approval_date`= '$dateToday' WHERE `id` = '$requestID';";
+            }
+            elseif ($section == "FEM" || $section === "fem")
+            {
+                $sql = "UPDATE `request` SET `status2`='admin',`approving_head`='$username',`head_approval_date`='$date',`head_remarks`='$remarks' WHERE `id` = '$requestID';";
+            }               
+            $results = mysqli_query($con,$sql);
 
                if($results){
                 $sql2 = "Select * FROM `sender`";
@@ -330,25 +343,42 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                 {
                 $account=$list["email"];
                 $accountpass=$list["password"];
-        
                 }    
 
-                $subject ='Job order request';
-                $message = 'Hi '.$personnelName.',<br> <br>   You have a new job order from '.$requestor.' Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
-                
-
                  require '../vendor/autoload.php';
-    
+
+                 if($section === "ICT" || $section === "mis"){
+                    $subject ='Job order request';
+                    $message = 'Hi '.$personnelName.',<br> <br>   You have a new job order from '.$requestor.' Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+
+                    $subject2 ='Approved Job Order';
+                    $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number '.$completejoid.' is now approved by the administrator. It is now in progress. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+                }
+
+                elseif ($section === "FEM" || $section === "fem") {
+                    $sql1 = "Select * FROM `user` WHERE `level` = 'admin' AND `leader` = 'fem' ";
+                    $result = mysqli_query($con, $sql1);
+                    while($list=mysqli_fetch_assoc($result))
+                    {
+                    $personnelEmail=$list["email"];
+                    $leaderName=$list["name"];
+                    }
+                    $subject ='Job order request';
+                    $message = 'Hi '.$leaderName.',<br> <br>   Mr/Ms. '.$requestor.' filed a job order with JO number of '.$completejoid.' . Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+
+                    $subject2 ='Approved Job Order';
+                    $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number of '.$completejoid.' is now approved by your head. It is now sent to your administrator. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+                }
                  $mail = new PHPMailer(true);       
                  $mail2 = new PHPMailer(true);       
 
-                //  email the admin               
+                             
                  try {
                   //Server settings
-                    $mail->isSMTP();                                      // Set mailer to use SMTP
-                    $mail->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
-                    $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                    $mail->Username = $account;     // Your Email/ Server Email
+                    $mail->isSMTP();                                     // Set mailer to use SMTP
+                    $mail->Host = 'mail.glorylocal.com.ph';              // Specify main and backup SMTP servers
+                    $mail->SMTPAuth = true;                             // Enable SMTP authentication
+                    $mail->Username = $account;                         // Your Email/ Server Email
                     $mail->Password = $accountpass;                     // Your Password
                     $mail->SMTPOptions = array(
                         'ssl' => array(
@@ -360,69 +390,55 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     $mail->SMTPSecure = 'none';                           
                     $mail->Port = 465;                                   
             
-                    //Send Email
-                    // $mail->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
-                    
+                    //Email ICT personnel / FEM admin
                     //Recipients
                     $mail->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
                     $mail->addAddress($personnelEmail);       
-                    // $mail->addAddress('o.bugarin@gmail.com');        
-                    $mail->isHTML(true);                                  
+                    $mail->isHTML(true);    
                     $mail->Subject = $subject;
-                    $mail->Body    = $message;
-            
+                    $mail->Body = $message;
                     $mail->send();
-
                     
-                    $subject2 ='Approved Job Order';
-                    $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number '.$completejoid.' is now approved by the administrator. It is now in progress. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
-                    
-                    // email this requestor
-            
-                        //Server settings
-                          $mail2->isSMTP();                                      // Set mailer to use SMTP
-                          $mail2->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
-                          $mail2->SMTPAuth = true;                               // Enable SMTP authentication
-                          $mail2->Username = $account;     // Your Email/ Server Email
-                          $mail2->Password = $accountpass;                     // Your Password
-                          $mail2->SMTPOptions = array(
+                    //Email Requestor
+                    //Server settings
+                    $mail2->isSMTP();                                     // Set mailer to use SMTP
+                    $mail2->Host = 'mail.glorylocal.com.ph';              // Specify main and backup SMTP servers
+                    $mail2->SMTPAuth = true;                              // Enable SMTP authentication
+                    $mail2->Username = $account;                          // Your Email/ Server Email
+                    $mail2->Password = $accountpass;                      // Your Password
+                    $mail2->SMTPOptions = array(
                               'ssl' => array(
                               'verify_peer' => false,
                               'verify_peer_name' => false,
                               'allow_self_signed' => true
                               )
                                                       );                         
-                          $mail2->SMTPSecure = 'none';                           
-                          $mail2->Port = 465;                                   
+                    $mail2->SMTPSecure = 'none';                           
+                    $mail2->Port = 465;                                   
                   
-                          //Send Email
-                          // $mail2->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
-                          
-                          //Recipients
-                          $mail2->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-                          $mail2->addAddress($requestorEmail);        
-                          $mail2->isHTML(true);                                  
-                          $mail2->Subject = $subject2;
-                          $mail2->Body    = $message2;
+
+                    //Recipients
+                    $mail2->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
+                    $mail2->addAddress($requestorEmail);        
+                    $mail2->isHTML(true);                                  
+                    $mail2->Subject = $subject2;
+                    $mail2->Body    = $message2;
                   
-                          $mail2->send();
-                          $_SESSION['message'] = 'Message has been sent';
-                          echo "<script>alert('Thank you for approving.') </script>";
-                          echo "<script> location.href='index.php'; </script>";
+                    $mail2->send();
+                    $_SESSION['message'] = 'Message has been sent';
+                    echo "<script>alert('Thank you for approving.') </script>";
+                    echo "<script> location.href='index.php'; </script>";
       
+                    echo "<script>setTimeout(function() {
+                            alert('Delayed alert after 3 seconds!');
+                        }, 10000);  </script>";
 
                         // header("location: form.php");
                     } catch (Exception $e) {
                         $_SESSION['message'] = 'Message could not be sent. Mailer Error: '.$mail->ErrorInfo;
                     echo "<script>alert('Message could not be sent. Mailer Error.') </script>";
-
                     }
-
-               
-               }
-          
-          
-          // end of sending email
+               } // end of sending email
           
           
           
@@ -447,8 +463,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                     {
                     $account=$list["email"];
                     $accountpass=$list["password"];
-            
-                      }    
+                    }    
     
                      require '../vendor/autoload.php';
         
@@ -464,9 +479,9 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                 
                             //Server settings
                               $mail->isSMTP();                                      // Set mailer to use SMTP
-                              $mail->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
-                              $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                              $mail->Username = $account;     // Your Email/ Server Email
+                              $mail->Host = 'mail.glorylocal.com.ph';              // Specify main and backup SMTP servers
+                              $mail->SMTPAuth = true;                              // Enable SMTP authentication
+                              $mail->Username = $account;                          // Your Email/ Server Email
                               $mail->Password = $accountpass;                     // Your Password
                               $mail->SMTPOptions = array(
                                   'ssl' => array(
@@ -515,10 +530,6 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
             }
 
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -676,7 +687,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                                                 <div style="overflow:inherit" class="_qiHHw Ut_ecQ kHy45A">
                                                 <span  class=" sr-only">Notifications</span>
                         <?php 
-                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE  `status2` ='inprogress' and `request_to` = 'fem'";
+                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE  `status2` ='inprogress' and `request_to` = '$user_level'";
                                         $result = mysqli_query($con, $sql1);
                                         while($count=mysqli_fetch_assoc($result))
                                         {
@@ -684,7 +695,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                                         if($count["pending"] > 0){
                                             ?>
                                             <div  class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900"> <?php 
-                                                       $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` ='inprogress' and `request_to` = 'fem'";
+                                                       $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` ='inprogress' and `request_to` = '$user_level'";
                                                        $result = mysqli_query($con, $sql1);
                                                        while($count=mysqli_fetch_assoc($result))
                                                        {
@@ -1741,11 +1752,16 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
         <select required id="assigned" name="assigned" class="bg-gray-50 col-span-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         <option selected disabled value="">Choose</option>
             <?php
-            $sql="SELECT u.*, 
+            // $sql="SELECT u.*, 
+            // (SELECT COUNT(id) FROM request 
+            //  WHERE `status2` = 'inprogress' 
+            //  AND `assignedPersonnel` = u.username) AS 'pending'
+            // FROM `user` u";
+            $sql = "SELECT u.*, 
             (SELECT COUNT(id) FROM request 
-             WHERE `status2` = 'inprogress' 
+             WHERE  `status2` = 'inprogress' 
              AND `assignedPersonnel` = u.username) AS 'pending'
-            FROM `user` u";
+            FROM `user` u WHERE u.department = 'ICT'";
                 $result = mysqli_query($con,$sql);
 
                 while($row=mysqli_fetch_assoc($result)){
@@ -1773,15 +1789,15 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                 </div>
                 <div class="w-full grid gap-4 grid-cols-2">
                      <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Requested Section: </span><span id="sectionmodal"></span></h2>
-                     <h2 class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Type: </span><span id="category"></span></h2>
+                     <h2 class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Category: </span><span id="category"></span></h2>
                 </div>
-                <div class="w-full grid gap-4 grid-cols-2">
-                <div id="categoryDivParent" class="grid gap-4 grid-cols-2">
+                <div class="hidden w-full grid gap-4 grid-cols-2">
+                <div id="categoryDivParent" class="hidden grid gap-4 grid-cols-2">
                 <h2 class="float-left font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Computer Name: </span></h2>
                 <input disabled type="text" name="computername" id="computername"class="col-span-1 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     
                 </div>
-                     <div class="grid gap-4 grid-cols-2">
+                     <div class="grid gap-4 grid-cols-2 hidden">
                 <h2 id="telephoneh2" class="pl-10 float-left font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Telephone</span></h2>
                 <input disabled type="text" name="telephone" id="telephone"class="col-span-1 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     
@@ -1856,7 +1872,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
                      <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Recommendation: </span><span id="recommendation"></span></h2>
                 </div>
 
-                <div id="remarksDiv">
+                <div id="remarksDiv" class="hidden">
                 <hr class="h-px  bg-gray-200 border-0 dark:bg-gray-700">
                 <label for="message" class="py-4 col-span-1 font-semibold text-gray-400 dark:text-gray-400">Remarks</label>
                 <textarea id="remarks" name="remarks" rows="1" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Leave  remarks..."></textarea>
@@ -1901,7 +1917,7 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
             <button type="button"  onclick="cancellation()" data-modal-target="popup-modal-cancel" data-modal-toggle="popup-modal-cancel"  class="shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-pink-800/80  w-full text-white bg-gradient-to-br from-red-400 to-pink-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-200 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cancel Request</button>
      
             </div>
-            <div id="buttonPrintDiv" class="hidden items-center px-4 rounded-b dark:border-gray-600">
+            <div id="buttonPrintDiv" class="items-center px-4 rounded-b dark:border-gray-600">
             <button type="submit" name="print" class="shadow-lg shadow-blue-500/30 dark:shadow-lg dark:shadow-teal-800/80  w-full text-white bg-gradient-to-br from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Print</button>
             </div>
 
@@ -2002,11 +2018,16 @@ $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
         <select  id="transferUser" name="transferUser" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         <option selected disabled value="">Choose</option>
             <?php
-            $sql="SELECT u.*, 
-            (SELECT COUNT(id) FROM request 
-             WHERE `status2` = 'inprogress' 
-             AND `assignedPersonnel` = u.username) AS 'pending'
-     FROM `user` u";
+    //         $sql="SELECT u.*, 
+    //         (SELECT COUNT(id) FROM request 
+    //          WHERE `status2` = 'inprogress' 
+    //          AND `assignedPersonnel` = u.username) AS 'pending'
+    //  FROM `user` u";
+    $sql = "SELECT u.*, 
+                (SELECT COUNT(id) FROM request 
+                WHERE  `status2` = 'inprogress' 
+                AND `assignedPersonnel` = u.username) AS 'pending'
+                FROM `user` u WHERE u.department = 'ICT'";
                             $result = mysqli_query($con,$sql);
 
                 while($row=mysqli_fetch_assoc($result)){
@@ -2627,7 +2648,7 @@ const taboptions = {
     activeClasses: 'text-white hover:text-amber-400 dark:text-blue-500 dark:hover:text-blue-400 border-blue-600 dark:border-blue-500',
     inactiveClasses: 'text-gray-300 hover:text-amber-500 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300',
     onShow: () => {
-        //console.log('tab is shown');
+        // console.log('tab is shown');
     }
 };
 
@@ -2649,6 +2670,7 @@ function goToOverall(){
     document.getElementById("datestart").disabled = true;
     document.getElementById("datefinish").disabled = true;
 
+
 const currentTransform = myElement.style.transform = 'translateX(55px) translateY(2px) rotate(135deg)';
 
 $("#buttonPrintDiv").addClass("hidden");
@@ -2658,43 +2680,31 @@ $("#transferButton").addClass("hidden");
 
 }
 
-function goToAdmin(){
-    const myElement = document.querySelector('#diamond');
-    $("#actionDetailsDiv").addClass("hidden");
-    const currentTransform = myElement.style.transform = 'translateX(180px) translateY(2px) rotate(135deg)';
-    $("#buttonPrintDiv").addClass("hidden");
-    $("#recommendationDiv").addClass("hidden");
+// function goToAdmin(){
+//     const myElement = document.querySelector('#diamond');
+//     $("#actionDetailsDiv").addClass("hidden");
+//     const currentTransform = myElement.style.transform = 'translateX(180px) translateY(2px) rotate(135deg)';
+//     $("#buttonPrintDiv").addClass("hidden");
+//     $("#recommendationDiv").addClass("hidden");
 
-    $("#ratingstar").addClass("hidden");
-$("#transferButton").addClass("hidden");
-document.getElementById("datestart").disabled = true;
-    document.getElementById("datefinish").disabled = true;
+//     $("#ratingstar").addClass("hidden");
+//     $("#transferButton").addClass("hidden");
+//     document.getElementById("datestart").disabled = true;
+//     document.getElementById("datefinish").disabled = true;
 
-}
+// }
 
 
 function goToHeadApproval(){
     const myElement = document.querySelector('#diamond');
-    $("#adminremarksDiv").addClass("hidden");
-    $("#remarksDiv").removeClass("hidden");
-    // $("#buttonDiv").removeClass("hidden");
-    $("#assignedPersonnelDiv").addClass("hidden");
-    $("#chooseAssignedDiv").addClass("hidden");
-     $("#buttonPrintDiv").addClass("hidden");
-    $("#buttonPrintDiv").removeClass("hidden");
-    $("#actionDetailsDiv").addClass("hidden");
-    $("#ratingstar").addClass("hidden");
     const currentTransform = myElement.style.transform = 'translateX(165px) translateY(2px) rotate(135deg)';
-    // document.getElementById("reasonCancel").required = false;document.getElementById("telephone").disabled = true;
-    // document.getElementById("assigned").required = true;
-    // document.getElementById("telephone").disabled = true;
-    // document.getElementById("datestart").disabled = false;
-    // document.getElementById("datefinish").disabled = false;
-
-    $("#recommendationDiv").addClass("hidden");
-    $("#transferButton").addClass("hidden");
-
-
+    
+    $("#chooseAssignedDiv").addClass("hidden");
+    $("#remarksDiv").removeClass("hidden");
+    $("#buttonDiv").removeClass("hidden");
+    $("#buttonPrintDiv").addClass("hidden");
+    
+    document.getElementById("assigned").required = false;
 }
 function goToHead(){
     const myElement = document.querySelector('#diamond');
@@ -2706,8 +2716,8 @@ function goToHead(){
     $("#buttonPrintDiv").addClass("hidden");
     $("#actionDetailsDiv").addClass("hidden");
     $("#ratingstar").addClass("hidden");
-const currentTransform = myElement.style.transform = 'translateX(275px) translateY(2px) rotate(135deg)';
-document.getElementById("reasonCancel").required = false;document.getElementById("telephone").disabled = true;
+    const currentTransform = myElement.style.transform = 'translateX(275px) translateY(2px) rotate(135deg)';
+    document.getElementById("reasonCancel").required = false;document.getElementById("telephone").disabled = true;
     document.getElementById("assigned").required = true;
     document.getElementById("telephone").disabled = true;
     document.getElementById("datestart").disabled = false;
@@ -2734,8 +2744,8 @@ function goToMis(){
     document.getElementById("assigned").required = false;
     $("#recommendationDiv").addClass("hidden");
 
-$("#transferButton").removeClass("hidden");
-document.getElementById("datestart").disabled = true;
+    $("#transferButton").removeClass("hidden");
+    document.getElementById("datestart").disabled = true;
     document.getElementById("datefinish").disabled = true;
     const currentTransform = myElement.style.transform = 'translateX(385px) translateY(2px) rotate(135deg)';
 
