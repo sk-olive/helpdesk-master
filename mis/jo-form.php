@@ -200,9 +200,9 @@ else
                 $accountpass=$list["password"];
                 }    
 
-                $subject ='Job order request';
-                $message = 'Hi '.$headname.',<br> <br>   Mr/Ms. '.$requestor_name.' filed a job order. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
-                
+                $subject ='Job Order Request';
+                $message = 'Hi '.$headname.',<br> <br>   Mr/Ms. '.$requestor_name.' filed a job order. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: Job Order<br> Category: '.$category.'<br> Request Details: '.$request.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+
 
                  require '../vendor/autoload.php';
     

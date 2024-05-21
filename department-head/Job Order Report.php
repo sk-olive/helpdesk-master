@@ -177,7 +177,7 @@ if($type == "Computer"){
              
             if($adminsRemarks !=""){
                 $html.=' <tr>
-                <td class="first"><span class="label">Admin&apos;s Remaks</span></td>
+                <td class="first"><span class="label">ICT Head&apos;s Remaks</span></td>
                 <td colspan="4"> <span class="child">'.$adminsRemarks.'
                     </span></td>
             </tr>';

@@ -1,25 +1,23 @@
-<?php
-    require '../dompdf/vendor/autoload.php';
 
-    use Dompdf\Dompdf;
-    session_start();
+    <?php 
+    // session_start();
     $date = new DateTime(); 
     $date = $date->format('F d, Y');
 
-    $wholename=$_SESSION['name'];
-    $jobOrderNo = $_SESSION['jobOrderNo'] ;
-
+    $jobOrderNo = $_SESSION['ticket_number'];
     $requestor = $_SESSION['requestor'] ;
     $department = $_SESSION['pdepartment'] ;
     $dateFiled = $_SESSION['dateFiled'] ;
-    $requestedSchedule = $_SESSION['requestedSchedule'] ;
     $type = $_SESSION['type'] ;
-    $pcNumber = $_SESSION['pcNumber'] ;
     $details = $_SESSION['details'] ;
-    $headsRemarks = $_SESSION['headsRemarks'] ;
+
     $adminsRemarks = $_SESSION['adminsRemarks'] ;
     $assignedPersonnel = $_SESSION['assignedPersonnel'] ;
-    $section = $_SESSION['section'] ;
+    $request_type = $_SESSION['requestType'];
+    $ticket_category =  $_SESSION['ticket_category'];
+    $adminsDate = $date;
+    $onthespot_ticket = $_SESSION['onthespot_ticket'] ;
+
     $firstAction = $_SESSION['firstAction'] ;
     $firstDate = $_SESSION['firstDate'] ;
     $secondAction = $_SESSION['secondAction'] ;
@@ -29,31 +27,25 @@
     $finalAction = $_SESSION['finalAction'] ;
     $recommendation = $_SESSION['recommendation'] ;
     $dateFinished = $_SESSION['dateFinished'] ;
-    $ratedBy = $_SESSION['ratedBy'] ;
-    $delivery = $_SESSION['delivery'] ;
-    $quality = $_SESSION['quality'] ;
-    $totalRating = $_SESSION['totalRating'] ;
-    $ratingRemarks = $_SESSION['ratingRemarks'] ;
-    $ratedDate = $_SESSION['ratedDate'] ;
     $approved_reco = $_SESSION['approved_reco'];
     $icthead_reco_remarks = $_SESSION['icthead_reco_remarks'];
+ 
 
-
-   $headsDate =  $_SESSION['headsDate'];
-   $adminsDate =  $_SESSION['adminsDate'];
-
-    if($_SESSION['status']=="inprogress"){
+   
+    $section = 'ICT';
+    if(isset($onthespot_ticket) && $onthespot_ticket == 0)
+    {
         $status = "In Progress";
     }
-    else if($_SESSION['status']=="rated"){
+    else
+    {
         $status = "Done";
-
-    }   else if($_SESSION['status']=="Done"){
-        $status = "Done";
-
     }
+ 
+    ?>
 
-    $html ='<!DOCTYPE html>
+
+   <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -124,6 +116,7 @@ padding-top: 5px;
     <body style="margin: 0px; padding: 0px; ">
         <div style="text-align: center">
         <p style="font-size: 11px; margin: 0">GLORY (PHILIPPINES) INC.</p>
+            <!-- <p style="font-size: 11px; margin: 0">Administration Department</p> -->
             <p style="font-size: 10px; margin: 0">http://glory-helpdesk.com</p>
             <p style="font-size: 11px; margin: 0; font-weight: bold">Helpdesk Report</p>
         </div>
@@ -132,18 +125,19 @@ padding-top: 5px;
         <table>
             <tr>
                 <td class="first"><span class="label">Job Order No</span><span style="align-text: right">:</span></td>
-                <td class="second"> <span class="child">'.$jobOrderNo.'</span></td>
+                <td class="second"> <span class="child"><?php echo $jobOrderNo;?></span></td>
                 <td><span class="label">Status: </span></td>
-                <td class="fourth"><span class="child">'.$status .'</span></td>
+                <td class="fourth"><span class="child"><?php echo $status ;?></span></td>
+             
 
 
             </tr>
 
             <tr>
                 <td class="first"><span class="label">Requestor: </span></td>
-                <td class="second"> <span class="child">'.$requestor .'</span></td>
+                <td class="second"> <span class="child"><?php echo $requestor;?></span></td>
                 <td><span class="label">Department: </span></td>
-                <td class="fourth"><span class="child">'.$department.'</span></td>
+                <td class="fourth"><span class="child"><?php echo $department;?></span></td>
             </tr>
         </table>
         <hr>
@@ -154,65 +148,49 @@ padding-top: 5px;
             </tr>
             <tr>
                 <td><span class="label">Date Filed: </span></td>
-                <td> <span class="child">'.$dateFiled.'</span></td>
+                <td> <span class="child"><?php echo $dateFiled;?></span></td>
             </tr>
-            <tr style="display: none">
+            <!-- <tr style="display: none">
                 <td><span class="label">Requested Schedule: </span></td>
-                <td> <span class="child">'.$requestedSchedule .'</span></td>
+                <td> <span class="child"><?php echo $requestedSchedule; ?></span></td>
+
+            </tr> -->
+            <tr>
+                <td class="first"><span class="label">Category: </span></td>
+                <?php if ($request_type === "Technical Support"){;?>
+                    <td class="second"> <span class="child"><?php echo $ticket_category; ?></span></td>
+               <?php }
+               else{
+                ?>
+                    <td class="second"> <span class="child"><?php echo $type; ?></span></td>
+                <?php }
+                ?>
 
             </tr>
-            <tr>
-                <td class="first"><span class="label">Type: </span></td>
-                <td class="second"> <span class="child">'.$type.'</span></td>';
-if($type == "Computer"){
-
-    $html.='<td class="third"><span class="label">PC Number: </span></td>
-    <td><span class="child">'.$pcNumber.'</span></td>';
-}
-           $html.=' </tr>
             <tr>
                 <td class="first"><span class="label">Details</span></td>
-                <td  colspan="4"> <span class="child"> '.$details.'
-                    </span></td>
-            </tr>';
-            if($headsRemarks !=""){
-                
-                $html.='<tr>
-            <td class="first"><span class="label">Head&apos;s Remarks</span></td>
-            <td class="second"> <span class="child">'.$headsRemarks .'</span></td>
-            <td><span class="label">Date: </span></td>
-            <td class="fourth"><span class="child">'.$headsDate.'</span></td>
-        </tr>
-        ';
-            }
-            else{
-                $html.='<tr>
-                <td class="first"><span class="label">Head&apos;s Remarks</span></td>
-                <td class="second"> <span class="child">n/a</span></td>
-                <td><span class="label">Date: </span></td>
-                <td class="fourth"><span class="child">'.$headsDate.'</span></td>
-            </tr>';
-            }
-             
-            if($adminsRemarks !="" ){
-                $html.=' <tr>
+                <td  colspan="4"> <span class="child"> <?php echo $details; ?></span></td>
+            </tr>
+  
+         <?php   
+            if($adminsRemarks !="" ){ ?>
+                <tr>
                 <td class="first"><span class="label">ICT Head&apos;s Remarks</span></td>
-                <td class="second"> <span class="child">'.$adminsRemarks .'</span></td>
+                <td class="second"> <span class="child"><?php echo $adminsRemarks; ?></span></td>
                 <td><span class="label">Date: </span></td>
-                <td class="fourth"><span class="child">'.$adminsDate.'</span></td>
-            </tr>';
-            }
-            else{
-                $html.='<tr>
+                <td class="fourth"><span class="child"><?php echo $adminsDate; ?></span></td>
+            </tr>
+           <?php }
+            elseif(($adminsRemarks =="" ||  $adminsRemarks = NULL)&& $adminsDate != NULL){?>
+            <tr>
                 <td class="first"><span class="label">ICT Head&apos;s Remarks</span></td>
                 <td class="second"> <span class="child">n/a</span></td>
                 <td><span class="label">Date: </span></td>
-                <td class="fourth"><span class="child">'.$adminsDate.'</span></td>
-            </tr>';
-            }
+                <td class="fourth"><span class="child"><?php echo $adminsDate; ?></span></td>
+            </tr>
+          <?php  } ?>
              
-         
-       $html.=' </table>
+       </table>
         <hr>
 
         <table>
@@ -222,99 +200,83 @@ if($type == "Computer"){
             </tr>
             <tr>
                 <td class="first"><span class="label">Assigned Personnel: </span></td>
-                <td class="second"> <span class="child">'.$assignedPersonnel.'</span></td>
+                <td class="second"> <span class="child"><?php echo $assignedPersonnel; ?></span></td>
                 <td class="third"><span class="label">Section: </span></td>
-                <td><span class="child">'.$section.'</span></td>
-            </tr>';
-if($firstAction !=""){
-    $html.='<tr>
+                <td><span class="child"><?php echo $section; ?></span></td>
+            </tr>
+            <?php 
+if($firstAction !=""){?>
+    <tr>
     <td class="first"><span class="label">1st Action: </span></td>
-    <td class="second"> <span class="child">'.$firstAction.'</span></td>
+    <td class="second"> <span class="child"><?php echo $firstAction; ?></span></td>
     <td style="width: 10%"><span class="label">Date: </span></td>
-    <td><span class="child">'.$firstDate.'</span></td>
-</tr>';
-}
- if($secondAction !=""){
-    $html.='<tr>
+    <td><span class="child"><?php echo $firstDate; ?></span></td>
+</tr>
+<?php }
+ if($secondAction !=""){ ?>
+    <tr>
     <td class="first"><span class="label">2nd Action: </span></td>
-    <td class="second"> <span class="child">'.$secondAction.'</span></td>
+    <td class="second"> <span class="child"><?php echo $secondAction; ?></span></td>
     <td><span class="label">Date: </span></td>
-    <td><span class="child">'.$secondDate.'</span></td>
-</tr>';
-}
- if($thirdAction !=""){
-    $html.='  <tr>
+    <td><span class="child"><?php echo $secondDate; ?></span></td>
+</tr>
+<?php }
+ if($thirdAction !=""){ ?>
+ <tr>
     <td class="first"><span class="label">3rd Action: </span></td>
-    <td class="second"> <span class="child">'.$thirdAction.'</span></td>
+    <td class="second"> <span class="child"><?php echo $thirdAction; ?></span></td>
     <td><span class="label">Date: </span></td>
-    <td><span class="child">'.$thirdDate.'</span></td>
-</tr>';
-}
- if($finalAction !=""){
-    $html.=' <tr>
+    <td><span class="child"><?php echo $thirdDate; ?></span></td>
+</tr>
+<?php }
+ if($finalAction !=""){ ?>
+    <tr>
     <td class="first"><span class="label">Final Solution: </span></td>
-    <td colspan="4"> <span class="child">'.$finalAction.'</span></td>
+    <td colspan="4"> <span class="child"><?php echo $finalAction ?></span></td>
 
-</tr>';
-}
-$html.='  </table>
-
-<hr>';
-// if($dateFinished !=""){
-//         $html.='  <tr>
-//                 <td class="first"><span class="label">Date Finished:</span></td>
-//                 <td colspan="4"> <span class="child">'.$dateFinished.'
-//                     </span></td>
-
-//             </tr>';
-// }
+</tr>
+<?php }
     
+if($dateFinished !=""){ ?>
+        <tr>
+                <td class="first"><span class="label">Date Finished:</span></td>
+                <td colspan="4"> <span class="child"><?php echo  $dateFinished ?></span></td>
+        </tr>
+<?php } ?>
+    
+        </table>
 
-          
+            <hr>
+            <?php 
             if($recommendation != "" && ($icthead_reco_remarks != ""  || $icthead_reco_remarks != NULL) && $approved_reco == 1)
-            {
-                $html.='<table>
+            { ?>
+            <table>
                 <tr>
                     <td colspan="2" class="category"><span class="label">RECOMMENDATION</span></td>
                 </tr>
                 <tr>
                     <td class="first"><span class="label">Assigned Personnel Recommendation:</span></td>
-                    <td colspan="4"> <span class="child">'.$recommendation.'</span></td>
-                </tr>';
-                $html.= '<tr>
+                    <td colspan="4"> <span class="child"><?php echo $recommendation; ?></span></td>
+                </tr>
+                <tr>
                     <td class="first"><span class="label">ICT Head&apos;s Remarks:</span></td>
-                    <td colspan="4"> <span class="child">'.$icthead_reco_remarks.'</span></td>
-                    </tr></table> <hr>';   
-            }
+                    <td colspan="4"> <span class="child"><?php echo $icthead_reco_remarks; ?></span></td>
+                    </tr></table> <hr>
+         <?php   }
             elseif($recommendation != "" && ($icthead_reco_remarks == "" || $icthead_reco_remarks == NULL ) && $approved_reco == 1)
-                    {
-                        $html.='<table>
+                    { ?>
+                    <table>
                         <tr>
                             <td colspan="2" class="category"><span class="label">RECOMMENDATION</span></td>
                         </tr>
                         <tr>
                             <td class="first"><span class="label">Assigned Personnel Recommendation:</span></td>
-                            <td colspan="4"> <span class="child">'.$recommendation.'</span></td>
-                        </tr></table> <hr>';   
-                    }      
-                        
-         
-    
-$html.='<table style="bottom: 35px; position: absolute;">
-<tr>
-<td class="first"><span class="label">Printed by: </span></td>
-<td class="second"> <span class="child">'.$wholename.'</span></td>
-<td class="third"><span class="label">Date: </span></td>
-<td><span class="child">'.$date.'</span></td>
-</tr>
-</table>
+                            <td colspan="4"> <span class="child"><?php echo $recommendation; ?></span></td>
+                        </tr></table> <hr>  
+                  <?php  }?>      
+               
+        
     </body>
-    </html>';   
-    $dompdf = new Dompdf();
+    </html>
 
-$dompdf->loadHtml($html);
-$dompdf->setPaper('A5', 'portrait');
-$dompdf->render();
-$dompdf->stream('Job Order Report.pdf', ['Attachment' => 0]);
-?>
 

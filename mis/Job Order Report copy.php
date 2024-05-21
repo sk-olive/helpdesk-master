@@ -36,22 +36,22 @@
     $approved_reco = $_SESSION['approved_reco'];
     $icthead_reco_remarks = $_SESSION['icthead_reco_remarks'];
     $request_type = $_SESSION['requestType'];
-
+    $ticket_category =  $_SESSION['ticket_category'];
     $headsDate =  $_SESSION['headsDate'];
     $adminsDate =  $_SESSION['adminsDate'];
 
-    // if($_SESSION['status']=="inprogress"){
+    // $onthespot_ticket = $_SESSION['onthespot_ticket'] ;
+  
+    // if($onthespot_ticket == 0 || $onthespot_ticket == NULL)
+    // {
     //     $status = "In Progress";
     // }
-    // else if($_SESSION['status']=="rated"){
+    // else
+    // {
     //     $status = "Done";
-
-    // } 
-    // else if($_SESSION['status']=="Done"){
-    //     $status = "Done";
-
-    // }  
-    $status = "Done";
+    // }
+ 
+    $status = $_SESSION['status'];
     if($_SESSION['requestType'] === "Technical Support"){
         $jobOrderNo = 'TS-'.$jobOrderNo;
     }else{
@@ -173,7 +173,14 @@ padding-top: 5px;
             </tr>
             <tr>
                 <td class="first"><span class="label">Category: </span></td>
-                <td class="second"> <span class="child"><?php echo $type; ?></span></td>
+                <?php if ($request_type === "Technical Support"){;?>
+                    <td class="second"> <span class="child"><?php echo $ticket_category; ?></span></td>
+               <?php }
+               else{
+                ?>
+                    <td class="second"> <span class="child"><?php echo $type; ?></span></td>
+                <?php }
+                ?>
 
 
                 <?php if($type == "Computer"){;?>
@@ -190,13 +197,14 @@ padding-top: 5px;
             if($headsRemarks !=""){ ?>
                 
         <tr>
+            <td class="first"><span class="label">Head&apos;s Remarks</span></td>
             <td class="second"> <span class="child"><?php echo $headsRemarks; ?></span></td>
             <td><span class="label">Date: </span></td>
             <td class="fourth"><span class="child"></span> <?php echo $headsDate; ?></span></td>
         </tr>
         
             <?php  } 
-            else{?>
+            elseif($headsRemarks =="" && $headsDate !=""){?>
             <tr>
                 <td class="first"><span class="label">Head&apos;s Remarks</span></td>
                 <td class="second"> <span class="child">n/a</span></td>
@@ -207,20 +215,21 @@ padding-top: 5px;
              
             if($adminsRemarks !="" ){ ?>
                 <tr>
-                <td class="first"><span class="label">Admin&apos;s Remarks</span></td>
+                <td class="first"><span class="label">ICT Head&apos;s Remarks</span></td>
                 <td class="second"> <span class="child"><?php echo $adminsRemarks; ?></span></td>
                 <td><span class="label">Date: </span></td>
                 <td class="fourth"><span class="child"><?php echo $adminsDate; ?></span></td>
             </tr>
            <?php }
-            else{?>
+            elseif($adminsRemarks =="" && $adminsDate !=""){?>
             <tr>
-                <td class="first"><span class="label">Admin&apos;s Remarks</span></td>
+                <td class="first"><span class="label">ICT Head&apos;s Remarks</span></td>
                 <td class="second"> <span class="child">n/a</span></td>
                 <td><span class="label">Date: </span></td>
                 <td class="fourth"><span class="child"><?php echo $adminsDate; ?></span></td>
             </tr>
           <?php  } ?>
+             
              
          
        </table>

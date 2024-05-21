@@ -196,7 +196,7 @@ if($type == "Computer"){
              
             if($adminsRemarks !="" ){
                 $html.=' <tr>
-                <td class="first"><span class="label">Admin&apos;s Remarks</span></td>
+                <td class="first"><span class="label">ICT Head&apos;s Remarks</span></td>
                 <td class="second"> <span class="child">'.$adminsRemarks .'</span></td>
                 <td><span class="label">Date: </span></td>
                 <td class="fourth"><span class="child">'.$adminsDate.'</span></td>
@@ -204,7 +204,7 @@ if($type == "Computer"){
             }
             else{
                 $html.='<tr>
-                <td class="first"><span class="label">Admin&apos;s Remarks</span></td>
+                <td class="first"><span class="label">ICT Head&apos;s Remarks</span></td>
                 <td class="second"> <span class="child">n/a</span></td>
                 <td><span class="label">Date: </span></td>
                 <td class="fourth"><span class="child">'.$adminsDate.'</span></td>

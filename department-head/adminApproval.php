@@ -39,6 +39,7 @@ $headusername= $_SESSION['username'];
               <td >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                     <button type="button" id="viewdetails" onclick="modalShow(this)"data-recommendation="<?php echo $row['recommendation'] ?>" 
+                    data-requestype ="<?php echo $row['request_type'];?>"
                     data-requestorremarks="<?php echo $row['requestor_remarks'] ?>" 
                     data-quality="<?php echo $row['rating_quality'] ?>" 
                     data-delivery="<?php echo $row['rating_delivery'] ?>" 

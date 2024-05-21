@@ -234,7 +234,7 @@
                 $account=$list["email"];
                 $accountpass=$list["password"];
         
-                  }    
+                }    
 
                 $subject ='Completed Job Order';
                 $message = 'Hi '.$requestor.',<br> <br> FEM has completed one of your job order requests. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';

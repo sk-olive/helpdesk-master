@@ -257,27 +257,87 @@
         }
 
         if(isset($_POST['approveRequest'])){
+            $_SESSION['jobOrderNo']= $_POST['pjobOrderNo'] ;
+            $_SESSION['status']= $_POST['pstatus'] ;
+            $_SESSION['requestor']= $_POST['prequestor'] ;
+            $_SESSION['pdepartment']= $_POST['pdepartment'] ;
+            $_SESSION['dateFiled']= $_POST['pdateFiled'] ;
+            $_SESSION['requestedSchedule']= $_POST['prequestedSchedule'] ;
+            $_SESSION['type']= $_POST['ptype'] ;
+            $_SESSION['pcNumber']= $_POST['ppcNumber'] ;
+            $_SESSION['details']= $_POST['pdetails'] ;
+            $_SESSION['headsRemarks']= $_POST['pheadsRemarks'] ;
+            $_SESSION['adminsRemarks']= $_POST['padminsRemarks'] ;
+            $_SESSION['headsDate']= $_POST['pheadsDate'] ;
+            $_SESSION['adminsDate']= $_POST['padminsDate'] ;
+            $_SESSION['assignedPersonnel']= $_POST['passignedPersonnel'] ;
+            $_SESSION['section']= $_POST['psection'] ;
+            $_SESSION['firstAction']= $_POST['pfirstAction'] ;
+            $_SESSION['firstDate']= $_POST['pfirstDate'] ;
+            $_SESSION['secondAction']= $_POST['psecondAction'] ;
+            $_SESSION['secondDate']= $_POST['psecondDate'] ;
+            $_SESSION['thirdAction']= $_POST['pthirdAction'] ;
+            $_SESSION['thirdDate']= $_POST['pthirdDate'] ;
+            $_SESSION['finalAction']= $_POST['pfinalAction'] ;
+            $_SESSION['recommendation']= $_POST['precommendation'] ;
+            $_SESSION['dateFinished']= $_POST['pdateFinished'] ;
+            $_SESSION['ratedBy']= $_POST['pratedBy'] ;
+            $_SESSION['delivery']= $_POST['pdelivery'] ;
+            $_SESSION['quality']= $_POST['pquality'] ;
+            $_SESSION['totalRating']= $_POST['ptotalRating'] ;
+            $_SESSION['ratingRemarks']= $_POST['pratingRemarks'] ;
+            $_SESSION['ratedDate']= $_POST['pratedDate'] ;
+            $_SESSION['approved_reco']= $_POST['papproved_reco'] ;
+            $_SESSION['icthead_reco_remarks']= $_POST['picthead_reco_remarks'] ;
+            $_SESSION['requestType']= $_POST['prequestType'] ;
+
+
+            $request_type =   $_POST['prequestType'] ;
             $requestID = $_POST['joid2'];
             $completejoid = $_POST['completejoid'];
             $section = $_POST['psection'];
             $remarks = $_POST['remarks'];
             $requestor = $_POST['requestor'];
             $requestorEmail = $_POST['requestoremail'];
-
+            
             if(isset($_POST['assigned']))
             {
                 $assigned = $_POST['assigned'];
+                $sql1 = "Select * FROM `user` WHERE `username` = '$assigned'";
+                $result = mysqli_query($con, $sql1);
+                while($list=mysqli_fetch_assoc($result))
+                {
+                $personnelEmail=$list["email"];
+                $personnelName=$list["name"];
+                }
             }
-            $start = $_POST['start'];
-            $finish = $_POST['finish'];
-            
-            $sql1 = "Select * FROM `user` WHERE `username` = '$assigned'";
+            else
+            {
+                $personnelName= $_POST['passignedPersonnel'];
+            }
+            $cat_lvl ;
+            $sql1 = "Select * FROM `request` WHERE `id` = '$requestID'";
             $result = mysqli_query($con, $sql1);
             while($list=mysqli_fetch_assoc($result))
             {
-            $personnelEmail=$list["email"];
-            $personnelName=$list["name"];
+            // $requestorUsername=$list["requestorUsername"];
+            // $email=$list["email"];
+            // $requestor=$list["requestor"];
+            
+            $request_type = $list['request_type'];
+            $request_category =$list["request_category"];
+            $detailsOfRequest= $list["request_details"];
+            // $r_personnelsName=$list["assignedPersonnelName"];
+            $ticket_category =$list["ticket_category"];
+            $user_name = $list["ticket_filer"];
+            $cat_lvl =$list['category_level'];
             }
+            $_SESSION['ticket_category']=  $ticket_category;
+
+            $start = $_POST['start'];
+            $finish = $_POST['finish'];
+            
+          
              
 
 
@@ -328,7 +388,7 @@
             $username = $_SESSION['name'];
             if ( $section  === "ICT" || $section === "mis")
             {
-                $sql = "UPDATE `request` SET `status2`='inprogress',`reqstart_date` = '$start',`reqfinish_date` = '$finish',`admin_approved_date`='$date',`expectedFinishDate` = '$newDate',`admin_remarks`='$remarks',`assignedPersonnel`='$assigned',`assignedPersonnelName`='$personnelName', `ict_approval_date`= '$dateToday' WHERE `id` = '$requestID';";
+                $sql = "UPDATE `request` SET `status2`='inprogress',`reqstart_date` = '$start',`reqfinish_date` = '$finish',`admin_approved_date`='$date',`expectedFinishDate` = '$newDate',`admin_remarks`='$remarks',`admin_approved_date`='$date',`assignedPersonnel`='$assigned',`assignedPersonnelName`='$personnelName', `ict_approval_date`= '$dateToday' WHERE `id` = '$requestID';";
             }
             elseif ($section == "FEM" || $section === "fem")
             {
@@ -348,11 +408,25 @@
                  require '../vendor/autoload.php';
 
                  if($section === "ICT" || $section === "mis"){
-                    $subject ='Job order request';
-                    $message = 'Hi '.$personnelName.',<br> <br>   You have a new job order from '.$requestor.' Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
 
-                    $subject2 ='Approved Job Order';
-                    $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number '.$completejoid.' is now approved by the administrator. It is now in progress. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+                    if ($request_type === "Technical Support")
+                    {
+                    $subject ='New Ticket Request';
+                    $message = 'Hi '.$personnelName.',<br> <br>   You have a new ticket request with TS number TS-'.$completejoid.' from '.$requestor.'. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Ticket Category: '.$ticket_category.'<br>Category Level: '.$cat_lvl.'<br> Request Details: '.$detailsOfRequest.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+
+                    $subject2 ='Approved Ticket Request';
+                    $message2 = 'Hi '.$requestor.',<br> <br>  Your ticket request with TS number TS-'.$completejoid.' is now approved by the administrator. It is now in progress. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Ticket Category: '.$ticket_category.'<br>Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$personnelName.'<br> Ticket Filer: '.$user_name.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    }
+                    else
+                    {
+                        $request_type = "Job Order";
+                        $subject ='Job Order Request';
+                        $message = 'Hi '.$personnelName.',<br> <br>   You have a new job order with JO number JO-'.$completejoid.' from '.$requestor.'. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Category: '.$request_category.'<br>Request Details: '.$detailsOfRequest.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+
+                        $subject2 ='Approved Job Order';
+                        $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number JO-'.$completejoid.' is now approved by the administrator. It is now in progress. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Category: '.$request_category.'<br>Request Details: '.$detailsOfRequest.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    }
+
                 }
 
                 elseif ($section === "FEM" || $section === "fem") {
@@ -363,12 +437,17 @@
                     $personnelEmail=$list["email"];
                     $leaderName=$list["name"];
                     }
-                    $subject ='Job order request';
-                    $message = 'Hi '.$leaderName.',<br> <br>   Mr/Ms. '.$requestor.' filed a job order with JO number of '.$completejoid.' . Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+                    $subject ='Job Order Request';
+                    $message = 'Hi '.$leaderName.',<br> <br>   Mr/Ms. '.$requestor.' filed a job order with JO number JO-'.$completejoid.' . Please check the details below or by signing in into our Helpdesk.  <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Category: '.$request_category.'<br>Request Details: '.$detailsOfRequest.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
 
                     $subject2 ='Approved Job Order';
-                    $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number of '.$completejoid.' is now approved by your head. It is now sent to your administrator. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+                    $message2 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number JO-'.$completejoid.' is now approved by your head. It is now sent to your administrator. Please check the details below or by signing in into our Helpdesk.<br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Category: '.$request_category.'<br>Request Details: '.$detailsOfRequest.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                 }
+                require '../vendor/autoload.php';
+                require '../dompdf/vendor/autoload.php';
+                ob_start();
+                require 'Job Order Report copy.php';
+                $html = ob_get_clean();
                  $mail = new PHPMailer(true);       
                  $mail2 = new PHPMailer(true);       
 
@@ -396,6 +475,15 @@
                     $mail->addAddress($personnelEmail);       
                     $mail->isHTML(true);    
                     $mail->Subject = $subject;
+                     // Generate PDF content using Dompdf
+                     $dompdf = new Dompdf\Dompdf();
+                     $dompdf->loadHtml($html);
+                     $dompdf->setPaper('A5', 'portrait'); // Set paper size and orientation
+                     $dompdf->render();
+                     $pdfContent = $dompdf->output();
+                             
+                     // Attach PDF to the email
+                     $mail->addStringAttachment($pdfContent, 'Helpdesk Report.pdf', 'base64', 'application/pdf');
                     $mail->Body = $message;
                     $mail->send();
                     
@@ -420,7 +508,16 @@
                     //Recipients
                     $mail2->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
                     $mail2->addAddress($requestorEmail);        
-                    $mail2->isHTML(true);                                  
+                    $mail2->isHTML(true);    
+                     // Generate PDF content using Dompdf
+                     $dompdf = new Dompdf\Dompdf();
+                     $dompdf->loadHtml($html);
+                     $dompdf->setPaper('A5', 'portrait'); // Set paper size and orientation
+                     $dompdf->render();
+                     $pdfContent = $dompdf->output();
+                             
+                     // Attach PDF to the email
+                     $mail2->addStringAttachment($pdfContent, 'Helpdesk Report.pdf', 'base64', 'application/pdf');                              
                     $mail2->Subject = $subject2;
                     $mail2->Body    = $message2;
                   
@@ -429,9 +526,7 @@
                     echo "<script>alert('Thank you for approving.') </script>";
                     echo "<script> location.href='index.php'; </script>";
       
-                    echo "<script>setTimeout(function() {
-                            alert('Delayed alert after 3 seconds!');
-                        }, 10000);  </script>";
+            
 
                         // header("location: form.php");
                     } catch (Exception $e) {
@@ -915,7 +1010,7 @@
                             </ul>
                         </div>
                         <div class="rzHaWQ theme light" id="diamond"
-                            style="transform: translateX(160px) translateY(2px) rotate(135deg);"></div>
+                            style="transform: translateX(275px) translateY(2px) rotate(135deg);"></div>
                     </div>
                 </div>
             </div>
@@ -1227,6 +1322,7 @@
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                    
                     <button type="button" id="viewdetails" onclick="modalShow(this)" 
+                    data-requestype ="<?php echo $row['request_type'];?>"
                     data-recommendation="<?php echo $row['recommendation'] ?>" 
                     data-requestorremarks="<?php echo $row['requestor_remarks'] ?>" 
                     data-quality="<?php echo $row['rating_quality'] ?>" 
@@ -1531,7 +1627,9 @@
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                    <?php if (($row['recommendation'] != "" || $row['recommendation'] != NULL) && $row['approved_reco'] == 0)
                                 {
+                                    
                                     echo "<button id='viewdetails' onclick='modalShow(this)' 
+                                    data-reco='1' 
                                     data-recommendation='".$row['recommendation']."' 
                                     data-approved_reco='".$row['approved_reco']."' 
                                     data-icthead_reco_remarks='".$row['icthead_reco_remarks']."' 
@@ -1576,6 +1674,7 @@
                                 }
                             else{
                                 echo "<span id='viewdetails' onclick='modalShow(this)' 
+                                data-reco='0' 
                                 data-recommendation='".$row['recommendation']."' 
                                 data-approved_reco='".$row['approved_reco']."' 
                                 data-icthead_reco_remarks='".$row['icthead_reco_remarks']."' 
@@ -1716,6 +1815,7 @@
             <input type="text" id="pratedDate" name="pratedDate" class="hidden">
             <input type="text" id="papproved_reco" name="papproved_reco" class="hidden">
             <input type="text" id="picthead_reco_remarks" name="picthead_reco_remarks" class="hidden">
+            <input type="text" id="prequestType" name="prequestType" class="hidden">
 
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -1752,16 +1852,16 @@
         <select required id="assigned" name="assigned" class="bg-gray-50 col-span-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         <option selected disabled value="">Choose</option>
             <?php
-            // $sql="SELECT u.*, 
-            // (SELECT COUNT(id) FROM request 
-            //  WHERE `status2` = 'inprogress' 
-            //  AND `assignedPersonnel` = u.username) AS 'pending'
-            // FROM `user` u";
-            $sql = "SELECT u.*, 
+            $sql="SELECT u.*, 
             (SELECT COUNT(id) FROM request 
-             WHERE  `status2` = 'inprogress' 
+             WHERE `status2` = 'inprogress' 
              AND `assignedPersonnel` = u.username) AS 'pending'
-            FROM `user` u WHERE u.department = 'ICT'";
+            FROM `user` u";
+            // $sql = "SELECT u.*, 
+            // (SELECT COUNT(id) FROM request 
+            //  WHERE  `status2` = 'inprogress' 
+            //  AND `assignedPersonnel` = u.username) AS 'pending'
+            // FROM `user` u WHERE u.department = 'ICT'";
                 $result = mysqli_query($con,$sql);
 
                 while($row=mysqli_fetch_assoc($result)){
@@ -1917,7 +2017,7 @@
             <button type="button"  onclick="cancellation()" data-modal-target="popup-modal-cancel" data-modal-toggle="popup-modal-cancel"  class="shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-pink-800/80  w-full text-white bg-gradient-to-br from-red-400 to-pink-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-200 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cancel Request</button>
      
             </div>
-            <div id="buttonPrintDiv" class="items-center px-4 rounded-b dark:border-gray-600">
+            <div id="buttonPrintDiv" class=" items-center px-4 rounded-b dark:border-gray-600">
             <button type="submit" name="print" class="shadow-lg shadow-blue-500/30 dark:shadow-lg dark:shadow-teal-800/80  w-full text-white bg-gradient-to-br from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Print</button>
             </div>
 
@@ -2018,16 +2118,16 @@
         <select  id="transferUser" name="transferUser" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         <option selected disabled value="">Choose</option>
             <?php
-    //         $sql="SELECT u.*, 
-    //         (SELECT COUNT(id) FROM request 
-    //          WHERE `status2` = 'inprogress' 
-    //          AND `assignedPersonnel` = u.username) AS 'pending'
-    //  FROM `user` u";
-    $sql = "SELECT u.*, 
-                (SELECT COUNT(id) FROM request 
-                WHERE  `status2` = 'inprogress' 
-                AND `assignedPersonnel` = u.username) AS 'pending'
-                FROM `user` u WHERE u.department = 'ICT'";
+            $sql="SELECT u.*, 
+            (SELECT COUNT(id) FROM request 
+             WHERE `status2` = 'inprogress' 
+             AND `assignedPersonnel` = u.username) AS 'pending'
+     FROM `user` u";
+    // $sql = "SELECT u.*, 
+    //             (SELECT COUNT(id) FROM request 
+    //             WHERE  `status2` = 'inprogress' 
+    //             AND `assignedPersonnel` = u.username) AS 'pending'
+    //             FROM `user` u WHERE u.department = 'ICT'";
                             $result = mysqli_query($con,$sql);
 
                 while($row=mysqli_fetch_assoc($result)){
@@ -2138,6 +2238,12 @@ const optionsModal = {
 const modal = new Modal($targetElModal, optionsModal);
 
 function modalShow(element){
+    if(element.getAttribute("data-reco")==1){
+        $("#buttonPrintDiv").addClass("hidden");
+    }
+    else{
+        $("#buttonPrintDiv").removeClass("hidden");
+    }
 
     $headRemarksVar = element.getAttribute("data-headremarks");
     $adminRemarksVar = element.getAttribute("data-adminremarks");
@@ -2147,13 +2253,13 @@ function modalShow(element){
 
 if($recommendation != "" && $approved_reco == 0)
 {
-    $("#buttonPrintDiv").addClass("hidden");
+    // $("#buttonPrintDiv").addClass("hidden");
     $("#buttonApproveRecoDiv").removeClass("hidden");
     $("#ictheadRecoRemarksDiv").removeClass("hidden");
 }
 else
 {
-    $("#buttonPrintDiv").removeClass("hidden");
+    // $("#buttonPrintDiv").removeClass("hidden");
     $("#buttonApproveRecoDiv").addClass("hidden");
 }
 
@@ -2201,6 +2307,7 @@ else
     document.getElementById("requestorinput").value =element.getAttribute("data-requestor");
     document.getElementById("requestoremailinput").value =element.getAttribute("data-requestoremail");
     document.getElementById("assignedPersonnel").innerHTML =element.getAttribute("data-assignedpersonnel");
+    document.getElementById("prequestType").value = element.getAttribute("data-requestype");
 
 
 

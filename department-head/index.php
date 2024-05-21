@@ -242,17 +242,40 @@ if(isset($_POST['print'])){
    
 
         if(isset($_POST['approveRequest'])){
+            $request_type =   $_POST['prequestType'] ;
             $requestID = $_POST['joid2'];
             $completejoid = $_POST['completejoid'];
             $requestTo = strtolower($_POST['psection']);
             $remarks = $_POST['remarks'];
             $requestor = $_POST['requestor'];
             $requestorEmail = $_POST['requestoremail'];
-
-
-                        
-
-
+  
+            if(isset($_POST['assigned']))
+            {
+                $assigned = $_POST['assigned'];
+                $sql1 = "Select * FROM `user` WHERE `username` = '$assigned'";
+                $result = mysqli_query($con, $sql1);
+                while($list=mysqli_fetch_assoc($result))
+                {
+                $personnelEmail=$list["email"];
+                $personnelName=$list["name"];
+                }
+            }
+            else
+            {
+                $personnelName= $_POST['passignedPersonnel'];
+            }
+            $sql1 = "Select * FROM `request` WHERE `id` = '$requestID'";
+            $result = mysqli_query($con, $sql1);
+            while($list=mysqli_fetch_assoc($result))
+            {
+            $request_category =$list["request_category"];
+            $detailsOfRequest= $list["request_details"];
+            $ticket_category =$list["ticket_category"];
+            $user_name = $list["ticket_filer"];
+            $cat_lvl =$list['category_level'];
+            }
+            $_SESSION['ticket_category']=  $ticket_category;
 
             $date = date("Y-m-d");
             $username = $_SESSION['name'];
@@ -267,10 +290,10 @@ if(isset($_POST['print'])){
                 $account=$list["email"];
                 $accountpass=$list["password"];
         
-                  }    
+                }    
 
-                $subject ='Job order request';
-                $message = 'Hi '.$adminname.',<br> <br>   Mr/Ms. '.$requestor.' filed a job order with JO number of '.$completejoid.' . Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                $subject ='Job Order Request';
+                $message = 'Hi '.$adminname.',<br> <br>   Mr/Ms. '.$requestor.' filed a job order with JO number JO-'.$completejoid.' . Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Category: '.$request_category.'<br>Request Details: '.$detailsOfRequest.' <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                 
 
                  require '../vendor/autoload.php';
@@ -318,7 +341,7 @@ if(isset($_POST['print'])){
                                 $leaderName=$list["name"];
 
                                 $subject4 ='Job order request';
-                                $message4 = 'Hi '.$leaderName.',<br> <br>   Mr/Ms. '.$requestor.' filed a job order with JO number of '.$completejoid.' . Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                                $message4 = 'Hi '.$leaderName.',<br> <br>   Mr/Ms. '.$requestor.' filed a job order with JO number JO-'.$completejoid.' . Please check the details below or by signing in into our Helpdesk.  <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Category: '.$request_category.'<br>Request Details: '.$detailsOfRequest.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                                 
 
                                 
@@ -354,7 +377,7 @@ if(isset($_POST['print'])){
                  
                     
                     $subject3 ='Approved Job Order';
-                    $message3 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number of '.$completejoid.' is now approved by your head. It is now sent to your administrator. Please check the details by signing in into our Helpdesk <br> Click this '.$link.' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                    $message3 = 'Hi '.$requestor.',<br> <br>  Your Job Order with JO number JO-'.$completejoid.' is now approved by your head. It is now sent to your administrator. Please check the details below or by signing in into our Helpdesk.<br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Category: '.$request_category.'<br>Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$personnelName.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                     
                     // email this requestor
             
@@ -827,6 +850,7 @@ if(isset($_POST['print'])){
               <td >
                     <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                     <button type="button" id="viewdetails" onclick="modalShow(this)"data-recommendation="<?php echo $row['recommendation'] ?>" 
+                    data-requestype ="<?php echo $row['request_type'];?>"
                     data-requestorremarks="<?php echo $row['requestor_remarks'] ?>" 
                     data-quality="<?php echo $row['rating_quality'] ?>" 
                     data-delivery="<?php echo $row['rating_delivery'] ?>" 
@@ -962,6 +986,7 @@ if(isset($_POST['print'])){
             <input type="text" id="ptotalRating" name="ptotalRating" class="hidden">
             <input type="text" id="pratingRemarks" name="pratingRemarks" class="hidden">
             <input type="text" id="pratedDate" name="pratedDate" class="hidden">
+            <input type="text" id="prequestType" name="prequestType" class="hidden">
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                     Job Order Details
@@ -994,7 +1019,7 @@ if(isset($_POST['print'])){
                 </div>
                 <div class="w-full grid gap-4 grid-cols-2">
                      <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Requested Section: </span><span id="sectionmodal"></span></h2>
-                     <h2 class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Type: </span><span id="category"></span></h2>
+                     <h2 class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Category: </span><span id="category"></span></h2>
                 </div>
                 <div class="w-full grid gap-4 grid-cols-2">
                 <div id="categoryDivParent" class="grid gap-4 grid-cols-2">
@@ -1002,7 +1027,7 @@ if(isset($_POST['print'])){
                 <input disabled type="text" name="computername" id="computername"class="col-span-1 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     
                 </div>
-                     <div class="grid gap-4 grid-cols-2">
+                     <div class="grid gap-4 grid-cols-2 hidden">
                 <h2 id="telephoneh2" class="pl-10 float-left font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Telephone</span></h2>
                 <input disabled type="text" name="telephone" id="telephone"class="col-span-1 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     
@@ -1311,6 +1336,7 @@ function modalShow(element){
     document.getElementById("remarks").value =element.getAttribute("data-headremarks");
     document.getElementById("assignedPersonnel").innerHTML =element.getAttribute("data-assignedpersonnel");
     document.getElementById("misPersonnel").value =element.getAttribute("data-personnel");
+    document.getElementById("prequestType").value = element.getAttribute("data-requestype");
 
     document.getElementById("actionDetails").value =element.getAttribute("data-action");
     document.getElementById("headremarks").innerHTML =element.getAttribute("data-headremarks");

@@ -233,8 +233,9 @@
             $_SESSION['approved_reco']= $_POST['papproved_reco'] ;
             $_SESSION['icthead_reco_remarks']= $_POST['picthead_reco_remarks'] ;
             $_SESSION['requestType']= $_POST['prequestType'] ;
+            $_SESSION['onthespot_ticket'] = 0;
+            $_SESSION['status'] = 'Done';
             
-
             $requestID = $_POST['joid2'];
             $cat_lvl ;
             $sql1 = "Select * FROM `request` WHERE `id` = '$requestID'";
@@ -250,10 +251,10 @@
             $ticket_category =$list["ticket_category"];
             $user_name = $list["ticket_filer"];
             $ict_approval_date = $list["ict_approval_date"];
-            $cat_lvl =$row['category_level'];
+            $cat_lvl =$list['category_level'];
             }
 
-         
+            $_SESSION['ticket_category']=  $ticket_category;
 
             if( $cat_lvl  == "" || $cat_lvl == NULL)
             {
@@ -321,27 +322,28 @@
                 if ($request_type == "Technical Support")
                 {
                     $subject ='Ticket Closed';
-                    $message = 'Hi '.$requestor.',<br> <br> Your ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> If you agree with the closure of this ticket, please click the link below to confirm: <br> Click <a href="'.$requestorApprovalLink.'">this</a>  to confirm. This is a generated email. Please do not reply. <br><br> HELPDESK';
+                    $message = 'Hi '.$requestor.',<br> <br> Your ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> If you agree with the closure of this ticket, please click the link below to confirm: <br> Click <a href="'.$requestorApprovalLink.'">this</a>  to confirm. This is a generated email. Please do not reply. <br><br> Helpdesk';
 
                     if($recommendation != ""){
                     $subjectA ='Ticket Closed  - Recommendation Provided';
-                    $messageA = 'Hi Admin,<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please review the recommendation for approval and/or add remarks by signing into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.' <br>Recommendation:  '.$recommendation.'<br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+                    $messageA = 'Hi Admin,<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please review the recommendation for approval and/or add remarks by signing into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.' <br>Recommendation:  '.$recommendation.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                     }
                     else{
                         $subjectA ='Ticket Closed';
-                        $messageA = 'Hi Admin,<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk.  <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> This is a generated email. Please do not reply. <br><br>  HELPDESK';
+                        $messageA = 'Hi Admin,<br> <br>  A ticket request with TS Number TS-'.$completejoid.' has been closed. Please check the details below or by signing in into our Helpdesk.  <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br> Ticket Category: '.$ticket_category.'<br> Ticket Filer: '.$user_name.'<br><br><br> This is a generated email. Please do not reply. <br><br>  Helpdesk';
                     }
                 }  else {
                     $subject ='Completed Job Order';
-                    $message = 'Hi '.$requestor.',<br> <br> ICT has completed one of your job order requests. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+                    $message = 'Hi '.$requestor.',<br> <br> ICT has completed one of your job order requests. Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                    
                     if($recommendation != ""){
                         $subjectA ='Finished JO  with Recommendations';
-                        $messageA = 'Hi Admin,<br> <br> ICT has completed the job order requests with JO Number JO-'.$completejoid.'  Please review the recommendation for approval and/or add remarks by signing into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.' <br>Recommendation:  '.$recommendation.'<br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+                        $messageA = 'Hi Admin,<br> <br> ICT has completed the job order requests with JO Number JO-'.$completejoid.'.  Please review the recommendation for approval and/or add remarks by signing into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.' <br>Recommendation:  '.$recommendation.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                        
                     }
                     else{
                         $subjectA ='Finished JO';
-                        $messageA = 'Hi Admin,<br> <br> ICT has completed the job order requests with JO Number JO-'.$completejoid.'  Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br><br><br> This is a generated email. Please do not reply. <br><br> HELPDESK';
+                        $messageA = 'Hi Admin,<br> <br> ICT has completed the job order requests with JO Number JO-'.$completejoid.'  Please check the details below or by signing in into our Helpdesk. <br> Click this '.$link.' to sign in. <br><br>Request Type: '.$request_type.'<br> Request Details: '.$detailsOfRequest.'<br> Assigned Personnel: '.$r_personnelsName.'<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
                     }
                  
                 }
