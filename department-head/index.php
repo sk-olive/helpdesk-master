@@ -56,13 +56,6 @@ while ($listlink = mysqli_fetch_assoc($resultlink)) {
 $user_dept = $_SESSION['department'];
 $user_level = $_SESSION['level'];
 
-$sql1 = "Select * FROM `user` WHERE `level` = 'admin' LIMIT 1";
-$result = mysqli_query($con, $sql1);
-while ($list = mysqli_fetch_assoc($result)) {
-    $adminemail = $list["email"];
-    $adminname = $list["name"];
-}
-
 if (isset($_POST['rateJo'])) {
     $rateScore = $_POST['rateScore'];
     $rateScoreQuality = $_POST['rateScoreQuality'];
@@ -221,12 +214,12 @@ if (isset($_POST['print'])) {
 
 
 if (isset($_POST['approveRequest'])) {
-    $request_type =   $_POST['prequestType'];
+    $request_type =   'Job Order';
     $requestID = $_POST['joid2'];
     $completejoid = $_POST['completejoid'];
     $requestTo = strtolower($_POST['psection']);
     $remarks = $_POST['remarks'];
-    $requestor = $_POST['requestor'];
+    $requestor = $_POST['prequestor'];
     $requestorEmail = $_POST['requestoremail'];
 
     if (isset($_POST['assigned'])) {
@@ -250,6 +243,7 @@ if (isset($_POST['approveRequest'])) {
         $cat_lvl = $list['category_level'];
     }
     $_SESSION['ticket_category'] =  $ticket_category;
+    $_SESSION['request_category'] = $request_category;
 
     $date = date("Y-m-d");
     $username = $_SESSION['name'];
@@ -264,46 +258,17 @@ if (isset($_POST['approveRequest'])) {
             $accountpass = $list["password"];
         }
 
-        $subject = 'Job Order Request';
-        $message = 'Hi ' . $adminname . ',<br> <br>   Mr/Ms. ' . $requestor . ' filed a job order with JO number JO-' . $completejoid . ' . Please check the details by signing in into our Helpdesk <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Request Category: ' . $request_category . '<br>Request Details: ' . $detailsOfRequest . ' <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
-
-
         require '../vendor/autoload.php';
+        require '../dompdf/vendor/autoload.php';
+        ob_start();
+        require 'Job Order Report copy.php';
+        $html = ob_get_clean();
 
-        $mail = new PHPMailer(true);
         $mail2 = new PHPMailer(true);
-        $mail4 = new PHPMailer(true);
-
+        $mail = new PHPMailer(true);
 
         //  email the admin               
         try {
-            //Server settings
-            $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
-            $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = $account;     // Your Email/ Server Email
-            $mail->Password = $accountpass;                     // Your Password
-            $mail->SMTPOptions = array(
-                'ssl' => array(
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true
-                )
-            );
-            $mail->SMTPSecure = 'none';
-            $mail->Port = 465;
-
-            //Send Email
-            // $mail->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
-
-            //Recipients
-            $mail->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-            $mail->addAddress($adminemail);
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            $mail->Body    = $message;
-
-            $mail->send();
 
             $sql1 = "Select * FROM `user` WHERE `level` = 'admin' AND `leader` = '$requestTo' ";
             $result = mysqli_query($con, $sql1);
@@ -314,37 +279,40 @@ if (isset($_POST['approveRequest'])) {
                 $subject4 = 'Job order request';
                 $message4 = 'Hi ' . $leaderName . ',<br> <br>   Mr/Ms. ' . $requestor . ' filed a job order with JO number JO-' . $completejoid . ' . Please check the details below or by signing in into our Helpdesk.  <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Request Category: ' . $request_category . '<br>Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
 
-
-
-                $mail4->isSMTP();                                      // Set mailer to use SMTP
-                $mail4->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
-                $mail4->SMTPAuth = true;                               // Enable SMTP authentication
-                $mail4->Username = $account;     // Your Email/ Server Email
-                $mail4->Password = $accountpass;                     // Your Password
-                $mail4->SMTPOptions = array(
+                $mail->isSMTP();                                      // Set mailer to use SMTP
+                $mail->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
+                $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                $mail->Username = $account;     // Your Email/ Server Email
+                $mail->Password = $accountpass;                     // Your Password
+                $mail->SMTPOptions = array(
                     'ssl' => array(
                         'verify_peer' => false,
                         'verify_peer_name' => false,
                         'allow_self_signed' => true
                     )
                 );
-                $mail4->SMTPSecure = 'none';
-                $mail4->Port = 465;
+                $mail->SMTPSecure = 'none';
+                $mail->Port = 465;
 
                 //Send Email
-                // $mail4->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
+                // $mail->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
 
                 //Recipients
-                $mail4->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-                $mail4->addAddress($leaderEmail);
-                $mail4->isHTML(true);
-                $mail4->Subject = $subject4;
-                $mail4->Body    = $message4;
+                $mail->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
+                $mail->addAddress($leaderEmail);
+                $mail->isHTML(true);
+                // Generate PDF content using Dompdf
+                $dompdf = new Dompdf\Dompdf();
+                $dompdf->loadHtml($html);
+                $dompdf->setPaper('A5', 'portrait'); // Set paper size and orientation
+                $dompdf->render();
+                $pdfContent = $dompdf->output();
+                $mail->addStringAttachment($pdfContent, 'Helpdesk Report.pdf', 'base64', 'application/pdf');
+                $mail->Subject = $subject4;
+                $mail->Body    = $message4;
 
-                $mail4->send();
+                $mail->send();
             }
-
-
 
 
             $subject3 = 'Approved Job Order';
@@ -375,6 +343,13 @@ if (isset($_POST['approveRequest'])) {
             $mail2->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
             $mail2->addAddress($requestorEmail);
             $mail2->isHTML(true);
+            // Generate PDF content using Dompdf
+            $dompdf = new Dompdf\Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A5', 'portrait'); // Set paper size and orientation
+            $dompdf->render();
+            $pdfContent = $dompdf->output();
+            $mail2->addStringAttachment($pdfContent, 'Helpdesk Report.pdf', 'base64', 'application/pdf');
             $mail2->Subject = $subject3;
             $mail2->Body    = $message3;
 
@@ -696,8 +671,8 @@ if (isset($_POST['cancelJO'])) {
                                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                                                 ?>
 
-                                                        <!-- <img src="../resources/img/star.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> -->
-                                                        <img style="    max-width: 150%; width:150%; height: 150%;" src="../resources/img/parol.gif" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <img src="../resources/img/star.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <!-- <img style="    max-width: 150%; width:150%; height: 150%;" src="../resources/img/parol.gif" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> -->
 
                                                     </div>
                                                 </div>
@@ -774,12 +749,12 @@ if (isset($_POST['cancelJO'])) {
                                         <button type="button" id="viewdetails" onclick="modalShow(this)" data-recommendation="<?php echo $row['recommendation'] ?>" data-requestype="<?php echo $row['request_type']; ?>" data-requestorremarks="<?php echo $row['requestor_remarks'] ?>" data-quality="<?php echo $row['rating_quality'] ?>" data-delivery="<?php echo $row['rating_delivery'] ?>" data-ratedby="<?php echo $row['ratedBy'] ?>" data-daterate="<?php echo $row['rateDate'] ?>" data-action1date="<?php echo $row['action1Date'] ?>" data-action2date="<?php echo $row['action2Date'] ?>" data-action3date="<?php echo $row['action3Date'] ?>" data-headremarks="<?php echo $row['head_remarks']; ?>" data-adminremarks="<?php echo $row['admin_remarks']; ?>" data-department="<?php echo $row['department'] ?>" data-status="<?php echo $row['status2'] ?>" data-action1="<?php echo $row['action1'] ?>" data-action2="<?php echo $row['action2'] ?>" data-action3="<?php echo $row['action3'] ?>" data-ratings="<?php echo $row['rating_final']; ?>" data-actualdatefinished="" data-assignedpersonnel="<?php echo $row['assignedPersonnelName'] ?> " data-requestor="<?php echo $row['requestor'] ?>" data-personnel="<?php echo $row['assignedPersonnel'] ?>" data-requestoremail="<?php echo $row['email']; ?>" data-action="<?php echo $row['action'] ?>" data-joidprint="<?php $date = new DateTime($row['date_filled']);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     $date = $date->format('ym');
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     echo $date . '-' . $row['id']; ?>" data-joid="<?php echo $row['id']; ?>" data-datefiled="<?php $date = new DateTime($row['date_filled']);
-                                                                                                                                    $date = $date->format('F d, Y');
-                                                                                                                                    echo $date; ?>" data-section="<?php if ($row['request_to'] === "fem") {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        echo "FEM";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } else if ($row['request_to'] === "mis") {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        echo "ICT";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } ?> " data-category="<?php echo $row['request_category']; ?>" data-telephone="<?php echo $row['telephone']; ?>" data-attachment="<?php echo $row['attachment']; ?>" data-comname="<?php echo $row['computerName']; ?>" data-start="<?php echo $row['reqstart_date']; ?>" data-end="<?php echo $row['reqfinish_date']; ?>" data-details="<?php echo $row['request_details']; ?>" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                $date = $date->format('F d, Y');
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                echo $date; ?>" data-section="<?php if ($row['request_to'] === "fem") {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    echo "FEM";
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                } else if ($row['request_to'] === "mis") {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    echo "ICT";
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                } ?> " data-category="<?php echo $row['request_category']; ?>" data-telephone="<?php echo $row['telephone']; ?>" data-attachment="<?php echo $row['attachment']; ?>" data-comname="<?php echo $row['computerName']; ?>" data-start="<?php echo $row['reqstart_date']; ?>" data-end="<?php echo $row['reqfinish_date']; ?>" data-details="<?php echo $row['request_details']; ?>" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
                                             View more
                                         </button>
                                     </td>

@@ -58,8 +58,10 @@ if (isset($_POST['submit'])) {
           header("location:fem");
         } else if ($level == 'head') {
           header("location:department-head");
-        } else if ($level == 'admin') {
+        } else if ($level == 'admin' && $leaderof == 'mis') {
           header("location:department-admin");
+        } else if ($level == 'admin' && $leaderof == 'fem') {
+          header("location:fem-admin");
         }
       } else {
         echo '<script>alert("Login Failed! Wrong password")</script>';

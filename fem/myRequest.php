@@ -319,7 +319,7 @@
 
                  <div class="m-auto flex flex-col w-2/4">
 
-                     <div class="mt-0 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 ">
+                     <div class="mt-0 grid grid-cols-1 gap-4 sm:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 ">
 
                          <div class="flex items-start rounded-xl bg-teal-700 dark:bg-white p-4 shadow-lg">
                              <div class="flex h-12 w-12 overflow-hidden items-center justify-center rounded-full border border-red-100 bg-red-50">
@@ -338,7 +338,7 @@
                                                                                     ?></p>
                              </div>
                          </div>
-                         <div class="flex items-start rounded-xl bg-sky-900 dark:bg-white p-4 shadow-lg">
+                         <div class="flex items-start rounded-xl bg-sky-900 dark:bg-white p-4 shadow-lg hidden">
                              <div class="flex h-12 w-12 items-center overflow-hidden  justify-center rounded-full border border-indigo-100 bg-indigo-50">
                                  <img src="../resources/img/itboy.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
@@ -363,7 +363,20 @@
                          <div role="tablist" class="_6TVppg sJ9N9w">
                              <div class="uGmi4w">
                                  <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400" id="tabExample" role="tablist">
+                                     <li role="presentation">
+                                         <div class=" p__uwg" style="width: 106px; margin-right: 0px;">
+                                             <button id="headApprovalTab" onclick="goToHead()" type="button" role="tab" aria-controls="headApproval" class="_1QoxDw o4TrkA CA2Rbg Di_DSA cwOZMg zQlusQ uRvRjQ POMxOg _lWDfA" aria-selected="false">
+                                                 <div class="_1cZINw">
+                                                     <div class="_qiHHw Ut_ecQ kHy45A">
 
+                                                         <img src="../resources/img/list.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+
+                                                     </div>
+                                                 </div>
+                                                 <p class="_5NHXTA _2xcaIA ZSdr0w CCfw7w GHIRjw">Head approval</p>
+                                             </button>
+                                         </div>
+                                     </li>
                                      <li role="presentation">
 
                                          <div class="p__uwg" style="width: 113px; margin-left: 16px; margin-right: 0px;">
@@ -454,7 +467,9 @@
 
 </div> -->
          <div id="myTabContent">
-
+             <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="headApproval" role="tabpanel" aria-labelledby="dashboard-tab">
+                 <?php include 'headApproval.php'; ?>
+             </div>
              <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="adminApproval" role="tabpanel" aria-labelledby="dashboard-tab">
                  <?php include 'adminApproval.php'; ?>
              </div>
@@ -557,7 +572,7 @@
 
                          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                          <div>
-                             <div class="grid grid-cols-3">
+                             <div class="grid grid-cols-3 hidden">
                                  <h2 class=" py-4 col-span-1 font-semibold text-gray-400 dark:text-gray-400"><span class="inline-block align-middle">Requested Schedule: </span></h2>
                                  <div class="col-span-2 flex items-center">
                                      <div class="relative">
@@ -1007,7 +1022,11 @@
 
 
          // // Code for tabs
-         const tabElements = [
+         const tabElements = [{
+                 id: 'headApproval',
+                 triggerEl: document.querySelector('#headApprovalTab'),
+                 targetEl: document.querySelector('#headApproval')
+             },
 
              {
                  id: 'adminApproval1',
@@ -1028,7 +1047,7 @@
 
          // options with default values
          const taboptions = {
-             defaultTabId: 'adminApproval1',
+             defaultTabId: 'headApproval',
              activeClasses: 'text-white hover:text-amber-400 dark:text-blue-500 dark:hover:text-blue-400 border-blue-600 dark:border-blue-500',
              inactiveClasses: 'text-gray-300 hover:text-amber-500 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300',
              onShow: () => {
@@ -1043,7 +1062,7 @@
          const tabs = new Tabs(tabElements, taboptions);
 
          // open tab item based on id
-         tabs.show('adminApproval1');
+         tabs.show('headApproval');
 
 
          // // get the tab object based on ID
@@ -1052,6 +1071,27 @@
          // // get the current active tab object
          // tabs.getActiveTab()
 
+         function goToHead() {
+             $("#buttondiv").removeClass("hidden");
+             $("#buttonRateDiv").addClass("hidden");
+             $("#actionDetailsDiv").addClass("hidden");
+             $("#assignedPersonnelDiv").addClass("hidden");
+             $("#recommendationDiv").addClass("hidden");
+
+             document.getElementById("telephone").disabled = false;
+             document.getElementById("computername").disabled = false;
+             document.getElementById("datestart").disabled = true;
+             document.getElementById("datefinish").disabled = true;
+             document.getElementById("message").disabled = false;
+             const myElement = document.querySelector('#diamond');
+             $("#buttonPrintDiv").addClass("hidden");
+
+             // Get the current transform value
+             const currentTransform = myElement.style.transform = 'translateX(50px) translateY(2px) rotate(135deg)';
+
+
+             // transform: translateX(55px) translateY(2px) rotate(135deg);
+         }
 
          function goToAdmin() {
              const myElement = document.querySelector('#diamond');
@@ -1073,7 +1113,7 @@
 
 
              // Get the current transform value
-             const currentTransform = myElement.style.transform = 'translateX(70px) translateY(2px) rotate(135deg)';
+             const currentTransform = myElement.style.transform = 'translateX(180px) translateY(2px) rotate(135deg)';
 
 
              // transform: translateX(55px) translateY(2px) rotate(135deg);
@@ -1099,7 +1139,7 @@
              const myElement = document.querySelector('#diamond');
 
              // Get the current transform value
-             const currentTransform = myElement.style.transform = 'translateX(190px) translateY(2px) rotate(135deg)';
+             const currentTransform = myElement.style.transform = 'translateX(300px) translateY(2px) rotate(135deg)';
 
 
              // transform: translateX(55px) translateY(2px) rotate(135deg);
@@ -1124,7 +1164,7 @@
              const myElement = document.querySelector('#diamond');
 
              // Get the current transform value
-             const currentTransform = myElement.style.transform = 'translateX(300px) translateY(2px) rotate(135deg)';
+             const currentTransform = myElement.style.transform = 'translateX(420px) translateY(2px) rotate(135deg)';
 
 
              // transform: translateX(55px) translateY(2px) rotate(135deg);

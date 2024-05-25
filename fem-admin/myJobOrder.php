@@ -10,8 +10,6 @@ ini_set("session.gc_maxlifetime", $timeout);
 ini_set("session.cookie_lifetime", $timeout);
 
 $s_name = session_name();
-$url1 = $_SERVER['REQUEST_URI'];
-header("Refresh: 500; URL=$url1");
 
 if (isset($_COOKIE[$s_name])) {
 
@@ -27,18 +25,13 @@ if (isset($_SESSION['connected'])) {
 
 
     $level = $_SESSION['level'];
-    $leaderof = $_SESSION['leaderof'];
 
     if ($level == 'user') {
         header("location:../employees");
-    } else if ($level == 'mis') {
-        header("location:../mis");
+    } else if ($level == 'fem') {
+        header("location:../fem");
     } else if ($level == 'head') {
         header("location:../department-head");
-    } else if ($level == 'admin' && $leaderof == 'mis') {
-        header("location:department-admin");
-    } else if ($level == 'admin' && $leaderof == 'fem') {
-        header("location:fem-admin");
     }
 }
 if (!isset($_SESSION['connected'])) {
@@ -80,14 +73,9 @@ $_SESSION['quality'] = "";
 $_SESSION['totalRating'] = "";
 $_SESSION['ratingRemarks'] = "";
 $_SESSION['ratedDate'] = "";
+
 $_SESSION['headsDate'] = "";
 $_SESSION['adminsDate'] = "";
-$sqllink = "SELECT `link` FROM `setting`";
-$resultlink = mysqli_query($con, $sqllink);
-$link = "";
-while ($listlink = mysqli_fetch_assoc($resultlink)) {
-    $link = $listlink["link"];
-}
 
 
 if (isset($_POST['print'])) {
@@ -136,6 +124,15 @@ if (!isset($_SESSION['connected'])) {
     header("location: ../index.php");
 }
 
+
+$sqllink = "SELECT `link` FROM `setting`";
+$resultlink = mysqli_query($con, $sqllink);
+$link = "";
+while ($listlink = mysqli_fetch_assoc($resultlink)) {
+    $link = $listlink["link"];
+}
+
+
 $user_dept = $_SESSION['department'];
 $user_level = $_SESSION['level'];
 
@@ -162,27 +159,8 @@ if (isset($_POST['addAction'])) {
         }
     }
 }
-
-
-$sql1A = "Select * FROM `user` WHERE `level` = 'admin' and `leader` = 'fem' LIMIT 1";
-$resultA = mysqli_query($con, $sql1A);
-while ($list = mysqli_fetch_assoc($resultA)) {
-    $adminemail = $list["email"];
-    $adminname = $list["name"];
-}
-
 if (isset($_POST['approveRequest'])) {
     $requestID = $_POST['joid2'];
-
-    $numberOfDays = $_POST['NumberOfDays'];
-    $late;
-    if ($numberOfDays >= 8) {
-        $late = 1;
-    } else {
-        $late = 0;
-    }
-
-
     $completejoid = $_POST['completejoid'];
 
     $action = $_POST['action'];
@@ -206,7 +184,7 @@ if (isset($_POST['approveRequest'])) {
     $action = str_replace("'", "&apos;", $action);
     $recommendation = str_replace("'", "&apos;", $recommendation);
 
-    $sql = "UPDATE `request` SET `status2`='Done', `late`='$late',`actual_finish_date`='$date',`action`='$action', `recommendation`='$recommendation' WHERE `id` = '$requestID';";
+    $sql = "UPDATE `request` SET `status2`='Done',`actual_finish_date`='$date',`action`='$action', `recommendation`='$recommendation' WHERE `id` = '$requestID';";
     $results = mysqli_query($con, $sql);
 
     if ($results) {
@@ -218,16 +196,12 @@ if (isset($_POST['approveRequest'])) {
         }
 
         $subject = 'Completed Job Order';
-        $message = 'Hi ' . $requestor . ',<br> <br> FEM has completed one of your job order requests. Please check the details by signing in into our Helpdesk <br> Click this ' . $link . ' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+        $message = 'Hi ' . $requestor . ',<br> <br> ICT has completed one of your job order requests. Please check the details by signing in into our Helpdesk <br> Click this ' . $link . ' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
 
-        $subjectA = 'Finished JO';
-        $messageA = 'Hi ' . $adminname . ',<br> <br> FEM has completed the job order requests with JO Number of ' . $completejoid . '.  Please check the details by signing in into our Helpdesk <br> Click this ' . $link . ' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
 
         require '../vendor/autoload.php';
 
         $mail = new PHPMailer(true);
-        $mailA = new PHPMailer(true);
-
         //  email the admin               
         try {
             //Server settings
@@ -257,32 +231,6 @@ if (isset($_POST['approveRequest'])) {
             $mail->Body    = $message;
 
             $mail->send();
-            $mailA->isSMTP();                                      // Set mailer to use SMTP
-            $mailA->Host = 'mail.glorylocal.com.ph';                       // Specify main and backup SMTP servers
-            $mailA->SMTPAuth = true;                               // Enable SMTP authentication
-            $mailA->Username = $account;     // Your Email/ Server Email
-            $mailA->Password = $accountpass;                     // Your Password
-            $mailA->SMTPOptions = array(
-                'ssl' => array(
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true
-                )
-            );
-            $mailA->SMTPSecure = 'none';
-            $mailA->Port = 465;
-
-            //Send Email
-            // $mailA->setFrom('Helpdesk'); //eto ang mag front  notificationsys01@gmail.com
-
-            //Recipients
-            $mailA->setFrom('helpdesk@glorylocal.com.ph', 'Helpdesk');
-            $mailA->addAddress($adminemail);
-            $mailA->isHTML(true);
-            $mailA->Subject = $subjectA;
-            $mailA->Body    = $messageA;
-
-            $mailA->send();
 
 
             $_SESSION['message'] = 'Message has been sent';
@@ -295,8 +243,6 @@ if (isset($_POST['approveRequest'])) {
             $_SESSION['message'] = 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo;
             echo "<script>alert('Message could not be sent. Mailer Error.') </script>";
         }
-    } else {
-        echo "<script>alert('Error Alert!!!. Please contact your administrator.') </script>";
     }
 
 
@@ -317,11 +263,7 @@ if (isset($_POST['cancelJO'])) {
     $requestorEmail = $_POST['requestoremail'];
     $requestor = $_POST['requestor'];
     $completejoid = $_POST['completejoid'];
-
-
-    $dateOfCancellation = date("Y-m-d");
-
-    $sql = "UPDATE `request` SET `status2`='cancelled', `reasonOfCancellation`='$reasonCancel', `dateOfCancellation` = '$dateOfCancellation'  WHERE `id` = '$joid';";
+    $sql = "UPDATE `request` SET `status2`='cancelled', `reasonOfCancellation`='$reasonCancel' WHERE `id` = '$joid';";
     $results = mysqli_query($con, $sql);
     if ($results) {
         $sql2 = "Select * FROM `sender`";
@@ -339,7 +281,7 @@ if (isset($_POST['cancelJO'])) {
             //Server settings
 
             $subject2 = 'Cancelled Job Order';
-            $message2 = 'Hi ' . $requestor . ',<br> <br>  Your Job Order with JO number of ' . $completejoid . ' is CANCELLED by the administrator. Please check the details by signing in into our Helpdesk <br> Click this ' . $link . ' to sign in. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+            $message2 = 'Hi ' . $requestor . ',<br> <br>  Your Job Order with JO number of ' . $completejoid . ' is CANCELLED by the administrator. Please check the details by signing in into our Helpdesk <br> Click this ' . $link . ' to signin. <br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
 
             // email this requestor
 
@@ -402,10 +344,11 @@ if (isset($_POST['cancelJO'])) {
     <link rel="stylesheet" href="../fontawesome-free-6.2.0-web/css/all.min.css">
 
     <link rel="stylesheet" href="../node_modules/DataTables/datatables.min.css">
+
     <link rel="stylesheet" type="text/css" href="../node_modules/DataTables/Responsive-2.3.0/css/responsive.dataTables.min.css" />
 
     <link rel="stylesheet" href="index.css">
-    <!-- <script src="../Snowstorm-master/snowstorm.js"></script> -->
+
     <script src="../cdn_tailwindcss.js"></script>
 
     <link rel="stylesheet" href="../node_modules/flowbite/dist/flowbite.min.css" />
@@ -457,7 +400,7 @@ if (isset($_POST['cancelJO'])) {
                                                                                 ?></p>
                             </div>
                         </div>
-                        <div class="flex items-start rounded-xl bg-sky-900 dark:bg-white p-4 shadow-lg hidden">
+                        <!-- <div class="flex items-start rounded-xl bg-sky-900 dark:bg-white p-4 shadow-lg">
                             <div class="flex h-12 w-12 items-center overflow-hidden  justify-center rounded-full border border-indigo-100 bg-indigo-50">
                                 <img src="../resources/img/itboy.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
@@ -473,7 +416,7 @@ if (isset($_POST['cancelJO'])) {
                                                                                 }
                                                                                 ?></p>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="flex items-start rounded-xl bg-sky-900 dark:bg-white p-4 shadow-lg">
                             <div class="flex h-12 w-12 items-center overflow-hidden  justify-center rounded-full ">
                                 <img src="../resources/img/star.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -539,7 +482,6 @@ if (isset($_POST['cancelJO'])) {
 
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="FrD3PA">
@@ -554,6 +496,8 @@ if (isset($_POST['cancelJO'])) {
                                                     <div style="overflow:inherit" class="_qiHHw Ut_ecQ kHy45A">
                                                         <span class=" sr-only">Notifications</span>
                                                         <?php
+
+
                                                         $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE  `status2` ='inprogress' and `assignedPersonnel` = '$misusername'";
                                                         $result = mysqli_query($con, $sql1);
                                                         while ($count = mysqli_fetch_assoc($result)) {
@@ -561,7 +505,7 @@ if (isset($_POST['cancelJO'])) {
                                                             if ($count["pending"] > 0) {
                                                         ?>
                                                                 <div class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900"> <?php
-                                                                                                                                                                                                                                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE  `status2` ='inprogress' and `assignedPersonnel` = '$misusername'";
+                                                                                                                                                                                                                                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` ='inprogress' and `assignedPersonnel` = '$misusername'";
                                                                                                                                                                                                                                                         $result = mysqli_query($con, $sql1);
                                                                                                                                                                                                                                                         while ($count = mysqli_fetch_assoc($result)) {
                                                                                                                                                                                                                                                             echo $count["pending"];
@@ -585,15 +529,27 @@ if (isset($_POST['cancelJO'])) {
                                                     <div style="overflow:inherit" class="_qiHHw Ut_ecQ kHy45A">
                                                         <span class=" sr-only">Notifications</span>
                                                         <?php
-                                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE  `status2` ='inprogress' and `request_to` = 'fem'";
-                                                        $result = mysqli_query($con, $sql1);
+                                                        if ($_SESSION['leaderof'] == "fem") {
+                                                            $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` ='inprogress' and `request_to` = 'fem'";
+                                                            $result = mysqli_query($con, $sql1);
+                                                        } else  if ($_SESSION['leaderof'] == "mis") {
+                                                            $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` ='inprogress' and `request_to` = 'mis'";
+                                                            $result = mysqli_query($con, $sql1);
+                                                        }
+
+
                                                         while ($count = mysqli_fetch_assoc($result)) {
 
                                                             if ($count["pending"] > 0) {
                                                         ?>
                                                                 <div class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900"> <?php
-                                                                                                                                                                                                                                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` ='inprogress' and `request_to` = 'fem'";
-                                                                                                                                                                                                                                                        $result = mysqli_query($con, $sql1);
+                                                                                                                                                                                                                                                        if ($_SESSION['leaderof'] == "fem") {
+                                                                                                                                                                                                                                                            $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` ='inprogress' and `request_to` = 'fem'";
+                                                                                                                                                                                                                                                            $result = mysqli_query($con, $sql1);
+                                                                                                                                                                                                                                                        } else  if ($_SESSION['leaderof'] == "mis") {
+                                                                                                                                                                                                                                                            $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `status2` ='inprogress' and `request_to` = 'mis'";
+                                                                                                                                                                                                                                                            $result = mysqli_query($con, $sql1);
+                                                                                                                                                                                                                                                        }
                                                                                                                                                                                                                                                         while ($count = mysqli_fetch_assoc($result)) {
                                                                                                                                                                                                                                                             echo $count["pending"];
                                                                                                                                                                                                                                                         }
@@ -639,7 +595,6 @@ if (isset($_POST['cancelJO'])) {
                                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                                                 ?>
                                                         <img src="../resources/img/star.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                        <!-- <img style="    max-width: 150%; width:150%; height: 150%;" src="../resources/img/parol.gif" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> -->
 
                                                     </div>
                                                 </div>
@@ -685,66 +640,32 @@ if (isset($_POST['cancelJO'])) {
                     <table id="employeeTable" class="display" style="width:100%">
                         <thead>
                             <tr>
-                                <th data-priority="3">JO Number</th>
-                                <th data-priority="4">Action</th>
-                                <th data-priority="1">Details</th>
-                                <th data-priority="2">Requestor</th>
-                                <th data-priority="5">Date Approved</th>
-                                <th data-priority="6">Category</th>
-
+                                <th>JO Number</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                                <th>Requestor</th>
+                                <th>Date Approved</th>
+                                <th>Category</th>
+                                <th>Assigned to</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            $end_date = new DateTime();
-                            $end_date = $end_date->format('Y-m-d');
                             $a = 1;
-                            $sql = "SELECT * FROM `request`
-            WHERE `status2` ='inprogress'
-              AND `assignedPersonnel` = '$misusername'
-            ORDER BY id ASC;";
+
+                            $sql = "select * from `request` WHERE `status2` ='inprogress' and `assignedPersonnel` = '$misusername' order by id asc  ";
                             $result = mysqli_query($con, $sql);
 
                             while ($row = mysqli_fetch_assoc($result)) {
-
-                                $start = new DateTime($row['admin_approved_date']);
-                                $start1 = $start->format('Y-m-d');
-                                // echo $start1;
-                                $end = new DateTime();
-                                $end1 = $end->format('Y-m-d');
-                                // echo $end1;
-                                $count = 0;
-                                // echo $start->format('N');
-                                $start->add(new DateInterval('P1D')); // Increment by 1 day
-
-                                while ($start <= $end) {
-                                    // Check if the current day is not Saturday (6) or Sunday (0)
-                                    $start->add(new DateInterval('P1D')); // Increment by 1 day
-
-                                    if ($start->format('N') < 6) {
-                                        // echo $start->format('N');
-                                        $count++;
-                                    }
-                                }
                             ?>
-                                <tr <?php if ($count == 7) {
-                                        echo "style='background-color: #ef4444'";
-                                    } else if ($count == 4) {
-                                        echo "style='background-color: #ffd78f'";
-                                    } else if ($count >= 6) {
-                                        echo "style='background-color: #000000'";
-                                    } ?>>
-                                    <td <?php if ($count >= 7) {
-                                            echo "style='color: white'";
-                                        } ?>>
+                                <tr>
+                                    <td>
                                         <?php
                                         $date = new DateTime($row['date_filled']);
                                         $date = $date->format('ym');
                                         echo $date . '-' . $row['id']; ?>
 
-                                    <td <?php if ($count >= 7) {
-                                            echo "style='color: white'";
-                                        } ?>>
+                                    <td>
                                         <!-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Select</a> -->
                                         <button type="button" id="viewdetails" onclick="modalShow(this)" data-action1="<?php echo $row['action1'] ?>" data-action2="<?php echo $row['action2'] ?>" data-action3="<?php echo $row['action3'] ?>" data-action1date="<?php echo $row['action1Date'] ?>" data-action2date="<?php echo $row['action2Date'] ?>" data-action3date="<?php echo $row['action3Date'] ?>" data-telephone="<?php echo $row['telephone']; ?>" data-attachment="<?php echo $row['attachment']; ?>" data-action="<?php echo $row['action']; ?>" data-joidprint="<?php $date = new DateTime($row['date_filled']);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     $date = $date->format('ym');
@@ -754,49 +675,39 @@ if (isset($_POST['cancelJO'])) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     echo "FEM";
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 } else if ($row['request_to'] == "mis") {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     echo "ICT";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                } ?>" data-category="<?php echo $row['request_category']; ?>" data-comname="<?php echo $row['computerName']; ?>" data-start="<?php echo $row['reqstart_date']; ?>" data-end="<?php echo $row['reqfinish_date']; ?>" data-details="<?php echo $row['request_details']; ?>" data-numberOfDays="<?php echo $count; ?>" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                } ?>" data-category="<?php echo $row['request_category']; ?>" data-comname="<?php echo $row['computerName']; ?>" data-start="<?php echo $row['reqstart_date']; ?>" data-end="<?php echo $row['reqfinish_date']; ?>" data-details="<?php echo $row['request_details']; ?>" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
                                             View more
                                         </button>
                                     </td>
 
-                                    <td <?php if ($count >= 7) {
-                                            echo "style='color: white'";
-                                        } ?> class="text-sm  text-[#c00000] font-semibold font-sans px-6 py-4 whitespace-nowrap truncate max-w-xs">
+                                    <td class="text-sm text-red-700 font-light px-6 py-4 whitespace-nowrap truncate max-w-xs">
                                         <?php echo $row['request_details']; ?>
                                     </td>
 
-                                    <td <?php if ($count >= 7) {
-                                            echo "style='color: white'";
-                                        } ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+
+                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                         <?php echo $row['requestor']; ?>
                                     </td>
-
                                     <!-- to view pdf -->
-                                    <td <?php if ($count >= 7) {
-                                            echo "style='color: white'";
-                                        } ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                         <?php
                                         $date = new DateTime($row['admin_approved_date']);
                                         $date = $date->format('F d, Y');
                                         echo $date; ?>
 
-
-
                                     </td>
-                                    <td <?php if ($count >= 7) {
-                                            echo "style='color: white'";
-                                        } ?> class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                         <?php echo $row['request_category']; ?>
                                     </td>
-                                    <!-- <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"> -->
+                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
 
-                                    <!-- <?php if ($row['request_to'] == "fem") {
-                                                echo "FEM";
-                                            } else if ($row['request_to'] == "mis") {
-                                                echo "ICT";
-                                            }
-                                            ?>  -->
-                                    <!-- </td> -->
+                                        <?php if ($row['request_to'] == "fem") {
+                                            echo "FEM";
+                                        } else if ($row['request_to'] == "mis") {
+                                            echo "ICT";
+                                        }
+                                        ?>
+                                    </td>
 
 
 
@@ -820,21 +731,29 @@ if (isset($_POST['cancelJO'])) {
                     <table id="overAllTable" class="display" style="width:100%">
                         <thead>
                             <tr>
-                                <th data-priority="4">JO Number</th>
-                                <th data-priority="3">Action</th>
-                                <th data-priority="1">Details</th>
-                                <th data-priority="2">Requestor</th>
-                                <th data-priority="5">Date Approved</th>
-                                <th data-priority="6">Category</th>
-                                <th data-priority="7">Assigned to</th>
+                                <th>JO Number</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                                <th>Requestor</th>
+                                <th>Date Approved</th>
+                                <th>Category</th>
+                                <th>Assigned to</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             $a = 1;
+                            if ($_SESSION['leaderof'] == "fem") {
+                                $sql = "select * from `request` WHERE `status2` ='inprogress' and `request_to` = 'fem' order by id asc  ";
+                                $result = mysqli_query($con, $sql);
+                            } else  if ($_SESSION['leaderof'] == "mis") {
+                                $sql = "select * from `request` WHERE `status2` ='inprogress' and `request_to` = 'mis' order by id asc  ";
+                                $result = mysqli_query($con, $sql);
+                            } else {
+                                $sql = "select * from `request` WHERE `status2` ='inprogress'  order by id asc  ";
+                                $result = mysqli_query($con, $sql);
+                            }
 
-                            $sql = "select * from `request` WHERE `status2` ='inprogress' and `request_to` = 'fem' order by id asc  ";
-                            $result = mysqli_query($con, $sql);
 
                             while ($row = mysqli_fetch_assoc($result)) {
                             ?>
@@ -860,7 +779,7 @@ if (isset($_POST['cancelJO'])) {
                                         </button>
                                     </td>
 
-                                    <td class="text-sm text-[#c00000] font-semibold font-sans px-6 py-4 whitespace-nowrap truncate max-w-xs">
+                                    <td class="text-sm text-red-700 font-light px-6 py-4 whitespace-nowrap truncate max-w-xs">
                                         <?php echo $row['request_details']; ?>
                                     </td>
                                     <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
@@ -875,7 +794,6 @@ if (isset($_POST['cancelJO'])) {
                                         echo $date; ?>
 
                                     </td>
-
                                     <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                         <?php echo $row['request_category']; ?>
                                     </td>
@@ -907,13 +825,13 @@ if (isset($_POST['cancelJO'])) {
                     <table id="forRatingTable" class="display" style="width:100%">
                         <thead>
                             <tr>
-                                <th data-priority="5">JO Number</th>
-                                <th data-priority="4">Action</th>
-                                <th data-priority="1">Details</th>
-                                <th data-priority="3">Requestor</th>
-                                <th data-priority="6">Date Finished</th>
-                                <th data-priority="7">Comments</th>
-                                <th data-priority="2">Ratings</th>
+                                <th>JO Number</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                                <th>Requestor</th>
+                                <th>Date Finished</th>
+                                <th>Comments</th>
+                                <th>Ratings</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -922,7 +840,7 @@ if (isset($_POST['cancelJO'])) {
                             $date1 = new DateTime();
                             $dateMonth = $date1->format('M');
                             $dateYear = $date1->format('Y');
-                            $sql = "select * from `request` WHERE  `assignedPersonnel` = '$misusername' AND ( `status2` = 'Done'   OR `status2` = 'rated'  AND `month`='$dateMonth' AND `year`='$dateYear' )order by id asc";
+                            $sql = "select * from `request` WHERE (`status2` ='rated' OR `status2` = 'Done')  and `assignedPersonnel` = '$misusername' AND `month`='$dateMonth' AND `year`='$dateYear' order by id asc  ";
                             $result = mysqli_query($con, $sql);
                             $count = mysqli_num_rows($result);
                             if ($count == 0) {
@@ -955,7 +873,7 @@ if (isset($_POST['cancelJO'])) {
                                         </button>
                                     </td>
 
-                                    <td class="text-sm text-[#c00000] font-semibold font-sans px-6 py-4 whitespace-nowrap truncate max-w-xs">
+                                    <td class="text-sm text-red-700 font-light px-6 py-4 whitespace-nowrap truncate max-w-xs">
                                         <?php echo $row['request_details']; ?>
                                     </td>
                                     <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap truncate " style="max-width: 40px;">
@@ -1014,7 +932,7 @@ if (isset($_POST['cancelJO'])) {
                                                 } ?>
 
 
-                                                <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo  $row['rating_final']; ?> out of 5</span>
+                                                <span class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo  $row['rating_final']; ?> </span>
                                                 <!-- <?php echo ' ' . $row['rating_final'] ?>   -->
                                             </span>
                                         </h2>
@@ -1085,7 +1003,6 @@ if (isset($_POST['cancelJO'])) {
                     <input type="text" id="ptotalRating" name="ptotalRating" class="hidden">
                     <input type="text" id="pratingRemarks" name="pratingRemarks" class="hidden">
                     <input type="text" id="pratedDate" name="pratedDate" class="hidden">
-                    <input type="text" id="pNumberOfDays" name="pNumberOfDays" class="hidden">
 
                     <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -1114,7 +1031,6 @@ if (isset($_POST['cancelJO'])) {
                         <input type="text" name="completejoid" id="completejoid" class="hidden col-span-2 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                         <input type="text" name="joid2" id="joid2" class="hidden col-span-2 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <input type="text" name="NumberOfDays" id="NumberOfDays" class="hidden col-span-2 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
 
                         <div class="w-full grid gap-4 grid-cols-2">
@@ -1146,7 +1062,7 @@ if (isset($_POST['cancelJO'])) {
 
                         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <div>
-                            <div class="grid grid-cols-3 hidden">
+                            <div class="grid grid-cols-3">
                                 <h2 class=" py-4 col-span-1 font-semibold text-gray-400 dark:text-gray-400"><span class="inline-block align-middle">Requested Schedule: </span></h2>
                                 <div class="col-span-2 flex items-center">
                                     <div class="relative">
@@ -1155,7 +1071,7 @@ if (isset($_POST['cancelJO'])) {
                                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
                                             </svg>
                                         </div>
-                                        <input disabled id="datestart" onchange="testDate()" name="start" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input" placeholder="Request date start">
+                                        <input disabled id="datestart" onchange="testDate()" name="start" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input" placeholder="Request date start" required="">
                                     </div>
                                     <span class="mx-4 text-gray-500">to</span>
                                     <div class="relative">
@@ -1164,7 +1080,7 @@ if (isset($_POST['cancelJO'])) {
                                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
                                             </svg>
                                         </div>
-                                        <input disabled id="datefinish" onchange="endDate()" name="finish" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input" placeholder="Request date finish">
+                                        <input disabled id="datefinish" onchange="endDate()" name="finish" type="date" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 datepicker-input" placeholder="Request date finish" required="">
                                     </div>
                                 </div>
                             </div>
@@ -1220,6 +1136,9 @@ if (isset($_POST['cancelJO'])) {
                                     <div id="stardiv" class="flex items-center"></div>
                                     <p class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400"><span id="finalRatings"></span> out of 5</p>
                                 </div>
+                            </div>
+                            <div id="comments" class="grid col-span-10">
+                                <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Comments: </span><span id="userComments"></span></h2>
                             </div>
                         </div>
                     </div>
@@ -1360,7 +1279,7 @@ if (isset($_POST['cancelJO'])) {
         // options with default values
         const optionsModal = {
             placement: 'center-center',
-            backdrop: 'static',
+            backdrop: 'dynamic',
             backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
             closable: true,
             onHide: () => {
@@ -1430,11 +1349,7 @@ if (isset($_POST['cancelJO'])) {
             document.getElementById("action3").innerHTML = element.getAttribute("data-action3");
             document.getElementById("recommendation").innerHTML = element.getAttribute("data-recommendation");
 
-            document.getElementById("NumberOfDays").value = element.getAttribute("data-numberOfDays");
 
-
-            document.getElementById("pheadsDate").value = element.getAttribute("data-headdate");
-            document.getElementById("padminsDate").value = element.getAttribute("data-admindate");
             document.getElementById("pjobOrderNo").value = element.getAttribute("data-joidprint");
             document.getElementById("pstatus").value = element.getAttribute("data-status");
             document.getElementById("prequestor").value = element.getAttribute("data-requestor");
@@ -1463,6 +1378,10 @@ if (isset($_POST['cancelJO'])) {
             document.getElementById("pdetails").value = element.getAttribute("data-details");
             document.getElementById("pheadsRemarks").value = element.getAttribute("data-headremarks");
             document.getElementById("padminsRemarks").value = element.getAttribute("data-adminremarks");
+
+            document.getElementById("pheadsDate").value = element.getAttribute("data-headdate");
+            document.getElementById("padminsDate").value = element.getAttribute("data-admindate");
+
             document.getElementById("passignedPersonnel2").value = element.getAttribute("data-assignedpersonnel");
             document.getElementById("psection").value = element.getAttribute("data-section");
             document.getElementById("pfirstAction").value = element.getAttribute("data-action1");
@@ -1479,8 +1398,10 @@ if (isset($_POST['cancelJO'])) {
             document.getElementById("pquality").value = element.getAttribute("data-quality");
             document.getElementById("ptotalRating").value = element.getAttribute("data-ratings");
             document.getElementById("pratingRemarks").value = element.getAttribute("data-requestorremarks");
+
+            document.getElementById("userComments").innerHTML = element.getAttribute("data-requestorremarks");
+
             document.getElementById("pratedDate").value = element.getAttribute("data-daterate");
-            document.getElementById("pNumberOfDays").value = element.getAttribute("data-numberOfDays");
 
             var action1 = element.getAttribute("data-action1");
             var action2 = element.getAttribute("data-action2");
@@ -1915,10 +1836,11 @@ if (isset($_POST['cancelJO'])) {
 
 
 
-        $("#sidehome").addClass("bg-gray-200");
+        $("#sidehome").removeClass("bg-gray-200");
         $("#sidehistory").removeClass("bg-gray-200");
         $("#sideMyRequest").removeClass("bg-gray-200");
         $("#sidepms").removeClass("bg-gray-200");
+        $("#sideMyJo").addClass("bg-gray-200");
     </script>
 
 </body>

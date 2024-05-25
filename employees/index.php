@@ -576,8 +576,8 @@ while ($userRow = mysqli_fetch_assoc($result)) {
                                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                                                 ?>
-                                                        <!-- <img src="../resources/img/star.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> -->
-                                                        <img style="    max-width: 150%; width:150%; height: 150%;" src="../resources/img/parol.gif" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <img src="../resources/img/star.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <!-- <img style="    max-width: 150%; width:150%; height: 150%;" src="../resources/img/parol.gif" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> -->
 
                                                     </div>
                                                 </div>
@@ -1478,7 +1478,7 @@ while ($userRow = mysqli_fetch_assoc($result)) {
             $("#assignedPersonnelDiv").removeClass("hidden");
             $("#recommendationDiv").removeClass("hidden");
 
-            // $("#buttonRateDiv").removeClass("hidden");
+            $("#buttonRateDiv").removeClass("hidden");
             $("#actionDetailsDiv").removeClass("hidden");
 
             $("#buttondiv").addClass("hidden");

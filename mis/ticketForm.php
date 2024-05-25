@@ -229,6 +229,8 @@ if (isset($_POST['submitTicket'])) {
                 $mail2->addAddress($immediateHeadEmail);  // dept head          
                 foreach ($ict_leader as $item) {
                     $mail2->AddCC($item['email']);  // ict head / leader
+
+
                 }
 
                 $mail2->isHTML(true);
@@ -507,9 +509,9 @@ if (isset($_POST['submitTicket'])) {
                                 <!-- <option selected  disabled class="text-gray-900">Choose Head:</option>  -->
                                 <option data-sectionassign="<?php echo $row['level']; ?>" data-pending="<?php echo $row['pending'] ?>" data-personnelsname="<?php echo $row['name'] ?>" value="<?php echo $row['username']; ?>"><?php echo $row['name']; ?> (<?php echo $row['pending'] ?>)</option>; <?php
 
-                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                    }
 
-                                                                                                                                                                                                                                                                                                ?>
+                                                                                                                                                                                                                                                                                                        ?>
                         </select>
                     </div>
 
@@ -681,6 +683,22 @@ if (isset($_POST['submitTicket'])) {
                 $('#r_personnelsName').val(selectedpersonnel);
 
             });
+
+            $("#r_personnels option").each(function() {
+                var assignedSection = $(this).attr("data-sectionassign");
+                var pending = $(this).attr("data-pending");
+
+                if (assignedSection != 'mis' && assignedSection != "admin") {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                    if (pending >= 5) {
+                        $(this).prop("disabled", true);
+                    }
+
+                }
+            })
+
 
             $('.peer').on('click', function() {
 
