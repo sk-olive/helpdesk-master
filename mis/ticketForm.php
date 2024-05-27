@@ -103,7 +103,7 @@ if (isset($_POST['submitTicket'])) {
         $_SESSION['recommendation'] = $_POST['recommendation'];
         $_SESSION['dateFinished'] = $datenow;
     } else {
-        $onthespot_ticket = NULL;
+        $onthespot_ticket = 0;
         $action = NULL;
         $recommendation = NULL;
         $status = "admin";

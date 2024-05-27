@@ -525,7 +525,7 @@
                              <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Requested Section: </span><span id="sectionmodal"></span></h2>
                              <h2 class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Type: </span><span id="category"></span></h2>
                          </div>
-                         <div class="w-full grid gap-4 grid-cols-2">
+                         <div class="w-full grid gap-4 grid-cols-2 hidden">
                              <div id="categoryDivParent" class="grid gap-4 grid-cols-2">
                                  <h2 class="float-left font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Computer Name: </span></h2>
                                  <input disabled type="text" name="computername" id="computername" class="col-span-1 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -541,7 +541,7 @@
                          <a type="button" name="attachment" id="attachment" target="_blank" class="shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80  w-full text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">View Attachment</a>
 
                          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
-                         <div>
+                         <div class="hidden">
                              <div class="grid grid-cols-3">
                                  <h2 class=" py-4 col-span-1 font-semibold text-gray-400 dark:text-gray-400"><span class="inline-block align-middle">Requested Schedule: </span></h2>
                                  <div class="col-span-2 flex items-center">

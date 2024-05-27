@@ -275,12 +275,12 @@ require_once '../changePassword.php';
           <i class="fa-solid fa-clock-rotate-left"></i> <span class="flex-1 ml-3 whitespace-nowrap">History</span>
         </a>
       </li>
-      <li>
+      <!-- <li>
         <a href="pms.php" id="sidepms" class="flex items-center p-4 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
 
           <i class="fa-solid fa-broom"></i> <span class="flex-1 ml-3 whitespace-nowrap">PMS</span>
         </a>
-      </li>
+      </li> -->
       <li>
         <a href="devices.php" id="sidedevice" class="flex items-center p-4 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
 

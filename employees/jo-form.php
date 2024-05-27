@@ -580,7 +580,7 @@ if (isset($_POST['submit'])) {
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Rules for requesting JO to ICT.
+                        Guidelines for Requesting JO to ICT
                     </h3>
                     <button type="button" onclick="modalCallIctHide()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
                         <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -592,7 +592,7 @@ if (isset($_POST['submit'])) {
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
                     <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                        Call local 129 or 212.
+                        Please call local 129 or 212
                     </p>
                 </div>
                 <!-- Modal footer -->

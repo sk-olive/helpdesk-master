@@ -164,12 +164,12 @@ if ($type == "Computer") {
 }
 $html .= ' </tr>
             <tr>
-                <td class="first"><span class="label">Details</span></td>
+                <td class="first"><span class="label">Details:</span></td>
                 <td  colspan="4"> <span class="child"> ' . $details . '
                     </span></td>
             <tr>';
 if ($headsRemarks != "") {
-    $html .= ' <td class="first"><span class="label">Head&apos;s Remarks</span></td>
+    $html .= ' <td class="first"><span class="label">Head&apos;s Remarks:</span></td>
                 <td colspan="4"> <span class="child">' . $headsRemarks . '
                     </span></td>
             </tr>';
@@ -177,7 +177,7 @@ if ($headsRemarks != "") {
 
 if ($adminsRemarks != "") {
     $html .= ' <tr>
-                <td class="first"><span class="label">ICT Head&apos;s Remaks</span></td>
+                <td class="first"><span class="label">ICT Head&apos;s Remaks:</span></td>
                 <td colspan="4"> <span class="child">' . $adminsRemarks . '
                     </span></td>
             </tr>';
