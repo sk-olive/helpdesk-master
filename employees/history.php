@@ -376,10 +376,10 @@
                                                                                                                                                                                                                                                                     echo $count["pending"];
                                                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                                                 ?></div><?php
-                                                                }
-                                                            }
+                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                }
 
-                                                            ?>
+                                                                                                                                                                                                                                                                        ?>
 
 
                                                          <img src="../resources/img/list.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -412,10 +412,10 @@
                                                                                                                                                                                                                                                                     echo $count["pending"];
                                                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                                                 ?></div><?php
-                                                                }
-                                                            }
+                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                }
 
-                                                        ?>
+                                                                                                                                                                                                                                                                        ?>
                                                          <img src="../resources/img/disapprove.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
                                                      </div>
@@ -535,7 +535,7 @@
 
                      <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                             Job Order Details
+                             Request Details
                          </h3>
                          <button onclick="modalHide()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
                              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -559,7 +559,7 @@
                          <input type="text" name="joid2" id="joid2" class="hidden col-span-2 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                          <div class="w-full grid gap-4 grid-cols-2">
-                             <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">JO Number : </span><span class="dark:text-white" id="jonumber"></span></h2>
+                             <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Request Number : </span><span class="dark:text-white" id="jonumber"></span></h2>
                              <h2 class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Date filed: </span><span class="dark:text-white" id="datefiled"></span></h2>
                          </div>
                          <div class="w-full grid gap-4 grid-cols-2">
@@ -720,7 +720,7 @@
                                  <!-- Modal header -->
                                  <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                                      <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                         Job Order Details
+                                         Request Details
                                      </h3>
                                      <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="rateModal">
                                          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

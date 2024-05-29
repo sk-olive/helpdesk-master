@@ -157,7 +157,7 @@ if ($_SESSION['requestType'] === "Technical Support") {
 
     <table>
         <tr>
-            <td class="first"><span class="label">Job Order No</span><span style="align-text: right">:</span></td>
+            <td class="first"><span class="label">Request No</span><span style="align-text: right">:</span></td>
             <td class="second"> <span class="child"><?php echo $jobOrderNo; ?></span></td>
             <td><span class="label">Status: </span></td>
             <td class="fourth"><span class="child"><?php echo $status; ?></span></td>

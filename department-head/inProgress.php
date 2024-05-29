@@ -12,7 +12,7 @@ $headusername= $_SESSION['username'];
 <table id="inProgressTable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>JO Number</th>
+                <th>Request Number</th>
                 <th>Action</th>
                 <th>Details</th>
                 <th>Requestor</th>

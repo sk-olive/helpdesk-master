@@ -148,6 +148,10 @@ if (isset($_POST['submit'])) {
   </script>
 
   <style>
+    body {
+      background: linear-gradient(270deg, #00c4cc, #7d2ae8);
+    }
+
     .logo-container {
       position: relative;
       animation: floatAnimation 2s ease-in-out infinite;
@@ -170,8 +174,9 @@ if (isset($_POST['submit'])) {
 
 </head>
 
-<body class="static  bg-[#d0d7eff2] dark:bg-gray-900">
+<!-- <body class="static  bg-[#d0d7eff2] dark:bg-gray-900"> -->
 
+<body class="static">
   <!-- nav -->
   <?php require_once 'nav_login.php'; ?>
 
@@ -190,7 +195,7 @@ if (isset($_POST['submit'])) {
 
           <form method="post" action="login.php">
 
-            <h1 class="text-[#3a394b] text-xl font-bold text-center mb-10">Welcome to Helpdesk System</h1>
+            <h1 class="text-white text-xl font-bold text-center mb-10">Welcome to Helpdesk System</h1>
             <!-- <h1 class="text-gray-400 text-xl font-bold text-center mb-10">Welcome to Helpdesk System</h1> -->
 
             <!-- password input -->
@@ -205,13 +210,13 @@ if (isset($_POST['submit'])) {
             <div class="mb-6 flex gap-4">
 
 
-              <div class="gap-4 p-2 flex w-full items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+              <div class=" gap-4 p-2 flex w-full items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
                 <input checked id="bordered-radio-1" type="radio" value="femmis" name="section" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                <label for="bordered-radio-1" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">FEM / ICT</label>
+                <label for="bordered-radio-1" class="w-full py-4 ms-2 text-sm font-medium ">FEM / ICT</label>
               </div>
               <div class=" gap-4 p-2 flex w-full items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
                 <input id="bordered-radio-2" type="radio" value="systemkaizen" name="section" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                <label for="bordered-radio-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">System Request</label>
+                <label for="bordered-radio-2" class="w-full py-4 ms-2 text-sm font-medium ">System Request</label>
               </div>
 
             </div>
@@ -264,7 +269,7 @@ if (isset($_POST['submit'])) {
 
           <!-- <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" /> -->
           <!-- <span class="block text-sm text-gray-500 text-center dark:text-gray-400">  <a href="https://flowbite.com/" class="hover:underline">Designed By</a> Cedrick James - MIS Section</span> -->
-          <span class="block text-sm  text-center dark:text-gray-400"> <a href="https://flowbite.com/" class="hover:underline">Designed By</a> Cedrick James - ICT Department</span>
+          <span class="block text-sm  text-center text-white"> <a href="https://flowbite.com/" class="hover:underline">Designed By</a> Cedrick James - ICT Department</span>
 
       </div>
       </footer>

@@ -312,7 +312,7 @@ if (isset($_POST['dissapproveRequest'])) {
 
       <div class="py-4 inline-block min-w-full sm:px-6 lg:px-8">
         <div class="overflow-hidden">
-          <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-3xl dark:text-white">Job Order : <span class="text-blue-600 dark:text-blue-500">For Approval of Department Head</span></h1>
+          <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-3xl dark:text-white">Request : <span class="text-blue-600 dark:text-blue-500">For Approval of Department Head</span></h1>
 
           <table class="min-w-full text-center">
             <thead class="border-b bg-gray-800">

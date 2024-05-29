@@ -32,7 +32,7 @@ if(isset($_POST['approveRequest'])){
 <table id="employeeTable" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>JO Number</th>
+                <th>Request Number</th>
                 <th>Action</th>
                 <th>Details</th>
                 <th>Date Filed</th>

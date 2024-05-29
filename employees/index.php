@@ -403,7 +403,7 @@ while ($userRow = mysqli_fetch_assoc($result)) {
             <div class="text-center py-2 m-auto lg:text-center w-full">
                 <!-- <h6 class="text-sm  tracking-tight text-gray-200 sm:text-lg">Good Day</h6> -->
                 <div class="m-auto flex flex-col w-2/4  h-12">
-                    <h2 class="text-xl font-bold tracking-tight text-gray-100 sm:text-xl">Total numbers of pending Job Order</h2>
+                    <h2 class="text-xl font-bold tracking-tight text-gray-100 sm:text-xl">Total numbers of pending Request</h2>
 
                 </div>
 
@@ -528,22 +528,26 @@ while ($userRow = mysqli_fetch_assoc($result)) {
                                                     <div style="overflow: inherit" class="_qiHHw Ut_ecQ kHy45A">
                                                         <span class=" sr-only">Notifications</span>
                                                         <?php
+                                                        $username = $_SESSION['username'];
                                                         $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE `requestorUsername` = '$username' and `status2` = 'inprogress'";
                                                         $result = mysqli_query($con, $sql1);
                                                         while ($count = mysqli_fetch_assoc($result)) {
 
                                                             if ($count["pending"] > 0) {
                                                         ?>
-                                                                <div class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-white"> <?php
-                                                                                                                                                                                                                                                        $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE`requestorUsername` = '$username' and `status2` = 'inprogress'";
-                                                                                                                                                                                                                                                        $result = mysqli_query($con, $sql1);
-                                                                                                                                                                                                                                                        while ($count = mysqli_fetch_assoc($result)) {
-                                                                                                                                                                                                                                                            echo $count["pending"];
-                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                        ?></div><?php
-                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                ?>
+                                                                <div class=" absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-white">
+                                                                    <?php
+                                                                    $sql1 = "SELECT COUNT(id) as 'pending' FROM request WHERE`requestorUsername` = '$username' and `status2` = 'inprogress'";
+                                                                    $result = mysqli_query($con, $sql1);
+                                                                    while ($count = mysqli_fetch_assoc($result)) {
+                                                                        echo $count["pending"];
+                                                                    } ?>
+
+                                                                </div>
+                                                        <?php
+                                                            }
+                                                        }
+                                                        ?>
 
                                                         <img src="../resources/img/progress.png" class="h-full w-full text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
@@ -697,7 +701,7 @@ while ($userRow = mysqli_fetch_assoc($result)) {
                     <!-- Modal header -->
                     <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                            Job Order Details
+                            Request Details
                         </h3>
 
                         <button onclick="modalHide()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
@@ -717,7 +721,7 @@ while ($userRow = mysqli_fetch_assoc($result)) {
                         <input type="text" name="joid2" id="joid2" class="hidden col-span-2 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                         <div class="w-full grid gap-4 grid-cols-2">
-                            <h2 class="font-semibold text-gray-900 dark:text-gray-500"><span class="text-gray-400">JO Number : </span><span class="dark:text-white" id="jonumber"></span></h2>
+                            <h2 class="font-semibold text-gray-900 dark:text-gray-500"><span class="text-gray-400">Request Number : </span><span class="dark:text-white" id="jonumber"></span></h2>
                             <h2 class="pl-10 font-semibold text-gray-900 dark:text-gray-500"><span class="text-gray-400">Date filed: </span><span class="dark:text-white" id="datefiled"></span></h2>
                         </div>
                         <div class="w-full grid gap-4 grid-cols-2">

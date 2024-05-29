@@ -640,7 +640,7 @@ if (isset($_POST['cancelJO'])) {
                     <table id="employeeTable" class="display" style="width:100%">
                         <thead>
                             <tr>
-                                <th>JO Number</th>
+                                <th>Request Number</th>
                                 <th>Action</th>
                                 <th>Details</th>
                                 <th>Requestor</th>
@@ -736,7 +736,7 @@ if (isset($_POST['cancelJO'])) {
                     <table id="overAllTable" class="display" style="width:100%">
                         <thead>
                             <tr>
-                                <th>JO Number</th>
+                                <th>Request Number</th>
                                 <th>Action</th>
                                 <th>Details</th>
                                 <th>Requestor</th>
@@ -835,7 +835,7 @@ if (isset($_POST['cancelJO'])) {
                     <table id="forRatingTable" class="display" style="width:100%">
                         <thead>
                             <tr>
-                                <th>JO Number</th>
+                                <th>Request Number</th>
                                 <th>Action</th>
                                 <th>Details</th>
                                 <th>Requestor</th>
@@ -1046,7 +1046,7 @@ if (isset($_POST['cancelJO'])) {
 
                         </div>
                         <div class="w-full grid gap-4 grid-cols-2">
-                            <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">JO Number : </span><span id="jonumber"></span></h2>
+                            <h2 class="font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Request Number : </span><span id="jonumber"></span></h2>
                             <h2 class="pl-10 font-semibold text-gray-900 dark:text-gray-900"><span class="text-gray-400">Date filed: </span><span id="datefiled"></span></h2>
                         </div>
                         <div class="w-full grid gap-4 grid-cols-2">
