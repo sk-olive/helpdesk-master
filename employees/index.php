@@ -701,7 +701,7 @@ while ($userRow = mysqli_fetch_assoc($result)) {
                     <!-- Modal header -->
                     <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                            Request Details
+                            <span id="reqtype"></span> Details
                         </h3>
 
                         <button onclick="modalHide()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
@@ -1167,7 +1167,7 @@ while ($userRow = mysqli_fetch_assoc($result)) {
             document.getElementById("misPersonnel").value = element.getAttribute("data-personnel");
             document.getElementById("requestor").value = element.getAttribute("data-requestor");
             document.getElementById("assignedPersonnel").innerHTML = element.getAttribute("data-assignedpersonnel");
-
+            document.getElementById("reqtype").innerHTML = element.getAttribute("data-reqtype");
 
             document.getElementById("action1").innerHTML = element.getAttribute("data-action1");
             document.getElementById("action2").innerHTML = element.getAttribute("data-action2");

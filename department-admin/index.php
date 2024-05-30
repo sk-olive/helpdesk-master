@@ -350,7 +350,10 @@ if (isset($_POST['approveRequest'])) {
     $start = $_POST['start'];
     $finish = $_POST['finish'];
 
-
+    $query = mysqli_query($con, "Select * FROM `categories` WHERE `c_name` = '$ticket_category'");
+    while ($cat = mysqli_fetch_assoc($query)) {
+        $completion_days = $cat['days'];
+    }
 
 
 
@@ -391,8 +394,8 @@ if (isset($_POST['approveRequest'])) {
     // Your existing code to set the start date and add 7 weekdays
     $date = date("Y-m-d");
     $startDate = $date; // Replace with your start date
-    $daysToAdd = 5; // Number of weekdays to add
-
+    // $daysToAdd = 5; // Number of weekdays to add
+    $daysToAdd = $completion_days;
     $newDate = addWeekdays2($startDate, $daysToAdd, $holidays);
     // echo "Start Date: $startDate<br>";
     // echo "New Date (after adding 7 weekdays excluding weekends and holidays): $newDate";
@@ -421,17 +424,17 @@ if (isset($_POST['approveRequest'])) {
 
             if ($request_type === "Technical Support") {
                 $subject = 'New Ticket Request';
-                $message = 'Hi ' . $personnelName . ',<br> <br>   You have a new ticket request with TS number TS-' . $completejoid . ' from ' . $requestor . '. Please check the details below or by signing in into our Helpdesk. <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Ticket Category: ' . $ticket_category . '<br>Category Level: ' . $cat_lvl . '<br> Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                $message = 'Hi ' . $personnelName . ',<br> <br>   You have a new ticket request with TS number ' . $completejoid . ' from ' . $requestor . '. Please check the details below or by signing in into our Helpdesk. <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Ticket Category: ' . $ticket_category . '<br>Category Level: ' . $cat_lvl . '<br> Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
 
                 $subject2 = 'Approved Ticket Request';
-                $message2 = 'Hi ' . $requestor . ',<br> <br>  Your ticket request with TS number TS-' . $completejoid . ' is now approved by the administrator. It is now in progress. Please check the details below or by signing in into our Helpdesk. <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Ticket Category: ' . $ticket_category . '<br>Request Details: ' . $detailsOfRequest . '<br> Assigned Personnel: ' . $personnelName . '<br> Ticket Filer: ' . $user_name . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                $message2 = 'Hi ' . $requestor . ',<br> <br>  Your ticket request with TS number ' . $completejoid . ' is now approved by the administrator. It is now in progress. Please check the details below or by signing in into our Helpdesk. <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Ticket Category: ' . $ticket_category . '<br>Request Details: ' . $detailsOfRequest . '<br> Assigned Personnel: ' . $personnelName . '<br> Ticket Filer: ' . $user_name . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
             } else {
                 $request_type = "Job Order";
                 $subject = 'Job Order Request';
-                $message = 'Hi ' . $personnelName . ',<br> <br>   You have a new job order with JO number JO-' . $completejoid . ' from ' . $requestor . '. Please check the details below or by signing in into our Helpdesk. <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Request Category: ' . $request_category . '<br>Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                $message = 'Hi ' . $personnelName . ',<br> <br>   You have a new job order with JO number ' . $completejoid . ' from ' . $requestor . '. Please check the details below or by signing in into our Helpdesk. <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Request Category: ' . $request_category . '<br>Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
 
                 $subject2 = 'Approved Job Order';
-                $message2 = 'Hi ' . $requestor . ',<br> <br>  Your Job Order with JO number JO-' . $completejoid . ' is now approved by the administrator. It is now in progress. Please check the details below or by signing in into our Helpdesk. <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Request Category: ' . $request_category . '<br>Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+                $message2 = 'Hi ' . $requestor . ',<br> <br>  Your Job Order with JO number ' . $completejoid . ' is now approved by the administrator. It is now in progress. Please check the details below or by signing in into our Helpdesk. <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Request Category: ' . $request_category . '<br>Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
             }
         } elseif ($section === "FEM" || $section === "fem") {
             $sql1 = "Select * FROM `user` WHERE `level` = 'admin' AND `leader` = 'fem' ";
@@ -441,10 +444,10 @@ if (isset($_POST['approveRequest'])) {
                 $leaderName = $list["name"];
             }
             $subject = 'Job Order Request';
-            $message = 'Hi ' . $leaderName . ',<br> <br>   Mr/Ms. ' . $requestor . ' filed a job order with JO number JO-' . $completejoid . ' . Please check the details below or by signing in into our Helpdesk.  <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Request Category: ' . $request_category . '<br>Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+            $message = 'Hi ' . $leaderName . ',<br> <br>   Mr/Ms. ' . $requestor . ' filed a job order with JO number ' . $completejoid . ' . Please check the details below or by signing in into our Helpdesk.  <br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Request Category: ' . $request_category . '<br>Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
 
             $subject2 = 'Approved Job Order';
-            $message2 = 'Hi ' . $requestor . ',<br> <br>  Your Job Order with JO number JO-' . $completejoid . ' is now approved by your head. It is now sent to your administrator. Please check the details below or by signing in into our Helpdesk.<br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Request Category: ' . $request_category . '<br>Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
+            $message2 = 'Hi ' . $requestor . ',<br> <br>  Your Job Order with JO number ' . $completejoid . ' is now approved by your head. It is now sent to your administrator. Please check the details below or by signing in into our Helpdesk.<br> Click this ' . $link . ' to sign in. <br><br>Request Type: ' . $request_type . '<br> Request Category: ' . $request_category . '<br>Request Details: ' . $detailsOfRequest . '<br><br><br> This is a generated email. Please do not reply. <br><br> Helpdesk';
         }
         require '../vendor/autoload.php';
         require '../dompdf/vendor/autoload.php';

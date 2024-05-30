@@ -535,7 +535,7 @@
 
                      <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                             Request Details
+                             <span id="reqtype"></span> Details
                          </h3>
                          <button onclick="modalHide()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
                              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -863,6 +863,7 @@
              document.getElementById("action1").innerHTML = element.getAttribute("data-action1");
              document.getElementById("action2").innerHTML = element.getAttribute("data-action2");
              document.getElementById("action3").innerHTML = element.getAttribute("data-action3");
+             document.getElementById("reqtype").innerHTML = element.getAttribute("data-reqtype");
 
 
              document.getElementById("pjobOrderNo").value = element.getAttribute("data-joidprint");

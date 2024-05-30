@@ -38,6 +38,7 @@ while ($field = mysqli_fetch_assoc($resultLevel)) {
 }
 
 require_once '../changePassword.php';
+$username = $_SESSION['username'];
 ?>
 
 
@@ -281,13 +282,13 @@ require_once '../changePassword.php';
           <i class="fa-solid fa-broom"></i> <span class="flex-1 ml-3 whitespace-nowrap">PMS</span>
         </a>
       </li> -->
-      <li>
+      <li class="hidden">
         <a href="devices.php" id="sidedevice" class="flex items-center p-4 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
 
           <i class="fa-solid fa-computer"></i> <span class="flex-1 ml-3 whitespace-nowrap">Devices</span>
         </a>
       </li>
-      <li>
+      <li class="hidden">
         <a href="documents.php" id="sidedocs" class="flex items-center p-4 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
 
           <i class="fa-solid fa-file"></i> <span class="flex-1 ml-3 whitespace-nowrap">Documents</span>

@@ -47,11 +47,11 @@ if ($_SESSION['status'] == "inprogress") {
     $status = "For Approval";
 }
 
-if ($_SESSION['requestType'] === "Technical Support") {
-    $jobOrderNo = 'TS-' . $jobOrderNo;
-} else {
-    $jobOrderNo =  'JO-' . $jobOrderNo;
-}
+// if ($_SESSION['requestType'] === "Technical Support") {
+//     $jobOrderNo = 'TS-' . $jobOrderNo;
+// } else {
+//     $jobOrderNo =  'JO-' . $jobOrderNo;
+// }
 
 ?>
 

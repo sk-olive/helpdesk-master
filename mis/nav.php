@@ -60,7 +60,7 @@
 
 
   require_once '../changePassword.php';
-
+  $username = $_SESSION['username'];
   ?>
 
 
@@ -488,9 +488,9 @@
                 ?> <option <?php if ($monthNow == $month) {
                               echo "selected";
                             } ?> value="<?php echo $month; ?>"><?php echo $month; ?></option> <?php
-                                                                                                            $date->modify('next month');
-                                                                                                          }
-                                                                                                            ?>
+                                                                                              $date->modify('next month');
+                                                                                            }
+                                                                                              ?>
               </select>
 
             </div>
